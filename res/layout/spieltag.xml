@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llAgg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_vertical_margin"
+    android:paddingTop="@dimen/activity_vertical_margin" >
+
+    <TextView
+        android:id="@+id/tvRoundChoose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Spieltag auswählen"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Button
+        android:id="@+id/btnSpl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Spieltag" />
+
+    <Button
+        android:id="@+id/btnLeg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Leg"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tvWC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Team auswählen"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/btnSplTeam1"
+            android:layout_width="331dp"
+            android:layout_height="wrap_content"
+            android:text="Heim"
+            android:textColor="#ff0000" />
+
+        <Button
+            android:id="@+id/btnSplTeam2"
+            android:layout_width="335dp"
+            android:layout_height="wrap_content"
+            android:text="Auswärt"
+            android:textColor="#0000ff" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llDlgAgg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" >
+
+        <EditText
+            android:id="@+id/txtDlgAgg1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/txtDlgAgg2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="number" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llSpieltag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/btnSplOK"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OK" />
+
+        <Button
+            android:id="@+id/btnSplCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Abbrechen" />
+    </LinearLayout>
+
+</LinearLayout>

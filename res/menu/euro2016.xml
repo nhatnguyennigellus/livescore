@@ -1,0 +1,27 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.project.livescore1415.Euro2016Activity" >
+
+    <item
+        android:id="@+id/eurorefresh"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="Refresh"/>
+	<item
+        android:id="@+id/eurofulltime"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="Full-time!"/>
+	<item
+        android:id="@+id/eurosavedb"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:visible="false"
+        android:title="Save to database!"/>
+	<item
+        android:id="@+id/euroexit"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="Exit"/>
+
+</menu>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="bundesliga">
+        <item>FC Bayern München</item>
+        <item>Borussia Dortmund</item>
+        <item>Bayer 04 Leverkusen</item>
+        <item>FC Schalke 04</item>
+        <item>Eintracht Frankfurt</item>
+        <item>Hamburger SV</item>
+        <item>Bor. Mönchengladbach</item>
+        <item>Hannover 96</item>
+        <item>1. FC Köln</item>
+        <item>VfL Wolfsburg</item>
+        <item>VfB Stuttgart</item>
+        <item>1. FSV Mainz 05</item>
+        <item>SV Werder Bremen</item>
+        <item>FC Augsburg</item>
+        <item>TSG 1899 Hoffenheim</item>
+        <item>Hertha Berlin</item>
+        <item>FC Ingolstadt 04</item>
+        <item>SV Darmstadt 98</item>
+    </string-array>
+    <string-array name="championsleague">
+        <item>FC Bayern München</item>
+        <item>FC Barcelona</item>
+        <item>Borussia Mönchengladbach</item>
+        <item>Bayer 04 Leverkusen</item>
+        <item>Manchester City FC</item>
+        <item>Chelsea FC</item>
+        <item>Real Madrid CF</item>
+        <item>Club Atlético de Madrid</item>
+        <item>Paris Saint-Germain</item>
+        <item>FC Porto</item>
+        <item>Arsenal FC</item>
+        <item>VfL Wolfsburg</item>
+        <item>Juventus FC</item>
+        <item>FC Shakhtar Donetsk</item>
+        <item>Valencia CF</item>
+        <item>PFC CSKA Moskva</item>
+        <item>Manchester United FC</item>
+        <item>Maccabi Tel-Aviv FC</item>
+        <item>Malmö FF</item>
+        <item>GNK Dinamo Zagreb</item>
+        <item>FC Astana</item>
+        <item>K.A.A. Gent</item>
+        <item>AS Roma</item>
+        <item>Galatasaray AŞ</item>
+        <item>PSV Eindhoven</item>
+        <item>Olympiacos FC</item>
+        <item>FC Dynamo Kyiv</item>
+        <item>Olympique Lyonnais</item>
+        <item>Sevilla FC</item>
+        <item>Zenit St. Petersburg</item>
+        <item>SL Benfica</item>
+        <item>FC BATE Borisov</item>
+    </string-array>
+    <string-array name="dfbpokal">
+        <item>FC Bayern München</item>
+        <item>Borussia Dortmund</item>
+        <item>Hertha Berlin</item>
+        <item>1. FC Heidenheim</item>
+        <item>SV Werder Bremen</item>
+        <item>VfL Bochum 1848</item>
+    </string-array>
+    <string-array name="worldcup">
+        <item>BRAZIL</item>
+        <item>CROATIA</item>
+        <item>MEXICO</item>
+        <item>CAMEROON</item>
+        <item>SPAIN</item>
+        <item>NETHERLANDS</item>
+        <item>CHILE</item>
+        <item>AUSTRALIA</item>
+        <item>COLOMBIA</item>
+        <item>GREECE</item>
+        <item>CÔTE D\'IVOIRE</item>
+        <item>JAPAN</item>
+        <item>URUGUAY</item>
+        <item>COSTA RICA</item>
+        <item>ENGLAND</item>
+        <item>ITALY</item>
+        <item>SWITZERLAND</item>
+        <item>ECUADOR</item>
+        <item>FRANCE</item>
+        <item>HONDURAS</item>
+        <item>ARGENTINA</item>
+        <item>BOSNIA-HERZEGOVINA</item>
+        <item>IRAN</item>
+        <item>NIGERIA</item>
+        <item>GERMANY</item>
+        <item>PORTUGAL</item>
+        <item>GHANA</item>
+        <item>UNITED STATES</item>
+        <item>BELGIUM</item>
+        <item>ALGERIA</item>
+        <item>RUSSIA</item>
+        <item>KOREA REPUBLIC</item>
+    </string-array>
+    <string-array name="euro">
+        <item>FRANCE</item>
+        <item>ROMANIA</item>
+        <item>ALBANIA</item>
+        <item>SWITZERLAND</item>
+        <item>ENGLAND</item>
+        <item>RUSSIA</item>
+        <item>WALES</item>
+        <item>SLOVAKIA</item>
+        <item>GERMANY</item>
+        <item>UKRAINE</item>
+        <item>POLAND</item>
+        <item>NORTHERN IRELAND</item>
+        <item>SPAIN</item>
+        <item>CZECH REPUBLIC</item>
+        <item>TURKEY</item>
+        <item>CROATIA</item>
+        <item>BELGIUM</item>
+        <item>ITALY</item>
+        <item>REPUBLIC OF IRELAND</item>
+        <item>SWEDEN</item>
+        <item>PORTUGAL</item>
+        <item>ICELAND</item>
+        <item>AUSTRIA</item>
+        <item>HUNGARY</item>
+    </string-array>
+</resources>

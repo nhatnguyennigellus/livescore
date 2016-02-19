@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:background="@drawable/euro"
+    android:orientation="vertical"
+    android:paddingBottom="15dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingTop="15dp" >
+
+    <TextView
+        android:id="@+id/txtEuro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_activity_euro2016"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#ffffff"
+        android:textSize="35sp" />
+
+    <TextView
+        android:id="@+id/txtEuroDatetime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#ffffff"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/btnEuroRound"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="278dp"
+        android:layout_height="wrap_content"
+        android:background="#0179FA"
+        android:text="Round"
+        android:textColor="#ffffff"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/scoreboard"
+        android:gravity="center_horizontal|center_vertical" >
+
+        <TextView
+            android:id="@+id/txtEuroTeamA"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.15"
+            android:gravity="right"
+            android:paddingRight="15dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#fff" />
+
+        <ImageView
+            android:id="@+id/imgEuroTeamA"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:paddingRight="5dp"
+            android:src="@drawable/euro2016_logo" />
+
+        <Button
+            android:id="@+id/btnEuroGoalA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#fff"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#00479D"
+            android:textSize="35sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnEuroGoalB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#fff"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#00479D"
+            android:textSize="35sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/imgEuroTeamB"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:paddingLeft="5dp"
+            android:src="@drawable/euro2016_logo" />
+
+        <TextView
+            android:id="@+id/txtEuroTeamB"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.14"
+            android:gravity="left"
+            android:paddingLeft="15dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#fff" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llEuroScorer"
+        android:layout_width="1218dp"
+        android:layout_height="wrap_content"
+        android:background="#81BEF7"
+        android:gravity="center_horizontal"
+        android:padding="10dp" >
+
+        <TextView
+            android:id="@+id/txtEuroScorerA"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:paddingRight="20dp"
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#052257" />
+
+        <TextView
+            android:id="@+id/txtEuroScorerB"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:paddingLeft="20dp"
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#052257" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llEuroPen"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:visibility="gone" >
+
+			<Button
+            android:id="@+id/btnPenEUA1"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pen_button_normal"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/TextView03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/btnPenEUA2"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pen_button_normal"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/TextView02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/btnPenEUA3"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pen_button_normal"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/TextView04"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/btnPenEUA4"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pen_button_normal"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/TextView05"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/btnPenEUA5"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pen_button_normal"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tvEuroPenA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/TextView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text=":"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/tvEuroPenB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/btnPenEUB1"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pen_button_normal"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/TextView06"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/btnPenEUB2"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pen_button_normal" />
+
+        <TextView
+            android:id="@+id/TextView07"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/btnPenEUB3"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pen_button_normal"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/TextView08"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/btnPenEUB4"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pen_button_normal"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/TextView09"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/tvEuroPenStage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnPenEUB5"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pen_button_normal"
+            android:visibility="visible" />
+        
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imgEuroLogo"
+        android:layout_width="421dp"
+        android:layout_height="237dp"
+        android:layout_gravity="center"
+        android:padding="20dp"
+        android:src="@drawable/euro2016_logo" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom|right" >
+
+        <DigitalClock
+            android:id="@+id/clockEuro"
+            android:layout_width="129dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="DigitalClock"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

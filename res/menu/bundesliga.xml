@@ -1,0 +1,26 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.project.livescore1415.BundesligaActivity" >
+
+    <item
+        android:id="@+id/refresh"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="Aktualisieren"/>
+	<item
+        android:id="@+id/fulltime"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="Endstand!"/>
+	<item
+        android:id="@+id/savedb"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:visible="false"
+        android:title="Speichern"/>
+	<item
+        android:id="@+id/exit"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="Beenden"/>
+</menu>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.project.livescore1415"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="15" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.project.livescore.activities.MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.project.livescore.activities.BundesligaActivity"
+            android:label="@string/title_activity_bundesliga"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name="com.project.livescore.activities.DFBPokalActivity"
+            android:label="@string/title_activity_dfbpokal"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name="com.project.livescore.activities.ChampionsLeagueActivity"
+            android:label="@string/title_activity_champions_league"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name="com.project.livescore.activities.MatchesListActivity"
+            android:label="@string/title_activity_matches_list"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name="com.project.livescore.activities.WorldCup2014Activity"
+            android:label="@string/title_activity_world_cup2014"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name="com.project.livescore.activities.DFLSupercupActivity"
+            android:label="@string/title_activity_dflsupercup" >
+        </activity>
+        <activity
+            android:name=".Euro2016Activity"
+            android:label="@string/title_activity_euro2016" >
+        </activity>
+    </application>
+
+</manifest>
