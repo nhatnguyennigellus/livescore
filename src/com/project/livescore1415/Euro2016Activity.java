@@ -38,7 +38,7 @@ public class Euro2016Activity extends Activity {
 	TextView txtTeamA, txtTeamB, txtGoalA, txtGoalB, tvPenA, tvPenB,
 			tvPenStage, txtDateTime;
 	LinearLayout llPen;
-	MediaPlayer mp;
+	MediaPlayer mp, mpgoal;
 	ImageView imgLogo, imgFlagA, imgFlagB;
 	static DBAdapter mDB;
 	static final int DATE_PICKER_DIALOG = 0;
@@ -143,7 +143,9 @@ public class Euro2016Activity extends Activity {
 		btnPenB5 = (Button) this.findViewById(R.id.btnPenEUB5);
 		tvPenStage = (TextView) this.findViewById(R.id.tvEuroPenStage);
 
-		mp = MediaPlayer.create(this, R.raw.clanthem);
+		mp = MediaPlayer.create(this, R.raw.euro);
+		mpgoal = MediaPlayer.create(this, R.raw.torhymne);
+		
 		mp.start();
 
 		SharedPreferences pref = getPreferences(MODE_PRIVATE);
@@ -444,7 +446,10 @@ public class Euro2016Activity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+				if (!txtTeamB.getText().equals("GERMANY")) {
+					mpgoal.start();
+				} 
+				
 				dlgGoal.setContentView(R.layout.goalalert);
 				dlgGoal.setTitle("GOOAAAALLL!!!!");
 
@@ -471,8 +476,8 @@ public class Euro2016Activity extends Activity {
 
 				tvGoalFor.setText("GOAAALLLL for " + txtTeamA.getText());
 				tvScoredBy.setText("Goal scored by ");
-				tvMin.setText("");
-				tvInThe.setText(" in the minute ");
+				tvMin.setText("'.		");
+				tvInThe.setText(" at ");
 				chkOG.setText("Own goal");
 				chkPen.setText("Penalty");
 
@@ -480,7 +485,7 @@ public class Euro2016Activity extends Activity {
 
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
+						mpgoal.pause();
 						dlgGoal.cancel();
 					}
 				});
@@ -533,7 +538,10 @@ public class Euro2016Activity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				if (!txtTeamA.getText().equals("GERMANY")) {
+					mpgoal.start();
+				} 
+				
 				dlgGoal.setContentView(R.layout.goalalert);
 				dlgGoal.setTitle("GOOAAAALLL!!!!");
 
@@ -560,8 +568,8 @@ public class Euro2016Activity extends Activity {
 
 				tvGoalFor.setText("GOAAALLLL for " + txtTeamB.getText() + " ");
 				tvScoredBy.setText("Goal scored by ");
-				tvMin.setText("");
-				tvInThe.setText(" in the minute ");
+				tvMin.setText("'.		");
+				tvInThe.setText(" at ");
 				chkOG.setText("Own goal");
 				chkPen.setText("Penalty");
 
@@ -569,7 +577,7 @@ public class Euro2016Activity extends Activity {
 
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
+						mpgoal.pause();
 						dlgGoal.cancel();
 					}
 				});
@@ -580,8 +588,6 @@ public class Euro2016Activity extends Activity {
 					public void onClick(View v) {
 						if (txtMin.getText().toString().equals("")
 								|| txtScorer.getText().toString().equals("")) {
-							// TODO Auto-generated method stub
-
 							showNoti("Please enter goalscorer and minute!");
 						} else {
 							int goal = Integer.parseInt(btnGoalB.getText()
@@ -992,53 +998,53 @@ public class Euro2016Activity extends Activity {
 		if (team.equals("")) {
 			return R.drawable.euro2016_logo;
 		} else if (team.equals("FRANCE")) {
-			return R.drawable.fra;
+			return R.drawable.fra_euro;
 		} else if (team.equals("SPAIN")) {
-			return R.drawable.esp;
+			return R.drawable.esp_euro;
 		} else if (team.equals("GERMANY")) {
-			return R.drawable.ger;
+			return R.drawable.ger_euro;
 		} else if (team.equals("ENGLAND")) {
-			return R.drawable.eng;
+			return R.drawable.eng_euro;
 		} else if (team.equals("PORTUGAL")) {
-			return R.drawable.por;
+			return R.drawable.por_euro;
 		} else if (team.equals("BELGIUM")) {
-			return R.drawable.bel;
+			return R.drawable.bel_euro;
 		} else if (team.equals("ITALY")) {
-			return R.drawable.ita;
+			return R.drawable.ita_euro;
 		} else if (team.equals("RUSSIA")) {
-			return R.drawable.rus;
+			return R.drawable.rus_euro;
 		} else if (team.equals("SWITZERLAND")) {
-			return R.drawable.sui;
+			return R.drawable.sui_euro;
 		} else if (team.equals("AUSTRIA")) {
-			return R.drawable.aut;
+			return R.drawable.aut_euro;
 		} else if (team.equals("CROATIA")) {
-			return R.drawable.cro;
+			return R.drawable.cro_euro;
 		} else if (team.equals("UKRAINE")) {
-			return R.drawable.ukr;
+			return R.drawable.ukr_euro;
 		} else if (team.equals("CZECH REPUBLIC")) {
-			return R.drawable.cze;
+			return R.drawable.cze_euro;
 		} else if (team.equals("SWEDEN")) {
-			return R.drawable.swe;
+			return R.drawable.swe_euro;
 		} else if (team.equals("POLAND")) {
-			return R.drawable.pol;
+			return R.drawable.pol_euro;
 		} else if (team.equals("ROMANIA")) {
-			return R.drawable.rou;
+			return R.drawable.rou_euro;
 		} else if (team.equals("SLOVAKIA")) {
-			return R.drawable.svk;
+			return R.drawable.svk_euro;
 		} else if (team.equals("HUNGARY")) {
-			return R.drawable.hun;
+			return R.drawable.hun_euro;
 		} else if (team.equals("TURKEY")) {
-			return R.drawable.tur;
+			return R.drawable.tur_euro;
 		} else if (team.equals("REPUBLIC OF IRELAND")) {
-			return R.drawable.irl;
+			return R.drawable.irl_euro;
 		} else if (team.equals("ICELAND")) {
-			return R.drawable.isl;
+			return R.drawable.isl_euro;
 		} else if (team.equals("WALES")) {
-			return R.drawable.wal;
+			return R.drawable.wal_euro;
 		} else if (team.equals("ALBANIA")) {
-			return R.drawable.alb;
+			return R.drawable.alb_euro;
 		} else if (team.equals("NORTHERN IRELAND")) {
-			return R.drawable.nir;
+			return R.drawable.nir_euro;
 		}
 		return 0;
 	}
@@ -1123,12 +1129,12 @@ public class Euro2016Activity extends Activity {
 			} else {
 				if (g1 > g2) {
 					resultNoti(txtTeamA.getText().toString());
-					addToDB(g1, g2, 0, 0);
+					miDB.setVisible(true);
 				} else if (g1 < g2) {
 					resultNoti(txtTeamB.getText().toString());
-					addToDB(g1, g2, 0, 0);
+					miDB.setVisible(true);
 				} else {
-					handlePSO(g1, g2);
+					miDB.setVisible(true);
 				}
 			}
 		}

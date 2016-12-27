@@ -1,66 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="bundesliga">
-        <item>FC Bayern München</item>
-        <item>Borussia Dortmund</item>
-        <item>Bayer 04 Leverkusen</item>
-        <item>FC Schalke 04</item>
-        <item>Eintracht Frankfurt</item>
-        <item>Hamburger SV</item>
-        <item>Bor. Mönchengladbach</item>
-        <item>Hannover 96</item>
-        <item>1. FC Köln</item>
-        <item>VfL Wolfsburg</item>
-        <item>VfB Stuttgart</item>
-        <item>1. FSV Mainz 05</item>
-        <item>SV Werder Bremen</item>
-        <item>FC Augsburg</item>
-        <item>TSG 1899 Hoffenheim</item>
-        <item>Hertha Berlin</item>
-        <item>FC Ingolstadt 04</item>
-        <item>SV Darmstadt 98</item>
+        <item>FC BAYERN MÜNCHEN</item>
+		<item>BORUSSIA DORTMUND</item>
+		<item>BAYER 04 LEVERKUSEN</item>
+		<item>BORUSSIA MÖNCHENGLADBACH</item>
+		<item>1. FSV MAINZ 05</item>
+		<item>HERTHA BSC</item>
+		<item>FC SCHALKE 04</item>
+		<item>1. FC KÖLN</item>
+		<item>VFL WOLFSBURG</item>
+		<item>FC INGOLSTADT 04</item>
+		<item>FC AUGSBURG</item>
+		<item>HAMBURGER SV</item>
+		<item>SV DARMSTADT 98</item>
+		<item>TSG 1899 HOFFENHEIM</item>
+		<item>EINTRACHT FRANKFURT</item>
+		<item>SV WERDER BREMEN</item>
+		<item>SC FREIBURG</item>
+		<item>RB LEIPZIG</item>
     </string-array>
     <string-array name="championsleague">
-        <item>FC Bayern München</item>
-        <item>FC Barcelona</item>
-        <item>Borussia Mönchengladbach</item>
-        <item>Bayer 04 Leverkusen</item>
-        <item>Manchester City FC</item>
-        <item>Chelsea FC</item>
-        <item>Real Madrid CF</item>
-        <item>Club Atlético de Madrid</item>
-        <item>Paris Saint-Germain</item>
-        <item>FC Porto</item>
-        <item>Arsenal FC</item>
-        <item>VfL Wolfsburg</item>
-        <item>Juventus FC</item>
-        <item>FC Shakhtar Donetsk</item>
-        <item>Valencia CF</item>
-        <item>PFC CSKA Moskva</item>
-        <item>Manchester United FC</item>
-        <item>Maccabi Tel-Aviv FC</item>
-        <item>Malmö FF</item>
-        <item>GNK Dinamo Zagreb</item>
-        <item>FC Astana</item>
-        <item>K.A.A. Gent</item>
-        <item>AS Roma</item>
-        <item>Galatasaray AŞ</item>
-        <item>PSV Eindhoven</item>
-        <item>Olympiacos FC</item>
-        <item>FC Dynamo Kyiv</item>
-        <item>Olympique Lyonnais</item>
-        <item>Sevilla FC</item>
-        <item>Zenit St. Petersburg</item>
-        <item>SL Benfica</item>
-        <item>FC BATE Borisov</item>
+        <item>REAL MADRID CF</item>
+        <item>FC BARCELONA</item>
+        <item>FC BAYERN MÜNCHEN</item>
+        <item>LEICESTER CITY FC</item>
+        <item>CLUB ATLÉTICO DE MADRID</item>
+        <item>SL BENFICA</item>
+        <item>SPORTING CP</item>
+        <item>TOTTENHAM HOTSPUR FC</item>
+        <item>PARIS SAINT-GERMAIN FC</item>
+        <item>JUVENTUS FC</item>
+        <item>PFC CSKA MOSKVA</item>
+        <item>ARSENAL FC</item>
+        <item>SEVILLA FC</item>
+        <item>OLYMPIQUE LYONNAIS</item>
+        <item>FC DYNAMO KYIV</item>
+        <item>CLUB BRUGGE KV</item>
+        <item>PSV EINDHOVEN</item>
+        <item>BEŞIKTAŞ JK</item>
+        <item>SSC NAPOLI</item>
+        <item>FC BASEL</item>
+        <item>BAYER 04 LEVERKUSEN</item>
+        <item>BORUSSIA DORTMUND</item>
+        <item>PFC LUDOGORETS RAZGRAD</item>
+        <item>CELTIC FC</item>
+        <item>FC KØBENHAVN</item>
+        <item>LEGIA WARSZAWA</item>
+        <item>GNK DINAMO ZAGREB</item>
+        <item>MANCHESTER CITY FC</item>
+        <item>FC PORTO</item>
+        <item>FC ROSTOV</item>
+        <item>BORUSSIA MÖNCHENGLADBACH</item>
+        <item>AS MONACO FC</item>
     </string-array>
     <string-array name="dfbpokal">
-        <item>FC Bayern München</item>
-        <item>Borussia Dortmund</item>
-        <item>Hertha Berlin</item>
-        <item>1. FC Heidenheim</item>
-        <item>SV Werder Bremen</item>
-        <item>VfL Bochum 1848</item>
+        <item>FC Augsburg</item>
+		<item>Bayer 04 Leverkusen</item>
+		<item>FC Bayern München</item>
+		<item>SV Darmstadt 98</item>
+		<item>Borussia Dortmund</item>
+		<item>Borussia Mönchengladbach</item>
+		<item>Eintracht Frankfurt</item>
+		<item>Hamburger SV</item>
+		<item>Hannover 96</item>
+		<item>Hertha BSC</item>
+		<item>TSG 1899 Hoffenheim</item>
+		<item>FC Ingolstadt 04</item>
+		<item>1. FC Köln</item>
+		<item>1. FSV Mainz 05</item>
+		<item>FC Schalke 04</item>
+		<item>VfB Stuttgart</item>
+		<item>SV Werder Bremen</item>
+		<item>VfL Wolfsburg</item>
+		<item>Arminia Bielefeld</item>
+		<item>VfL Bochum 1848</item>
+		<item>Eintracht Braunschweig</item>
+		<item>MSV Duisburg</item>
+		<item>Fortuna Düsseldorf</item>
+		<item>FSV Frankfurt</item>
+		<item>SC Freiburg</item>
+		<item>SpVgg Greuther Fürth</item>
+		<item>1. FC Heidenheim</item>
+		<item>1. FC Kaiserslautern</item>
+		<item>Karlruher SC</item>
+		<item>RB Leipzig</item>
+		<item>TSV 1860 München</item>
+		<item>1. FC Nürnberg</item>
+		<item>SC Paderborn 07</item>
+		<item>SV Sandhausen</item>
+		<item>FC St. Pauli</item>
+		<item>1. FC Union Berlin</item>
+		<item>SG Dynamo Dresden</item>
+		<item>FC Erzgebirge Aue</item>
+		<item>FC Würzburger Kickers</item>
+		<item>1. FC Magdeburg</item>
+		<item>FC Astoria Walldorf</item>
+		<item>SpVgg Unterhaching</item>
+		<item>SSV Jahn Regensburg</item>
+		<item>BFC Preußen</item>
+		<item>SV Babelsberg 03</item>
+		<item>Bremer SV</item>
+		<item>FC Eintracht Norderstedt 03</item>
+		<item>Kickers Offenbach</item>
+		<item>Rot-Weiss Essen</item>
+		<item>SV Drochtersen/Assel</item>
+		<item>1. FC Germania Egestorf/Langreder</item>
+		<item>F.C. Hansa Rostock</item>
+		<item>FC Viktoria Köln</item>
+		<item>SV Eintracht Trier 05</item>
+		<item>FC 08 Homburg</item>
+		<item>FSV Zwickau</item>
+		<item>Hallescher FC</item>
+		<item>VfB Lübeck</item>
+		<item>FC 08 Villingen</item>
+		<item>SC Hauenstein</item>
+		<item>FC Carl Zeiss Jena</item>
+		<item>SG Wattenscheid 09</item>
+		<item>Sportfreunde Lotte</item>
+		<item>FV Ravensburg</item>
     </string-array>
     <string-array name="worldcup">
         <item>BRAZIL</item>

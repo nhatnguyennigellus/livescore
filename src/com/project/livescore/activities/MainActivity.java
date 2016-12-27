@@ -170,7 +170,7 @@ public class MainActivity extends Activity {
 		String mes = "";
 		mes += "Livescore v1.2 App for Galaxy Tab 8.9";
 		mes += "\nAuthor : Nigellus Nguyen";
-		mes += "\nYear released : 2015";
+		mes += "\nYear released : 2016";
 		return mes;
 	}
 

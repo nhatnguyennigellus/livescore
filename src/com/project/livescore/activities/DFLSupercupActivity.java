@@ -34,14 +34,14 @@ import android.os.Build;
 
 public class DFLSupercupActivity extends Activity {
 
-	Button btnGoalWOB, btnGoalFCB, btnPenA1, btnPenA2, btnPenA3, btnPenA4,
+	Button btnGoalBVB, btnGoalFCB, btnPenA1, btnPenA2, btnPenA3, btnPenA4,
 			btnPenA5, btnPenB1, btnPenB2, btnPenB3, btnPenB4, btnPenB5;
-	TextView txtTeamWOB, txtTeamFCB, txtGoalWOB, txtGoalFCB, tvPenWOB,
+	TextView txtTeamBVB, txtTeamFCB, txtGoalBVB, txtGoalFCB, tvPenBVB,
 			tvPenFCB, tvPenStage;
 	LinearLayout llPen;
-	MediaPlayer mp;
+	MediaPlayer mp, mpGoal;
 	static DBAdapter mDB;
-	ImageView imgTrophy, imgFlagWOB, imgFlagFCB;
+	ImageView imgTrophy, imgFlagBVB, imgFlagFCB;
 	DigitalClock digiClock;
 
 	int idGoal = 0;
@@ -82,14 +82,14 @@ public class DFLSupercupActivity extends Activity {
 		drNone = getResources().getDrawable(idNone);
 
 		digiClock = (DigitalClock) this.findViewById(R.id.digitalClock1);
-		btnGoalWOB = (Button) this.findViewById(R.id.btnBVBGoal);
+		btnGoalBVB = (Button) this.findViewById(R.id.btnBVBGoal);
 		btnGoalFCB = (Button) this.findViewById(R.id.btnFCBGoal);
-		txtTeamWOB = (TextView) this.findViewById(R.id.txtBVB);
+		txtTeamBVB = (TextView) this.findViewById(R.id.txtBVB);
 		txtTeamFCB = (TextView) this.findViewById(R.id.txtFCB);
-		txtGoalWOB = (TextView) this.findViewById(R.id.txtBVBScorer);
+		txtGoalBVB = (TextView) this.findViewById(R.id.txtBVBScorer);
 		txtGoalFCB = (TextView) this.findViewById(R.id.txtFCBScorer);
 
-		tvPenWOB = (TextView) this.findViewById(R.id.tvPenBVB);
+		tvPenBVB = (TextView) this.findViewById(R.id.tvPenBVB);
 		tvPenFCB = (TextView) this.findViewById(R.id.tvPenFCB);
 		llPen = (LinearLayout) this.findViewById(R.id.llPen);
 		btnPenA1 = (Button) this.findViewById(R.id.btnPenA1);
@@ -105,12 +105,12 @@ public class DFLSupercupActivity extends Activity {
 		tvPenStage = (TextView) this.findViewById(R.id.tvPenStage);
 
 		SharedPreferences pref = getPreferences(MODE_PRIVATE);
-		btnGoalWOB.setText(pref.getString("btnGoal1", "0"));
+		btnGoalBVB.setText(pref.getString("btnGoal1", "0"));
 		btnGoalFCB.setText(pref.getString("btnGoal2", "0"));
-		txtGoalWOB.setText(pref.getString("txtGoal1", null));
+		txtGoalBVB.setText(pref.getString("txtGoal1", null));
 		txtGoalFCB.setText(pref.getString("txtGoal2", null));
 
-		tvPenWOB.setText(pref.getString("tvPenBVB", "0"));
+		tvPenBVB.setText(pref.getString("tvPenBVB", "0"));
 		tvPenFCB.setText(pref.getString("tvPenFCB", "0"));
 		llPen.setVisibility(pref.getInt("llPenVisible", 8));
 		
@@ -136,12 +136,14 @@ public class DFLSupercupActivity extends Activity {
 				R.drawable.pen_button_normal));
 		
 		imgTrophy = (ImageView) this.findViewById(R.id.imgDFLSTrophy);
-		imgFlagWOB = (ImageView) this.findViewById(R.id.imgBVB);
+		imgFlagBVB = (ImageView) this.findViewById(R.id.imgBVB);
 		imgFlagFCB = (ImageView) this.findViewById(R.id.imgFCB);
-		imgFlagWOB.setImageResource(R.drawable.wob);
+		imgFlagBVB.setImageResource(R.drawable.bvb);
 		imgFlagFCB.setImageResource(R.drawable.fcb);
 
 		mp = MediaPlayer.create(this, R.raw.bundesligaintro);
+		mpGoal = MediaPlayer.create(this, R.raw.torhymne);
+		
 		mp.start();
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
@@ -164,7 +166,7 @@ public class DFLSupercupActivity extends Activity {
 		final Dialog dlgGoal = new Dialog(this);
 		final Dialog dlgEdit = new Dialog(this);
 
-		btnGoalWOB.setOnClickListener(new View.OnClickListener() {
+		btnGoalBVB.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -188,7 +190,7 @@ public class DFLSupercupActivity extends Activity {
 				final CheckBox chkPen = (CheckBox) dlgGoal
 						.findViewById(R.id.chkPen);
 
-				tvGoalFor.setText("TOORRRRRR für VfL Wolfsburg ");
+				tvGoalFor.setText("TOORRRRRR für Borussia Dortmund ");
 
 				btnGoalCnl.setOnClickListener(new View.OnClickListener() {
 
@@ -209,9 +211,9 @@ public class DFLSupercupActivity extends Activity {
 
 							errNoti("Bitte die Minute und den Torschützer eingeben!");
 						} else {
-							int goal = Integer.parseInt(btnGoalWOB.getText()
+							int goal = Integer.parseInt(btnGoalBVB.getText()
 									.toString());
-							btnGoalWOB.setText(String.valueOf(goal + 1)
+							btnGoalBVB.setText(String.valueOf(goal + 1)
 									.toString());
 
 							String mes = txtScorer.getText() + " "
@@ -222,17 +224,17 @@ public class DFLSupercupActivity extends Activity {
 							if (chkPen.isChecked()) {
 								mes += "(E.m)";
 							}
-							if (txtGoalWOB.getText().toString()
+							if (txtGoalBVB.getText().toString()
 									.contains(txtScorer.getText())) {
-								String temp = txtGoalWOB
+								String temp = txtGoalBVB
 										.getText()
 										.toString()
 										.replace(
 												txtScorer.getText().toString(),
 												mes);
-								txtGoalWOB.setText(temp);
+								txtGoalBVB.setText(temp);
 							} else
-								txtGoalWOB.append(mes + "\n");
+								txtGoalBVB.append(mes + "\n");
 							dlgGoal.cancel();
 						}
 					}
@@ -248,7 +250,7 @@ public class DFLSupercupActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				mpGoal.start();
 				dlgGoal.setContentView(R.layout.goalalert);
 				dlgGoal.setTitle("TOORRRR!!!!");
 
@@ -274,7 +276,7 @@ public class DFLSupercupActivity extends Activity {
 
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
+						mpGoal.pause();
 						dlgGoal.cancel();
 					}
 				});
@@ -285,8 +287,6 @@ public class DFLSupercupActivity extends Activity {
 					public void onClick(View v) {
 						if (txtMin.getText().toString().equals("")
 								|| txtScorer.getText().toString().equals("")) {
-							// TODO Auto-generated method stub
-
 							errNoti("Bitte die Minute und den Torschützer eingeben!");
 						} else {
 							int goal = Integer.parseInt(btnGoalFCB.getText()
@@ -324,12 +324,12 @@ public class DFLSupercupActivity extends Activity {
 			}
 		});
 
-		txtGoalWOB.setOnLongClickListener(new View.OnLongClickListener() {
+		txtGoalBVB.setOnLongClickListener(new View.OnLongClickListener() {
 
 			@Override
 			public boolean onLongClick(View v) {
 				// TODO Auto-generated method stub
-				if (!txtGoalWOB.getText().toString().equals("")) {
+				if (!txtGoalBVB.getText().toString().equals("")) {
 					dlgEdit.setContentView(R.layout.edit);
 					final EditText txtEdit = (EditText) dlgEdit
 							.findViewById(R.id.txtEdit);
@@ -338,14 +338,14 @@ public class DFLSupercupActivity extends Activity {
 					Button btnEditCancel = (Button) dlgEdit
 							.findViewById(R.id.btnEditCancel);
 
-					txtEdit.setText(txtGoalWOB.getText().toString());
+					txtEdit.setText(txtGoalBVB.getText().toString());
 
 					btnEditOK.setOnClickListener(new View.OnClickListener() {
 
 						@Override
 						public void onClick(View v) {
 							// TODO Auto-generated method stub
-							txtGoalWOB.setText(txtEdit.getText().toString());
+							txtGoalBVB.setText(txtEdit.getText().toString());
 							dlgEdit.cancel();
 						}
 					});
@@ -415,8 +415,8 @@ public class DFLSupercupActivity extends Activity {
 				// TODO Auto-generated method stub
 				if (btnPenA1.getBackground().getConstantState() == drMiss
 						.getConstantState()) {
-					int p = Integer.parseInt(tvPenWOB.getText().toString());
-					tvPenWOB.setText(String.valueOf(
+					int p = Integer.parseInt(tvPenBVB.getText().toString());
+					tvPenBVB.setText(String.valueOf(
 							String.valueOf(p + 1).toString()).toString());
 					btnPenA1.setBackgroundResource(R.drawable.pen_button_goal);
 				} else if (btnPenA1.getBackground().getConstantState() == drNone
@@ -436,8 +436,8 @@ public class DFLSupercupActivity extends Activity {
 						.getConstantState()) {
 					if (btnPenA2.getBackground().getConstantState() == drMiss
 							.getConstantState()) {
-						int p = Integer.parseInt(tvPenWOB.getText().toString());
-						tvPenWOB.setText(String.valueOf(
+						int p = Integer.parseInt(tvPenBVB.getText().toString());
+						tvPenBVB.setText(String.valueOf(
 								String.valueOf(p + 1).toString()).toString());
 						btnPenA2.setBackgroundResource(R.drawable.pen_button_goal);
 					} else if (btnPenA2.getBackground().getConstantState() == drNone
@@ -459,8 +459,8 @@ public class DFLSupercupActivity extends Activity {
 								.getConstantState()) {
 					if (btnPenA3.getBackground().getConstantState() == drMiss
 							.getConstantState()) {
-						int p = Integer.parseInt(tvPenWOB.getText().toString());
-						tvPenWOB.setText(String.valueOf(p + 1).toString());
+						int p = Integer.parseInt(tvPenBVB.getText().toString());
+						tvPenBVB.setText(String.valueOf(p + 1).toString());
 						btnPenA3.setBackgroundResource(R.drawable.pen_button_goal);
 					} else if (btnPenA3.getBackground().getConstantState() == drNone
 							.getConstantState()) {
@@ -483,8 +483,8 @@ public class DFLSupercupActivity extends Activity {
 								.getConstantState()) {
 					if (btnPenA4.getBackground().getConstantState() == drMiss
 							.getConstantState()) {
-						int p = Integer.parseInt(tvPenWOB.getText().toString());
-						tvPenWOB.setText(String.valueOf(p + 1).toString());
+						int p = Integer.parseInt(tvPenBVB.getText().toString());
+						tvPenBVB.setText(String.valueOf(p + 1).toString());
 						btnPenA4.setBackgroundResource(R.drawable.pen_button_goal);
 					} else if (btnPenA4.getBackground().getConstantState() == drNone
 							.getConstantState()) {
@@ -509,8 +509,8 @@ public class DFLSupercupActivity extends Activity {
 								.getConstantState()) {
 					if (btnPenA5.getBackground().getConstantState() == drMiss
 							.getConstantState()) {
-						int p = Integer.parseInt(tvPenWOB.getText().toString());
-						tvPenWOB.setText(String.valueOf(p + 1).toString());
+						int p = Integer.parseInt(tvPenBVB.getText().toString());
+						tvPenBVB.setText(String.valueOf(p + 1).toString());
 						btnPenA5.setBackgroundResource(R.drawable.pen_button_goal);
 					} else if (btnPenA5.getBackground().getConstantState() == drNone
 							.getConstantState()) {
@@ -640,7 +640,7 @@ public class DFLSupercupActivity extends Activity {
 		String mes = "";
 		if (!team.equals("")) {
 
-			mes = team + " - DFL-SUPERCUP-2014 SIEGER!!!";
+			mes = team + " - DFL-SUPERCUP-2016 SIEGER!!!";
 
 		} else {
 
@@ -702,14 +702,14 @@ public class DFLSupercupActivity extends Activity {
 	}
 
 	private void saveData() {
-		btnGoalWOB = (Button) this.findViewById(R.id.btnBVBGoal);
+		btnGoalBVB = (Button) this.findViewById(R.id.btnBVBGoal);
 		btnGoalFCB = (Button) this.findViewById(R.id.btnFCBGoal);
-		txtTeamWOB = (TextView) this.findViewById(R.id.txtBVB);
+		txtTeamBVB = (TextView) this.findViewById(R.id.txtBVB);
 		txtTeamFCB = (TextView) this.findViewById(R.id.txtFCB);
-		txtGoalWOB = (TextView) this.findViewById(R.id.txtBVBScorer);
+		txtGoalBVB = (TextView) this.findViewById(R.id.txtBVBScorer);
 		txtGoalFCB = (TextView) this.findViewById(R.id.txtFCBScorer);
 
-		tvPenWOB = (TextView) this.findViewById(R.id.tvPenBVB);
+		tvPenBVB = (TextView) this.findViewById(R.id.tvPenBVB);
 		tvPenFCB = (TextView) this.findViewById(R.id.tvPenFCB);
 		llPen = (LinearLayout) this.findViewById(R.id.llPen);
 		btnPenA1 = (Button) this.findViewById(R.id.btnPenA1);
@@ -726,16 +726,16 @@ public class DFLSupercupActivity extends Activity {
 		SharedPreferences pref = getPreferences(MODE_PRIVATE);
 		SharedPreferences.Editor editor = pref.edit();
 
-		String BtnTor1 = btnGoalWOB.getText().toString();
+		String BtnTor1 = btnGoalBVB.getText().toString();
 		editor.putString("btnGoal1", BtnTor1);
 		String BtnTor2 = btnGoalFCB.getText().toString();
 		editor.putString("btnGoal2", BtnTor2);
-		String TxtTor1 = txtGoalWOB.getText().toString();
+		String TxtTor1 = txtGoalBVB.getText().toString();
 		editor.putString("txtGoal1", TxtTor1);
 		String TxtTor2 = txtGoalFCB.getText().toString();
 		editor.putString("txtGoal2", TxtTor2);
 
-		String PenA = tvPenWOB.getText().toString();
+		String PenA = tvPenBVB.getText().toString();
 		editor.putString("tvPenA", PenA);
 		String PenB = tvPenFCB.getText().toString();
 		editor.putString("tvPenB", PenB);
@@ -760,20 +760,20 @@ public class DFLSupercupActivity extends Activity {
 
 	private void refresh() {
 		// TODO Auto-generated method stub
-		txtTeamWOB.setText("VFL WOLFSBURG");
+		txtTeamBVB.setText("BORUSSIA DORTMUND");
 		txtTeamFCB.setText("FC BAYERN MÜNCHEN");
-		txtGoalWOB.setText("");
+		txtGoalBVB.setText("");
 		txtGoalFCB.setText("");
-		btnGoalWOB.setText("0");
+		btnGoalBVB.setText("0");
 		btnGoalFCB.setText("0");
-		btnGoalWOB.setEnabled(false);
+		btnGoalBVB.setEnabled(false);
 		btnGoalFCB.setEnabled(false);
-		tvPenWOB.setText("0");
+		tvPenBVB.setText("0");
 		tvPenFCB.setText("0");
 		llPen.setVisibility(View.GONE);
 		refreshPen();
 		tvPenStage.setText("0");
-		imgFlagWOB.setImageResource(R.drawable.wob);
+		imgFlagBVB.setImageResource(R.drawable.bvb);
 		imgFlagFCB.setImageResource(R.drawable.fcb);
 	}
 
@@ -821,11 +821,11 @@ public class DFLSupercupActivity extends Activity {
 			refresh();
 		} else if (id == R.id.dflfulltime) {
 
-			int g1 = Integer.parseInt(btnGoalWOB.getText().toString());
+			int g1 = Integer.parseInt(btnGoalBVB.getText().toString());
 			int g2 = Integer.parseInt(btnGoalFCB.getText().toString());
 
 			if (g1 > g2) {
-				resultNoti("VFL WOLFSBURG");
+				resultNoti("BORUSSIA DORTMUND");
 				addToDB(g1, g2, 0, 0);
 			} else if (g1 < g2) {
 				resultNoti("FC BAYERN MÜNCHEN");
@@ -842,12 +842,12 @@ public class DFLSupercupActivity extends Activity {
 
 	private void handlePSO(int g1, int g2) {
 		llPen.setVisibility(View.VISIBLE);
-		int pA = Integer.parseInt(tvPenWOB.getText().toString());
+		int pA = Integer.parseInt(tvPenBVB.getText().toString());
 		int pB = Integer.parseInt(tvPenFCB.getText().toString());
 		int stage = Integer.parseInt(tvPenStage.getText().toString());
 		if (stage == 0) {
 			if (pA > pB && (remainingShot("B") < pA - pB)) {
-				resultNoti(txtTeamWOB.getText().toString());
+				resultNoti(txtTeamBVB.getText().toString());
 				addToDB(g1, g2, pA, pB);
 			} else if (pA < pB && (remainingShot("A") < pB - pA)) {
 				resultNoti(txtTeamFCB.getText().toString());
@@ -862,7 +862,7 @@ public class DFLSupercupActivity extends Activity {
 			}
 		} else {
 			if (pA > pB && (remainingShot("A") == remainingShot("B"))) {
-				resultNoti("VFL WOLFSBURG");
+				resultNoti("BORUSSIA DORTMUND");
 				addToDB(g1, g2, pA, pB);
 			} else if (pA < pB && (remainingShot("A") == remainingShot("B"))) {
 				resultNoti("FC BAYERN MÜNCHEN");
@@ -895,12 +895,12 @@ public class DFLSupercupActivity extends Activity {
 
 	private void addToDB(int g1, int g2, int pA, int pB) {
 		// TODO Auto-generated method stub
-		String scorerListA = txtGoalWOB.getText().toString();
+		String scorerListA = txtGoalBVB.getText().toString();
 		String scorerListB = txtGoalFCB.getText().toString();
 
 		scorerListA.replace("\n", " ");
 		scorerListB.replace("\n", " ");
-		mDB.addMatch("DFL-Supercup 2015", "", "VfL Wolfsburg",
+		mDB.addMatch("DFL-Supercup 2016", "", "BORUSSIA DORTMUND",
 				"FC Bayern München", g1, g2, scorerListA, scorerListB, pA, pB);
 	}
 

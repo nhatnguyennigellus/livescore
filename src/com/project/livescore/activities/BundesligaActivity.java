@@ -34,6 +34,8 @@ public class BundesligaActivity extends Activity {
 	static DBAdapter mDB;
 	MenuItem miDB;
 
+	MediaPlayer mpGoal;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,6 +62,7 @@ public class BundesligaActivity extends Activity {
 		txtTeam1.setText(pref.getString("TeamBL1", null));
 		txtTeam2.setText(pref.getString("TeamBL2", null));
 
+		mpGoal = MediaPlayer.create(this, R.raw.torhymne);
 		mp = MediaPlayer.create(this, R.raw.bundesligaintro);
 		mp.start();
 		Resources res = getResources();
@@ -207,7 +210,9 @@ public class BundesligaActivity extends Activity {
 		btnTor1.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				if (!txtTeam2.getText().equals("FC Bayern München")) {
+					mpGoal.start();
+				}
 				dlgGoal.setContentView(R.layout.goalalert);
 				dlgGoal.setTitle("TOOORRRR!!!!");
 
@@ -232,7 +237,7 @@ public class BundesligaActivity extends Activity {
 
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
+						mpGoal.pause();
 						dlgGoal.cancel();
 					}
 				});
@@ -243,8 +248,6 @@ public class BundesligaActivity extends Activity {
 					public void onClick(View v) {
 						if (txtMin.getText().toString().equals("")
 								|| txtScorer.getText().toString().equals("")) {
-							// TODO Auto-generated method stub
-
 							errNoti("Bitte die Minute und den Torschützer eingeben!");
 						} else {
 							int goal = Integer.parseInt(btnTor1.getText()
@@ -284,7 +287,9 @@ public class BundesligaActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				if (!txtTeam1.getText().equals("FC Bayern München")) {
+					mpGoal.start();
+				}
 				dlgGoal.setContentView(R.layout.goalalert);
 				dlgGoal.setTitle("TOOORRRR!!!!");
 
@@ -309,7 +314,7 @@ public class BundesligaActivity extends Activity {
 
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
+						mpGoal.pause();
 						dlgGoal.cancel();
 					}
 				});
@@ -320,8 +325,6 @@ public class BundesligaActivity extends Activity {
 					public void onClick(View v) {
 						if (txtMin.getText().toString().equals("")
 								|| txtScorer.getText().toString().equals("")) {
-							// TODO Auto-generated method stub
-
 							errNoti("Bitte die Minute und den Torschützer eingeben!");
 						} else {
 							int goal = Integer.parseInt(btnTor2.getText()

@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="DFL-SUPERCUP 2015"
+        android:text="DFL-SUPERCUP 2016"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#ffffff"
         android:textSize="30dp"
@@ -28,9 +28,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="01:30 02.08.2015 - Volkswagen-Arena"
+        android:text="01:30 15.08.2015 GMT+07 - Signal-Iduna-Park"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#00ff00"
+        android:textColor="#FFff00"
         android:textSize="25dp" />
 
     <LinearLayout
@@ -43,7 +43,7 @@
             android:id="@+id/txtBVB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="VFL WOLFSBURG"
+            android:text="BORUSSIA DORTMUND"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
@@ -57,7 +57,7 @@
             android:id="@+id/imgBVB"
             android:layout_width="75dp"
             android:layout_height="40dp"
-            android:src="@drawable/wob" />
+            android:src="@drawable/bvb" />
 
         <Button
             android:id="@+id/btnBVBGoal"

@@ -15,6 +15,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.CollapsibleActionView;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ public class DFBPokalActivity extends Activity {
 	TextView txtTeam1, txtTeam2, txtTor1, txtTor2, tvPenA, tvPenB, tvPenStage;
 	LinearLayout llPen;
 	MenuItem miDB;
+	MediaPlayer mpGoal;
 
 	int idGoal = 0;
 	int idMiss = 0;
@@ -85,6 +87,8 @@ public class DFBPokalActivity extends Activity {
 		btnPenB4 = (Button) this.findViewById(R.id.btnDFBPenB4);
 		btnPenB5 = (Button) this.findViewById(R.id.btnDFBPenB5);
 		tvPenStage = (TextView) this.findViewById(R.id.tvPenStage);
+		
+		mpGoal = MediaPlayer.create(this, R.raw.torhymne);
 
 		SharedPreferences pref = getPreferences(MODE_PRIVATE);
 		btnRunde.setText(pref.getString("btnRunde", "Runde"));
@@ -258,7 +262,9 @@ public class DFBPokalActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+				if (txtTeam1.getText().equals("FC Bayern München")) {
+					mpGoal.start();
+				} 
 				dlgGoal.setContentView(R.layout.goalalert);
 				dlgGoal.setTitle("TOOORRRR!!!!");
 
@@ -283,7 +289,7 @@ public class DFBPokalActivity extends Activity {
 
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
+						mpGoal.pause();
 						dlgGoal.cancel();
 					}
 				});
@@ -334,7 +340,9 @@ public class DFBPokalActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				if (!txtTeam1.getText().equals("FC Bayern München")) {
+					mpGoal.start();
+				} 
 				dlgGoal.setContentView(R.layout.goalalert);
 				dlgGoal.setTitle("TOOORRRR!!!!");
 
@@ -359,7 +367,7 @@ public class DFBPokalActivity extends Activity {
 
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
+						mpGoal.pause();
 						dlgGoal.cancel();
 					}
 				});
@@ -410,7 +418,6 @@ public class DFBPokalActivity extends Activity {
 
 			@Override
 			public boolean onLongClick(View v) {
-				// TODO Auto-generated method stub
 				if (!txtTor1.getText().toString().equals("")) {
 					dlgEdit.setContentView(R.layout.edit);
 					final EditText txtEdit = (EditText) dlgEdit
@@ -452,7 +459,9 @@ public class DFBPokalActivity extends Activity {
 
 			@Override
 			public boolean onLongClick(View v) {
-				// TODO Auto-generated method stub
+				if (!txtTeam2.getText().equals("FC Bayern München")) {
+					mpGoal.start();
+				}
 				if (!txtTor2.getText().toString().equals("")) {
 					dlgEdit.setContentView(R.layout.edit);
 					final EditText txtEdit = (EditText) dlgEdit

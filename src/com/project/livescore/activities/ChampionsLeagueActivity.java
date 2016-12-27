@@ -40,6 +40,7 @@ public class ChampionsLeagueActivity extends Activity {
 			tvPenStage, txtAgg1, txtAgg2;
 	LinearLayout llPen, llCLAgg;
 	MediaPlayer mp;
+	MediaPlayer mpGoal;
 	ImageView imgTrophy;
 	MenuItem miDB;
 	
@@ -93,6 +94,7 @@ public class ChampionsLeagueActivity extends Activity {
 		btnPenB5 = (Button) this.findViewById(R.id.btnPenB5);
 		tvPenStage = (TextView) this.findViewById(R.id.tvPenStage);
 
+		mpGoal = MediaPlayer.create(this, R.raw.torhymne);
 		mp = MediaPlayer.create(this, R.raw.clanthem);
 		mp.start();
 
@@ -344,7 +346,9 @@ public class ChampionsLeagueActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+				if (!txtTeam2.getText().toString().equalsIgnoreCase("FC Bayern München")) {
+					mpGoal.start();
+				} 
 				dlgGoal.setContentView(R.layout.goalalert);
 				dlgGoal.setTitle("GOOAAAALLL!!!!");
 
@@ -380,7 +384,7 @@ public class ChampionsLeagueActivity extends Activity {
 
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
+						mpGoal.pause();
 						dlgGoal.cancel();
 					}
 				});
@@ -439,7 +443,9 @@ public class ChampionsLeagueActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				if (!txtTeam1.getText().toString().equalsIgnoreCase("FC Bayern München")) {
+					mpGoal.start();
+				} 
 				dlgGoal.setContentView(R.layout.goalalert);
 				dlgGoal.setTitle("GOOAAAALLL!!!!");
 
