@@ -210,7 +210,8 @@ public class BundesligaActivity extends Activity {
 		btnTor1.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (!txtTeam2.getText().equals("FC Bayern München")) {
+				if (!txtTeam2.getText().toString()
+						.equalsIgnoreCase("FC Bayern München")) {
 					mpGoal.start();
 				}
 				dlgGoal.setContentView(R.layout.goalalert);
@@ -287,7 +288,8 @@ public class BundesligaActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				if (!txtTeam1.getText().equals("FC Bayern München")) {
+				if (!txtTeam1.getText().toString()
+						.equalsIgnoreCase("FC Bayern München")) {
 					mpGoal.start();
 				}
 				dlgGoal.setContentView(R.layout.goalalert);
@@ -514,7 +516,6 @@ public class BundesligaActivity extends Activity {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					onPause();
 					System.exit(0);
 				}
@@ -524,7 +525,6 @@ public class BundesligaActivity extends Activity {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					dialog.cancel();
 				}
 			});

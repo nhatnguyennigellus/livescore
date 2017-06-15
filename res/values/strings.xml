@@ -24,7 +24,6 @@
         <item>Recife</item>
         <item>Salvador</item>
     </string-array>
-
     <string-array name="euro2016_venue">
         <item>Bordeaux</item>
         <item>Lens</item>
@@ -37,8 +36,29 @@
         <item>Saint-Étienne</item>
         <item>Toulouse</item>
     </string-array>
-    
+    <string-array name="confedcup_venue">
+        <item>Moscow</item>
+        <item>Kazan</item>
+        <item>Saint Petersburg</item>
+        <item>Sochi</item>
+    </string-array>
+    <string-array name="wc2018_venue">
+        <item>Ekaterinburg</item>
+        <item>Kaliningrad</item>
+        <item>Moscow</item>
+        <item>Nizhny Novgorod</item>
+        <item>Rostov-on-Don</item>
+        <item>Kazan</item>
+        <item>Saint Petersburg</item>
+        <item>Sochi</item>
+        <item>Samara</item>
+        <item>Saransk</item>
+        <item>Volgograd</item>
+    </string-array>
+
     <string name="title_activity_dflsupercup">DFL Supercup</string>
     <string name="title_activity_euro2016">UEFA EURO 2016 - France</string>
+    <string name="title_activity_confedcup2017">FIFA Confederations Cup - Russia 2017</string>
+    <string name="title_activity_confed_cup2017">FIFA Confederations Cup - Russia 2017</string>
 
 </resources>

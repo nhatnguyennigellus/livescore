@@ -59,7 +59,7 @@
             android:layout_width="175dp"
             android:layout_height="120dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/euro2016_logo"
+            android:src="@drawable/confedcup_logo"
             android:visibility="visible" />
 
     </LinearLayout>

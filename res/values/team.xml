@@ -2,6 +2,7 @@
 <resources>
     <string-array name="bundesliga">
         <item>FC BAYERN MÜNCHEN</item>
+		<item>RB LEIPZIG</item>
 		<item>BORUSSIA DORTMUND</item>
 		<item>BAYER 04 LEVERKUSEN</item>
 		<item>BORUSSIA MÖNCHENGLADBACH</item>
@@ -10,15 +11,14 @@
 		<item>FC SCHALKE 04</item>
 		<item>1. FC KÖLN</item>
 		<item>VFL WOLFSBURG</item>
-		<item>FC INGOLSTADT 04</item>
+		<item>VFB STUTTGART</item>
 		<item>FC AUGSBURG</item>
 		<item>HAMBURGER SV</item>
-		<item>SV DARMSTADT 98</item>
+		<item>HANNOVER 96</item>
 		<item>TSG 1899 HOFFENHEIM</item>
 		<item>EINTRACHT FRANKFURT</item>
 		<item>SV WERDER BREMEN</item>
 		<item>SC FREIBURG</item>
-		<item>RB LEIPZIG</item>
     </string-array>
     <string-array name="championsleague">
         <item>REAL MADRID CF</item>
@@ -179,5 +179,15 @@
         <item>ICELAND</item>
         <item>AUSTRIA</item>
         <item>HUNGARY</item>
+    </string-array>
+    <string-array name="confedcup">
+        <item>RUSSIA</item>
+        <item>NEW ZEALAND</item>
+        <item>PORTUGAL</item>
+        <item>MEXICO</item>
+        <item>CAMEROON</item>
+        <item>CHILE</item>
+        <item>AUSTRALIA</item>
+        <item>GERMANY</item>
     </string-array>
 </resources>

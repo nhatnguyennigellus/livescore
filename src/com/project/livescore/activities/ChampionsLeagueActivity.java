@@ -481,7 +481,6 @@ public class ChampionsLeagueActivity extends Activity {
 
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
 						dlgGoal.cancel();
 					}
 				});
@@ -492,8 +491,6 @@ public class ChampionsLeagueActivity extends Activity {
 					public void onClick(View v) {
 						if (txtMin.getText().toString().equals("")
 								|| txtScorer.getText().toString().equals("")) {
-							// TODO Auto-generated method stub
-
 							errNoti("Please enter goalscorer and minute!");
 						} else {
 							int goal = Integer.parseInt(btnGoal2.getText()
@@ -540,7 +537,6 @@ public class ChampionsLeagueActivity extends Activity {
 
 			@Override
 			public boolean onLongClick(View v) {
-				// TODO Auto-generated method stub
 				if (!txtGoal1.getText().toString().equals("")) {
 					dlgEdit.setContentView(R.layout.edit);
 					final EditText txtEdit = (EditText) dlgEdit
@@ -556,7 +552,6 @@ public class ChampionsLeagueActivity extends Activity {
 
 						@Override
 						public void onClick(View v) {
-							// TODO Auto-generated method stub
 							txtGoal1.setText(txtEdit.getText().toString());
 							dlgEdit.cancel();
 						}
@@ -567,7 +562,6 @@ public class ChampionsLeagueActivity extends Activity {
 
 								@Override
 								public void onClick(View v) {
-									// TODO Auto-generated method stub
 									dlgEdit.cancel();
 								}
 							});
@@ -582,7 +576,6 @@ public class ChampionsLeagueActivity extends Activity {
 
 			@Override
 			public boolean onLongClick(View v) {
-				// TODO Auto-generated method stub
 				if (!txtGoal2.getText().toString().equals("")) {
 					dlgEdit.setContentView(R.layout.edit);
 					final EditText txtEdit = (EditText) dlgEdit
@@ -598,7 +591,6 @@ public class ChampionsLeagueActivity extends Activity {
 
 						@Override
 						public void onClick(View v) {
-							// TODO Auto-generated method stub
 							txtGoal2.setText(txtEdit.getText().toString());
 							dlgEdit.cancel();
 						}
@@ -609,7 +601,6 @@ public class ChampionsLeagueActivity extends Activity {
 
 								@Override
 								public void onClick(View v) {
-									// TODO Auto-generated method stub
 									dlgEdit.cancel();
 								}
 							});
@@ -624,8 +615,6 @@ public class ChampionsLeagueActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-
 				if (btnPenA1.getBackground().getConstantState() == drMiss
 						.getConstantState()) {
 					int p = Integer.parseInt(tvPenA.getText().toString());
@@ -896,7 +885,7 @@ public class ChampionsLeagueActivity extends Activity {
 		editor.putString("tvPenB", PenB);
 		int llPenVisible = llPen.getVisibility();
 		editor.putInt("llPenVisible", llPenVisible);
-		int llAggVisible = llPen.getVisibility();
+		int llAggVisible = llCLAgg.getVisibility();
 		editor.putInt("llAggVisible", llAggVisible);
 
 		editor.putInt("PenA1Color", getButtonResId(btnPenA1));
@@ -915,8 +904,6 @@ public class ChampionsLeagueActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.champions_league, menu);
 		miDB = menu.findItem(R.id.clsavedb);
 		return true;
@@ -924,9 +911,6 @@ public class ChampionsLeagueActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.clexit) {
 			final AlertDialog.Builder dlgExit = new AlertDialog.Builder(this);
@@ -938,7 +922,6 @@ public class ChampionsLeagueActivity extends Activity {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					onPause();
 					System.exit(0);
 				}
@@ -948,7 +931,6 @@ public class ChampionsLeagueActivity extends Activity {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					dialog.cancel();
 				}
 			});
@@ -1140,7 +1122,6 @@ public class ChampionsLeagueActivity extends Activity {
 	}
 
 	private void refresh() {
-		// TODO Auto-generated method stub
 		txtTeam1.setText("");
 		txtTeam2.setText("");
 		txtGoal1.setText("");

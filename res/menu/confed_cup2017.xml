@@ -1,0 +1,27 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.project.livescore1415.ConfedCup2017Activity" >
+
+    <item
+        android:id="@+id/confedrefresh"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="Refresh"/>
+	<item
+        android:id="@+id/confedfulltime"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="Full-time!"/>
+	<item
+        android:id="@+id/confedsavedb"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:visible="false"
+        android:title="Save to database!"/>
+	<item
+        android:id="@+id/confedexit"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="Exit"/>
+
+</menu>

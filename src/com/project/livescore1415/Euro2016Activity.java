@@ -879,7 +879,6 @@ public class Euro2016Activity extends Activity {
 		});
 
 		btnPenB4.setOnClickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View arg0) {
 				if (btnPenB1.getBackground().getConstantState() != drNone
@@ -1063,9 +1062,6 @@ public class Euro2016Activity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.euroexit) {
 			final AlertDialog.Builder dlgExit = new AlertDialog.Builder(this);

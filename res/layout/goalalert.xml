@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:text="TOORRRR für  "
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="30dp" />
+            android:textSize="25dp" />
 
         <TextView
             android:id="@+id/tvInThe"
@@ -25,15 +25,15 @@
             android:layout_height="wrap_content"
             android:text="in der "
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="30dp" />
+            android:textSize="25dp" />
 
         <EditText
             android:id="@+id/txtMinute"
-            android:layout_width="128dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="right|center_vertical"
-            android:textSize="30dp" >
+            android:textSize="25dp" >
 
             <requestFocus />
         </EditText>
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:text=". Minute"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="30dp" />
+            android:textSize="25dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:text="durch den Torschützer "
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="30dp" />
+            android:textSize="25dp" />
 
         <EditText
             android:id="@+id/txtScorerName"

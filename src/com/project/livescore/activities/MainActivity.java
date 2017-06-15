@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.project.livescore.data.DBAdapter;
+import com.project.livescore1415.ConfedCup2017Activity;
 import com.project.livescore1415.Euro2016Activity;
 import com.project.livescore1415.R;
 
@@ -80,7 +81,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent news = new Intent(MainActivity.this,
-						Euro2016Activity.class);
+						ConfedCup2017Activity.class);
 				onStop();
 				startActivity(news);
 			}

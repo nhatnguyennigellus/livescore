@@ -640,7 +640,7 @@ public class DFLSupercupActivity extends Activity {
 		String mes = "";
 		if (!team.equals("")) {
 
-			mes = team + " - DFL-SUPERCUP-2016 SIEGER!!!";
+			mes = team + " - DFL-SUPERCUP-2017 SIEGER!!!";
 
 		} else {
 
@@ -900,8 +900,8 @@ public class DFLSupercupActivity extends Activity {
 
 		scorerListA.replace("\n", " ");
 		scorerListB.replace("\n", " ");
-		mDB.addMatch("DFL-Supercup 2016", "", "BORUSSIA DORTMUND",
-				"FC Bayern München", g1, g2, scorerListA, scorerListB, pA, pB);
+		mDB.addMatch("DFL-Supercup 2017", "", "BORUSSIA DORTMUND",
+				"FC BAYERN MÜNCHEN", g1, g2, scorerListA, scorerListB, pA, pB);
 	}
 
 	/**

@@ -262,7 +262,8 @@ public class DFBPokalActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				if (txtTeam1.getText().equals("FC Bayern München")) {
+				if (txtTeam1.getText().toString()
+						.equalsIgnoreCase("FC Bayern München")) {
 					mpGoal.start();
 				} 
 				dlgGoal.setContentView(R.layout.goalalert);
@@ -459,7 +460,8 @@ public class DFBPokalActivity extends Activity {
 
 			@Override
 			public boolean onLongClick(View v) {
-				if (!txtTeam2.getText().equals("FC Bayern München")) {
+				if (!txtTeam2.getText().toString()
+						.equalsIgnoreCase("FC Bayern München")) {
 					mpGoal.start();
 				}
 				if (!txtTor2.getText().toString().equals("")) {
@@ -927,7 +929,6 @@ public class DFBPokalActivity extends Activity {
 
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
 		SharedPreferences pref = getPreferences(MODE_PRIVATE);
 		SharedPreferences.Editor editor = pref.edit();

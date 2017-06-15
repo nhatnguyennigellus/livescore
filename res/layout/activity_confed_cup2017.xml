@@ -1,0 +1,359 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/confedbg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.project.livescore1415.ConfedCup2017Activity" >
+
+    <TextView
+        android:id="@+id/txtConfed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_activity_confed_cup2017"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#ffffff"
+        android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/txtConfedDatetime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#ffffff"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/btnConfedRound"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="278dp"
+        android:layout_height="wrap_content"
+        android:background="#D50000"
+        android:text="Round"
+        android:textColor="#ffffff"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/scoreboard2"
+        android:gravity="center_horizontal|center_vertical" >
+
+        <TextView
+            android:id="@+id/txtConfedTeamA"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.15"
+            android:gravity="right"
+            android:paddingRight="15dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#fff" />
+
+        <ImageView
+            android:id="@+id/imgConfedTeamA"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:paddingRight="5dp"
+            android:src="@drawable/confedcup_logo" />
+
+        <Button
+            android:id="@+id/btnConfedGoalA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#fff"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#00479D"
+            android:textSize="35sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnConfedGoalB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#fff"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#00479D"
+            android:textSize="35sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/imgConfedTeamB"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:paddingLeft="5dp"
+            android:src="@drawable/confedcup_logo" />
+
+        <TextView
+            android:id="@+id/txtConfedTeamB"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.14"
+            android:gravity="left"
+            android:paddingLeft="15dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#fff" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llConfedScorer"
+        android:layout_width="1218dp"
+        android:layout_height="wrap_content"
+        android:background="#FFB4B4"
+        android:gravity="center_horizontal"
+        android:padding="10dp" >
+
+        <TextView
+            android:id="@+id/txtConfedScorerA"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:paddingRight="20dp"
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#052257" />
+
+        <TextView
+            android:id="@+id/txtConfedScorerB"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:paddingLeft="20dp"
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#052257" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llConfedPen"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:visibility="gone" >
+
+			<Button
+            android:id="@+id/btnPenCfcA1"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pen_button_normal"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/TextView03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/btnPenCfcA2"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pen_button_normal"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/TextView02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/btnPenCfcA3"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pen_button_normal"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/TextView04"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/btnPenCfcA4"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pen_button_normal"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/TextView05"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/btnPenCfcA5"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pen_button_normal"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tvConfedPenA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/TextView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text=":"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/tvConfedPenB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/btnPenCfcB1"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pen_button_normal"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/TextView06"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/btnPenCfcB2"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pen_button_normal" />
+
+        <TextView
+            android:id="@+id/TextView07"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/btnPenCfcB3"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pen_button_normal"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/TextView08"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/btnPenCfcB4"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pen_button_normal"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/TextView09"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/tvConfedPenStage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnPenCfcB5"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pen_button_normal"
+            android:visibility="visible" />
+        
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imgConfedLogo"
+        android:layout_width="324dp"
+        android:layout_height="183dp"
+        android:layout_gravity="center"
+        android:padding="20dp"
+        android:src="@drawable/confedcup_logo" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom|right" >
+
+        <DigitalClock
+            android:id="@+id/clockConfed"
+            android:layout_width="129dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="DigitalClock"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

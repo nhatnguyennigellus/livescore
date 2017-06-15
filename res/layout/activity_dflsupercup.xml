@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="DFL-SUPERCUP 2016"
+        android:text="DFL-SUPERCUP 2017"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#ffffff"
         android:textSize="30dp"
@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="01:30 15.08.2015 GMT+07 - Signal-Iduna-Park"
+        android:text="01:30 06.08.2017 GMT+07 - Signal-Iduna-Park"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#FFff00"
         android:textSize="25dp" />
