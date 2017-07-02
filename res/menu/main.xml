@@ -3,6 +3,11 @@
     tools:context="com.project.livescore1415.MainActivity" >
 
     <item
+        android:id="@+id/admin"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="System Admin"/>
+    <item
         android:id="@+id/matches"
         android:orderInCategory="100"
         android:showAsAction="never"

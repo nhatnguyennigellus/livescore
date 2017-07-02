@@ -1,6 +1,9 @@
 package com.project.livescore.activities;
 
+import java.util.ArrayList;
+
 import com.project.livescore.data.DBAdapter;
+import com.project.livescore.data.Team;
 import com.project.livescore1415.R;
 
 import android.app.Activity;
@@ -11,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -65,10 +69,9 @@ public class BundesligaActivity extends Activity {
 		mpGoal = MediaPlayer.create(this, R.raw.torhymne);
 		mp = MediaPlayer.create(this, R.raw.bundesligaintro);
 		mp.start();
-		Resources res = getResources();
+		final Resources res = getResources();
 
 		final CharSequence Spieltag[] = res.getStringArray(R.array.spieltag);
-		final CharSequence Team[] = res.getStringArray(R.array.bundesliga);
 
 		final Dialog dlgRnd = new Dialog(this);
 		final Dialog dlgGoal = new Dialog(this);
@@ -88,11 +91,11 @@ public class BundesligaActivity extends Activity {
 			}
 		});
 
+		
 		btnSpieltag.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				dlgRnd.setContentView(R.layout.spieltag);
 				dlgRnd.setTitle("Spielinfo");
 
@@ -110,13 +113,11 @@ public class BundesligaActivity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						dlgSpl.setItems(Spieltag, new OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
 								btnSpl.setText(Spieltag[which] + ". Spieltag");
 								dialog.cancel();
 							}
@@ -125,6 +126,19 @@ public class BundesligaActivity extends Activity {
 					}
 				});
 
+				Cursor mCursor;
+				final ArrayList<String> lstTeam = new ArrayList<String>();
+				mCursor = mDB.getTeamByLeague(res.getString(R.string.bundesliga));
+				mCursor.moveToFirst();
+				while (!mCursor.isAfterLast()) {
+					Team team = new Team();
+					team.setName(mCursor.getString(1));
+					
+					lstTeam.add(team.getName());
+					mCursor.moveToNext();
+				}
+				mCursor.close();
+				final String Team[] = lstTeam.toArray(new String[0]);
 				btnTeam1.setOnClickListener(new View.OnClickListener() {
 
 					@Override
@@ -247,9 +261,20 @@ public class BundesligaActivity extends Activity {
 
 					@Override
 					public void onClick(View v) {
+						int min = 0;
+						if(!txtMin.getText().toString().isEmpty()
+								&& !txtMin.getText().toString().startsWith("45+")
+								&& !txtMin.getText().toString().startsWith("90+")
+								&& !txtMin.getText().toString().startsWith("105+")
+								&& !txtMin.getText().toString().startsWith("120+")) {
+							min = Integer.parseInt(txtMin.getText().toString());
+						}
 						if (txtMin.getText().toString().equals("")
 								|| txtScorer.getText().toString().equals("")) {
 							errNoti("Bitte die Minute und den Torschützer eingeben!");
+						}
+						else if (min < 0 || min > 120) {
+							errNoti("Ungültige Nummer!");
 						} else {
 							int goal = Integer.parseInt(btnTor1.getText()
 									.toString());
@@ -257,10 +282,10 @@ public class BundesligaActivity extends Activity {
 							String mes = txtScorer.getText() + " "
 									+ txtMin.getText() + "'";
 							if (chkOG.isChecked()) {
-								mes += "(E.t.)";
+								mes += "(Et)";
 							}
 							if (chkPen.isChecked()) {
-								mes += "(E.m)";
+								mes += "(Elf.)";
 							}
 							if (txtTor1.getText().toString()
 									.contains(txtScorer.getText())) {
@@ -325,9 +350,20 @@ public class BundesligaActivity extends Activity {
 
 					@Override
 					public void onClick(View v) {
+						int min = 0;
+						if(!txtMin.getText().toString().isEmpty()
+								&& !txtMin.getText().toString().startsWith("45+")
+								&& !txtMin.getText().toString().startsWith("90+")
+								&& !txtMin.getText().toString().startsWith("105+")
+								&& !txtMin.getText().toString().startsWith("120+")) {
+							min = Integer.parseInt(txtMin.getText().toString());
+						}
 						if (txtMin.getText().toString().equals("")
 								|| txtScorer.getText().toString().equals("")) {
 							errNoti("Bitte die Minute und den Torschützer eingeben!");
+						}
+						else if (min < 0 || min > 120) {
+							errNoti("Ungültige Nummer!");
 						} else {
 							int goal = Integer.parseInt(btnTor2.getText()
 									.toString());
@@ -407,7 +443,6 @@ public class BundesligaActivity extends Activity {
 
 			@Override
 			public boolean onLongClick(View v) {
-				// TODO Auto-generated method stub
 				if (!txtTor2.getText().toString().equals("")) {
 					dlgEdit.setContentView(R.layout.edit);
 					final EditText txtEdit = (EditText) dlgEdit
@@ -423,7 +458,6 @@ public class BundesligaActivity extends Activity {
 
 						@Override
 						public void onClick(View v) {
-							// TODO Auto-generated method stub
 							txtTor2.setText(txtEdit.getText().toString());
 							dlgEdit.cancel();
 						}
@@ -434,7 +468,6 @@ public class BundesligaActivity extends Activity {
 
 								@Override
 								public void onClick(View v) {
-									// TODO Auto-generated method stub
 									dlgEdit.cancel();
 								}
 							});

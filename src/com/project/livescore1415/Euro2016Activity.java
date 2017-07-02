@@ -223,7 +223,6 @@ public class Euro2016Activity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 
 				dlgRnd.setTitle("Match Info");
 
@@ -247,13 +246,11 @@ public class Euro2016Activity extends Activity {
 
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
 						dlgSpl.setItems(Round, new OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
 								btnSpl.setText(Round[which]);
 
 								dialog.cancel();
@@ -280,13 +277,11 @@ public class Euro2016Activity extends Activity {
 
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
 						dlgGroup.setItems(Group, new OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
 								btnGrp.setText("Group " + Group[which]);
 								dialog.cancel();
 							}
@@ -300,13 +295,11 @@ public class Euro2016Activity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						dlgVenue.setItems(Venue, new OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
 								btnVenue.setText(Venue[which]);
 								dialog.cancel();
 							}
@@ -321,7 +314,6 @@ public class Euro2016Activity extends Activity {
 					@SuppressWarnings("deprecation")
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						showDialog(DATE_PICKER_DIALOG);
 
 					}
@@ -333,7 +325,6 @@ public class Euro2016Activity extends Activity {
 					@SuppressWarnings("deprecation")
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						showDialog(TIME_PICKER_DIALOG);
 
 					}
@@ -344,15 +335,12 @@ public class Euro2016Activity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						dlgTeam.setItems(Team, new OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
 								if (!Team[which].equals(btnTeam2.getText())) {
-									// TODO Auto-generated method stub
 									btnTeam1.setText(Team[which]);
 									dialog.cancel();
 								} else {
@@ -368,15 +356,12 @@ public class Euro2016Activity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						dlgTeam.setItems(Team, new OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
 								if (!Team[which].equals(btnTeam1.getText())) {
-									// TODO Auto-generated method stub
 									btnTeam2.setText(Team[which]);
 									dialog.cancel();
 								} else {
@@ -392,7 +377,6 @@ public class Euro2016Activity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						dlgRnd.cancel();
 					}
 				});
@@ -406,7 +390,6 @@ public class Euro2016Activity extends Activity {
 										.equals("Team A")
 								|| btnTeam2.getText().toString()
 										.equals("Team B")) {
-							// TODO Auto-generated method stub
 							showNoti("Please select round and teams!");
 						} else if (btnGrp.getVisibility() == View.VISIBLE
 								&& btnGrp.getText().toString().equals("Group")) {
@@ -494,11 +477,21 @@ public class Euro2016Activity extends Activity {
 
 					@Override
 					public void onClick(View v) {
+						int min = 0;
+						if(!txtMin.getText().toString().isEmpty()
+								&& !txtMin.getText().toString().startsWith("45+")
+								&& !txtMin.getText().toString().startsWith("90+")
+								&& !txtMin.getText().toString().startsWith("105+")
+								&& !txtMin.getText().toString().startsWith("120+")) {
+							min = Integer.parseInt(txtMin.getText().toString());
+						}
+						
 						if (txtMin.getText().toString().equals("")
 								|| txtScorer.getText().toString().equals("")) {
-							// TODO Auto-generated method stub
-
 							showNoti("Please enter goalscorer and minute!");
+						} 
+						else if (min < 0 || min > 120) {
+							showNoti("Invalid minute number!");
 						} else {
 							int goal = Integer.parseInt(btnGoalA.getText()
 									.toString());
@@ -586,9 +579,21 @@ public class Euro2016Activity extends Activity {
 
 					@Override
 					public void onClick(View v) {
+						int min = 0;
+						if(!txtMin.getText().toString().isEmpty()
+								&& !txtMin.getText().toString().startsWith("45+")
+								&& !txtMin.getText().toString().startsWith("90+")
+								&& !txtMin.getText().toString().startsWith("105+")
+								&& !txtMin.getText().toString().startsWith("120+")) {
+							min = Integer.parseInt(txtMin.getText().toString());
+						}
+						
 						if (txtMin.getText().toString().equals("")
 								|| txtScorer.getText().toString().equals("")) {
 							showNoti("Please enter goalscorer and minute!");
+						} 
+						else if (min < 0 || min > 120) {
+							showNoti("Invalid minute number!");
 						} else {
 							int goal = Integer.parseInt(btnGoalB.getText()
 									.toString());

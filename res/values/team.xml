@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="bundesliga">
+    <!-- <string-array name="bundesliga">
         <item>FC BAYERN MÜNCHEN</item>
 		<item>RB LEIPZIG</item>
 		<item>BORUSSIA DORTMUND</item>
@@ -119,7 +119,7 @@
 		<item>SG Wattenscheid 09</item>
 		<item>Sportfreunde Lotte</item>
 		<item>FV Ravensburg</item>
-    </string-array>
+    </string-array> -->
     <string-array name="worldcup">
         <item>BRAZIL</item>
         <item>CROATIA</item>
@@ -180,7 +180,7 @@
         <item>AUSTRIA</item>
         <item>HUNGARY</item>
     </string-array>
-    <string-array name="confedcup">
+   <!--  <string-array name="confedcup">
         <item>RUSSIA</item>
         <item>NEW ZEALAND</item>
         <item>PORTUGAL</item>
@@ -189,5 +189,5 @@
         <item>CHILE</item>
         <item>AUSTRALIA</item>
         <item>GERMANY</item>
-    </string-array>
+    </string-array> -->
 </resources>

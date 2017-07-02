@@ -1,19 +1,20 @@
 package com.project.livescore.activities;
 
+import java.util.ArrayList;
+
 import com.project.livescore.data.DBAdapter;
+import com.project.livescore.data.Team;
 import com.project.livescore1415.R;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -29,21 +30,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.os.Build;
 
 public class ChampionsLeagueActivity extends Activity {
 
 	Button btnRound, btnGoal1, btnGoal2;
-	Button btnPenA1, btnPenA2, btnPenA3, btnPenA4, btnPenA5, btnPenB1,
-			btnPenB2, btnPenB3, btnPenB4, btnPenB5;
-	TextView txtTeam1, txtTeam2, txtGoal1, txtGoal2, tvPenA, tvPenB,
-			tvPenStage, txtAgg1, txtAgg2;
+	Button btnPenA1, btnPenA2, btnPenA3, btnPenA4, btnPenA5, btnPenB1, btnPenB2, btnPenB3, btnPenB4, btnPenB5;
+	TextView txtTeam1, txtTeam2, txtGoal1, txtGoal2, tvPenA, tvPenB, tvPenStage, txtAgg1, txtAgg2;
 	LinearLayout llPen, llCLAgg;
 	MediaPlayer mp;
 	MediaPlayer mpGoal;
 	ImageView imgTrophy;
 	MenuItem miDB;
-	
+	Cursor mCursor;
+
 	int idGoal = 0;
 	int idMiss = 0;
 	int idNone = 0;
@@ -114,26 +113,16 @@ public class ChampionsLeagueActivity extends Activity {
 		llPen.setVisibility(pref.getInt("llPenVisible", 8));
 		llCLAgg.setVisibility(pref.getInt("llAggVisible", 8));
 
-		btnPenA1.setBackgroundResource(pref.getInt("PenA1Color",
-				R.drawable.pen_button_normal));
-		btnPenA2.setBackgroundResource(pref.getInt("PenA2Color",
-				R.drawable.pen_button_normal));
-		btnPenA3.setBackgroundResource(pref.getInt("PenA3Color",
-				R.drawable.pen_button_normal));
-		btnPenA4.setBackgroundResource(pref.getInt("PenA4Color",
-				R.drawable.pen_button_normal));
-		btnPenA5.setBackgroundResource(pref.getInt("PenA5Color",
-				R.drawable.pen_button_normal));
-		btnPenB1.setBackgroundResource(pref.getInt("PenB1Color",
-				R.drawable.pen_button_normal));
-		btnPenB2.setBackgroundResource(pref.getInt("PenB2Color",
-				R.drawable.pen_button_normal));
-		btnPenB3.setBackgroundResource(pref.getInt("PenB3Color",
-				R.drawable.pen_button_normal));
-		btnPenB4.setBackgroundResource(pref.getInt("PenB4Color",
-				R.drawable.pen_button_normal));
-		btnPenB5.setBackgroundResource(pref.getInt("PenB5Color",
-				R.drawable.pen_button_normal));
+		btnPenA1.setBackgroundResource(pref.getInt("PenA1Color", R.drawable.pen_button_normal));
+		btnPenA2.setBackgroundResource(pref.getInt("PenA2Color", R.drawable.pen_button_normal));
+		btnPenA3.setBackgroundResource(pref.getInt("PenA3Color", R.drawable.pen_button_normal));
+		btnPenA4.setBackgroundResource(pref.getInt("PenA4Color", R.drawable.pen_button_normal));
+		btnPenA5.setBackgroundResource(pref.getInt("PenA5Color", R.drawable.pen_button_normal));
+		btnPenB1.setBackgroundResource(pref.getInt("PenB1Color", R.drawable.pen_button_normal));
+		btnPenB2.setBackgroundResource(pref.getInt("PenB2Color", R.drawable.pen_button_normal));
+		btnPenB3.setBackgroundResource(pref.getInt("PenB3Color", R.drawable.pen_button_normal));
+		btnPenB4.setBackgroundResource(pref.getInt("PenB4Color", R.drawable.pen_button_normal));
+		btnPenB5.setBackgroundResource(pref.getInt("PenB5Color", R.drawable.pen_button_normal));
 
 		imgTrophy = (ImageView) this.findViewById(R.id.imgTrophy);
 
@@ -149,11 +138,10 @@ public class ChampionsLeagueActivity extends Activity {
 			}
 		});
 
-		Resources res = getResources();
+		final Resources res = getResources();
 
 		final CharSequence Runde[] = res.getStringArray(R.array.round);
 		final CharSequence Leg[] = { "1st leg", "2nd leg" };
-		final CharSequence Team[] = res.getStringArray(R.array.championsleague);
 		final Dialog dlgRnd = new Dialog(this);
 		final Dialog dlgGoal = new Dialog(this);
 		final Dialog dlgEdit = new Dialog(this);
@@ -170,24 +158,17 @@ public class ChampionsLeagueActivity extends Activity {
 				dlgRnd.setTitle("Match Info");
 
 				Button btnOK = (Button) dlgRnd.findViewById(R.id.btnSplOK);
-				Button btnCancel = (Button) dlgRnd
-						.findViewById(R.id.btnSplCancel);
+				Button btnCancel = (Button) dlgRnd.findViewById(R.id.btnSplCancel);
 
 				final Button btnSpl = (Button) dlgRnd.findViewById(R.id.btnSpl);
-				final Button btnTeam1 = (Button) dlgRnd
-						.findViewById(R.id.btnSplTeam1);
-				final Button btnTeam2 = (Button) dlgRnd
-						.findViewById(R.id.btnSplTeam2);
+				final Button btnTeam1 = (Button) dlgRnd.findViewById(R.id.btnSplTeam1);
+				final Button btnTeam2 = (Button) dlgRnd.findViewById(R.id.btnSplTeam2);
 
-				TextView tvRundeAuswln = (TextView) dlgRnd
-						.findViewById(R.id.tvRoundChoose);
+				TextView tvRundeAuswln = (TextView) dlgRnd.findViewById(R.id.tvRoundChoose);
 				final Button btnLeg = (Button) dlgRnd.findViewById(R.id.btnLeg);
-				final LinearLayout llDlgAgg = (LinearLayout) dlgRnd
-						.findViewById(R.id.llDlgAgg);
-				final EditText etAgg1 = (EditText) dlgRnd
-						.findViewById(R.id.txtDlgAgg1);
-				final EditText etAgg2 = (EditText) dlgRnd
-						.findViewById(R.id.txtDlgAgg2);
+				final LinearLayout llDlgAgg = (LinearLayout) dlgRnd.findViewById(R.id.llDlgAgg);
+				final EditText etAgg1 = (EditText) dlgRnd.findViewById(R.id.txtDlgAgg1);
+				final EditText etAgg2 = (EditText) dlgRnd.findViewById(R.id.txtDlgAgg2);
 
 				tvRundeAuswln.setText("Choose round");
 				btnSpl.setText("Round");
@@ -205,16 +186,13 @@ public class ChampionsLeagueActivity extends Activity {
 						dlgSpl.setItems(Runde, new OnClickListener() {
 
 							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
+							public void onClick(DialogInterface dialog, int which) {
 								// TODO Auto-generated method stub
 								btnSpl.setText(Runde[which]);
 
 								dialog.cancel();
-								if (!btnSpl.getText().toString()
-										.equals("Group Stage")
-										&& !btnSpl.getText().toString()
-												.equals("MILAN FINAL 2016")) {
+								if (!btnSpl.getText().toString().equals("Group Stage")
+										&& !btnSpl.getText().toString().equals("MILAN FINAL 2016")) {
 									btnLeg.setVisibility(View.VISIBLE);
 								} else {
 									btnLeg.setVisibility(View.GONE);
@@ -234,12 +212,10 @@ public class ChampionsLeagueActivity extends Activity {
 						dlgLeg.setItems(Leg, new OnClickListener() {
 
 							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
+							public void onClick(DialogInterface dialog, int which) {
 								// TODO Auto-generated method stub
 								btnLeg.setText(Leg[which]);
-								if (btnLeg.getText().toString()
-										.equals("2nd leg"))
+								if (btnLeg.getText().toString().equals("2nd leg"))
 									llDlgAgg.setVisibility(View.VISIBLE);
 								else
 									llDlgAgg.setVisibility(View.GONE);
@@ -251,6 +227,18 @@ public class ChampionsLeagueActivity extends Activity {
 					}
 				});
 
+				final ArrayList<String> lstTeam = new ArrayList<String>();
+				mCursor = mDB.getTeamByLeague(res.getString(R.string.ucl));
+				mCursor.moveToFirst();
+				while (!mCursor.isAfterLast()) {
+					Team team = new Team();
+					team.setName(mCursor.getString(1));
+					
+					lstTeam.add(team.getName());
+					mCursor.moveToNext();
+				}
+				mCursor.close();
+				final String Team[] = lstTeam.toArray(new String[0]);
 				btnTeam1.setOnClickListener(new View.OnClickListener() {
 
 					@Override
@@ -259,8 +247,7 @@ public class ChampionsLeagueActivity extends Activity {
 						dlgTeam.setItems(Team, new OnClickListener() {
 
 							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
+							public void onClick(DialogInterface dialog, int which) {
 								if (!Team[which].equals(btnTeam2.getText())) {
 									// TODO Auto-generated method stub
 									btnTeam1.setText(Team[which]);
@@ -278,15 +265,11 @@ public class ChampionsLeagueActivity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						dlgTeam.setItems(Team, new OnClickListener() {
 
 							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								// TODO Auto-generated method stub
+							public void onClick(DialogInterface dialog, int which) {
 								if (!Team[which].equals(btnTeam1.getText())) {
-									// TODO Auto-generated method stub
 									btnTeam2.setText(Team[which]);
 									dialog.cancel();
 								} else {
@@ -302,8 +285,7 @@ public class ChampionsLeagueActivity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						if (btnSpl.getText().toString().equals("Round")
-								|| btnTeam1.getText().toString().equals("Home")
+						if (btnSpl.getText().toString().equals("Round") || btnTeam1.getText().toString().equals("Home")
 								|| btnTeam2.getText().toString().equals("Away")) {
 							// TODO Auto-generated method stub
 							errNoti("Please select rounds and teams!");
@@ -313,8 +295,7 @@ public class ChampionsLeagueActivity extends Activity {
 							if (btnLeg.getVisibility() == View.GONE)
 								btnRound.setText(btnSpl.getText());
 							else
-								btnRound.setText(btnSpl.getText() + " - "
-										+ btnLeg.getText().toString());
+								btnRound.setText(btnSpl.getText() + " - " + btnLeg.getText().toString());
 
 							btnRound.setClickable(false);
 							btnGoal1.setEnabled(true);
@@ -348,30 +329,20 @@ public class ChampionsLeagueActivity extends Activity {
 			public void onClick(View arg0) {
 				if (!txtTeam2.getText().toString().equalsIgnoreCase("FC Bayern München")) {
 					mpGoal.start();
-				} 
+				}
 				dlgGoal.setContentView(R.layout.goalalert);
 				dlgGoal.setTitle("GOOAAAALLL!!!!");
 
-				final EditText txtMin = (EditText) dlgGoal
-						.findViewById(R.id.txtMinute);
-				final EditText txtScorer = (EditText) dlgGoal
-						.findViewById(R.id.txtScorerName);
-				final Button btnGoalOK = (Button) dlgGoal
-						.findViewById(R.id.btnGoalOK);
-				final Button btnGoalCnl = (Button) dlgGoal
-						.findViewById(R.id.btnGoalCancel);
-				final TextView tvGoalFor = (TextView) dlgGoal
-						.findViewById(R.id.tvGoalFor);
-				final TextView tvScoredBy = (TextView) dlgGoal
-						.findViewById(R.id.tvScoredBy);
-				final TextView tvInThe = (TextView) dlgGoal
-						.findViewById(R.id.tvInThe);
-				final TextView tvMin = (TextView) dlgGoal
-						.findViewById(R.id.tvMinute);
-				final CheckBox chkOG = (CheckBox) dlgGoal
-						.findViewById(R.id.chkOG);
-				final CheckBox chkPen = (CheckBox) dlgGoal
-						.findViewById(R.id.chkPen);
+				final EditText txtMin = (EditText) dlgGoal.findViewById(R.id.txtMinute);
+				final EditText txtScorer = (EditText) dlgGoal.findViewById(R.id.txtScorerName);
+				final Button btnGoalOK = (Button) dlgGoal.findViewById(R.id.btnGoalOK);
+				final Button btnGoalCnl = (Button) dlgGoal.findViewById(R.id.btnGoalCancel);
+				final TextView tvGoalFor = (TextView) dlgGoal.findViewById(R.id.tvGoalFor);
+				final TextView tvScoredBy = (TextView) dlgGoal.findViewById(R.id.tvScoredBy);
+				final TextView tvInThe = (TextView) dlgGoal.findViewById(R.id.tvInThe);
+				final TextView tvMin = (TextView) dlgGoal.findViewById(R.id.tvMinute);
+				final CheckBox chkOG = (CheckBox) dlgGoal.findViewById(R.id.chkOG);
+				final CheckBox chkPen = (CheckBox) dlgGoal.findViewById(R.id.chkPen);
 
 				tvGoalFor.setText("GOAAALLLL for " + txtTeam1.getText());
 				tvScoredBy.setText("Goal scored by ");
@@ -393,39 +364,38 @@ public class ChampionsLeagueActivity extends Activity {
 
 					@Override
 					public void onClick(View v) {
+						int min = 0;
+						if(!txtMin.getText().toString().isEmpty()
+								&& !txtMin.getText().toString().startsWith("45+")
+								&& !txtMin.getText().toString().startsWith("90+")
+								&& !txtMin.getText().toString().startsWith("105+")
+								&& !txtMin.getText().toString().startsWith("120+")) {
+							min = Integer.parseInt(txtMin.getText().toString());
+						}
+						
 						if (txtMin.getText().toString().equals("")
 								|| txtScorer.getText().toString().equals("")) {
-							// TODO Auto-generated method stub
-
 							errNoti("Please enter goalscorer and minute!");
+						} 
+						else if (min < 0 || min > 120) {
+							errNoti("Invalid minute number!");
 						} else {
-							int goal = Integer.parseInt(btnGoal1.getText()
-									.toString());
-							btnGoal1.setText(String.valueOf(goal + 1)
-									.toString());
-							if (btnRound.getText().toString()
-									.contains("2nd leg")) {
-								int agg = Integer.parseInt(txtAgg1.getText()
-										.toString());
-								txtAgg1.setText(String.valueOf(agg + 1)
-										.toString());
+							int goal = Integer.parseInt(btnGoal1.getText().toString());
+							btnGoal1.setText(String.valueOf(goal + 1).toString());
+							if (btnRound.getText().toString().contains("2nd leg")) {
+								int agg = Integer.parseInt(txtAgg1.getText().toString());
+								txtAgg1.setText(String.valueOf(agg + 1).toString());
 							}
-							String mes = txtScorer.getText() + " "
-									+ txtMin.getText() + "'";
+							String mes = txtScorer.getText() + " " + txtMin.getText() + "'";
 							if (chkOG.isChecked()) {
 								mes += "(OG)";
 							}
 							if (chkPen.isChecked()) {
 								mes += "(P)";
 							}
-							if (txtGoal1.getText().toString()
-									.contains(txtScorer.getText())) {
-								String temp = txtGoal1
-										.getText()
-										.toString()
-										.replace(
-												txtScorer.getText().toString(),
-												mes);
+							if (txtGoal1.getText().toString().contains(txtScorer.getText())) {
+								String temp = txtGoal1.getText().toString().replace(txtScorer.getText().toString(),
+										mes);
 								txtGoal1.setText(temp);
 							} else
 								txtGoal1.append(mes + "\n");
@@ -433,8 +403,7 @@ public class ChampionsLeagueActivity extends Activity {
 						}
 					}
 				});
-				if (!txtTeam1.getText().toString().equals("")
-						&& !txtTeam2.getText().toString().equals(""))
+				if (!txtTeam1.getText().toString().equals("") && !txtTeam2.getText().toString().equals(""))
 					dlgGoal.show();
 			}
 		});
@@ -445,30 +414,20 @@ public class ChampionsLeagueActivity extends Activity {
 			public void onClick(View v) {
 				if (!txtTeam1.getText().toString().equalsIgnoreCase("FC Bayern München")) {
 					mpGoal.start();
-				} 
+				}
 				dlgGoal.setContentView(R.layout.goalalert);
 				dlgGoal.setTitle("GOOAAAALLL!!!!");
 
-				final EditText txtMin = (EditText) dlgGoal
-						.findViewById(R.id.txtMinute);
-				final EditText txtScorer = (EditText) dlgGoal
-						.findViewById(R.id.txtScorerName);
-				final Button btnGoalOK = (Button) dlgGoal
-						.findViewById(R.id.btnGoalOK);
-				final Button btnGoalCnl = (Button) dlgGoal
-						.findViewById(R.id.btnGoalCancel);
-				final TextView tvGoalFor = (TextView) dlgGoal
-						.findViewById(R.id.tvGoalFor);
-				final CheckBox chkOG = (CheckBox) dlgGoal
-						.findViewById(R.id.chkOG);
-				final CheckBox chkPen = (CheckBox) dlgGoal
-						.findViewById(R.id.chkPen);
-				final TextView tvScoredBy = (TextView) dlgGoal
-						.findViewById(R.id.tvScoredBy);
-				final TextView tvInThe = (TextView) dlgGoal
-						.findViewById(R.id.tvInThe);
-				final TextView tvMin = (TextView) dlgGoal
-						.findViewById(R.id.tvMinute);
+				final EditText txtMin = (EditText) dlgGoal.findViewById(R.id.txtMinute);
+				final EditText txtScorer = (EditText) dlgGoal.findViewById(R.id.txtScorerName);
+				final Button btnGoalOK = (Button) dlgGoal.findViewById(R.id.btnGoalOK);
+				final Button btnGoalCnl = (Button) dlgGoal.findViewById(R.id.btnGoalCancel);
+				final TextView tvGoalFor = (TextView) dlgGoal.findViewById(R.id.tvGoalFor);
+				final CheckBox chkOG = (CheckBox) dlgGoal.findViewById(R.id.chkOG);
+				final CheckBox chkPen = (CheckBox) dlgGoal.findViewById(R.id.chkPen);
+				final TextView tvScoredBy = (TextView) dlgGoal.findViewById(R.id.tvScoredBy);
+				final TextView tvInThe = (TextView) dlgGoal.findViewById(R.id.tvInThe);
+				final TextView tvMin = (TextView) dlgGoal.findViewById(R.id.tvMinute);
 
 				tvGoalFor.setText("GOAAALLLL for " + txtTeam2.getText() + " ");
 				tvScoredBy.setText("Goal scored by ");
@@ -489,37 +448,25 @@ public class ChampionsLeagueActivity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						if (txtMin.getText().toString().equals("")
-								|| txtScorer.getText().toString().equals("")) {
+						if (txtMin.getText().toString().equals("") || txtScorer.getText().toString().equals("")) {
 							errNoti("Please enter goalscorer and minute!");
 						} else {
-							int goal = Integer.parseInt(btnGoal2.getText()
-									.toString());
-							btnGoal2.setText(String.valueOf(goal + 1)
-									.toString());
-							if (btnRound.getText().toString()
-									.contains("2nd leg")) {
-								int agg = Integer.parseInt(txtAgg2.getText()
-										.toString());
-								txtAgg2.setText(String.valueOf(agg + 1)
-										.toString());
+							int goal = Integer.parseInt(btnGoal2.getText().toString());
+							btnGoal2.setText(String.valueOf(goal + 1).toString());
+							if (btnRound.getText().toString().contains("2nd leg")) {
+								int agg = Integer.parseInt(txtAgg2.getText().toString());
+								txtAgg2.setText(String.valueOf(agg + 1).toString());
 							}
-							String mes = txtScorer.getText() + " "
-									+ txtMin.getText() + "'";
+							String mes = txtScorer.getText() + " " + txtMin.getText() + "'";
 							if (chkOG.isChecked()) {
 								mes += "(OG)";
 							}
 							if (chkPen.isChecked()) {
 								mes += "(P)";
 							}
-							if (txtGoal2.getText().toString()
-									.contains(txtScorer.getText())) {
-								String temp = txtGoal2
-										.getText()
-										.toString()
-										.replace(
-												txtScorer.getText().toString(),
-												mes);
+							if (txtGoal2.getText().toString().contains(txtScorer.getText())) {
+								String temp = txtGoal2.getText().toString().replace(txtScorer.getText().toString(),
+										mes);
 								txtGoal2.setText(temp);
 							} else
 								txtGoal2.append(mes + "\n");
@@ -527,8 +474,7 @@ public class ChampionsLeagueActivity extends Activity {
 						}
 					}
 				});
-				if (!txtTeam1.getText().toString().equals("")
-						&& !txtTeam2.getText().toString().equals(""))
+				if (!txtTeam1.getText().toString().equals("") && !txtTeam2.getText().toString().equals(""))
 					dlgGoal.show();
 			}
 		});
@@ -539,12 +485,9 @@ public class ChampionsLeagueActivity extends Activity {
 			public boolean onLongClick(View v) {
 				if (!txtGoal1.getText().toString().equals("")) {
 					dlgEdit.setContentView(R.layout.edit);
-					final EditText txtEdit = (EditText) dlgEdit
-							.findViewById(R.id.txtEdit);
-					Button btnEditOK = (Button) dlgEdit
-							.findViewById(R.id.btnEditOK);
-					Button btnEditCancel = (Button) dlgEdit
-							.findViewById(R.id.btnEditCancel);
+					final EditText txtEdit = (EditText) dlgEdit.findViewById(R.id.txtEdit);
+					Button btnEditOK = (Button) dlgEdit.findViewById(R.id.btnEditOK);
+					Button btnEditCancel = (Button) dlgEdit.findViewById(R.id.btnEditCancel);
 
 					txtEdit.setText(txtGoal1.getText().toString());
 
@@ -557,14 +500,13 @@ public class ChampionsLeagueActivity extends Activity {
 						}
 					});
 
-					btnEditCancel
-							.setOnClickListener(new View.OnClickListener() {
+					btnEditCancel.setOnClickListener(new View.OnClickListener() {
 
-								@Override
-								public void onClick(View v) {
-									dlgEdit.cancel();
-								}
-							});
+						@Override
+						public void onClick(View v) {
+							dlgEdit.cancel();
+						}
+					});
 
 					dlgEdit.show();
 				}
@@ -578,12 +520,9 @@ public class ChampionsLeagueActivity extends Activity {
 			public boolean onLongClick(View v) {
 				if (!txtGoal2.getText().toString().equals("")) {
 					dlgEdit.setContentView(R.layout.edit);
-					final EditText txtEdit = (EditText) dlgEdit
-							.findViewById(R.id.txtEdit);
-					Button btnEditOK = (Button) dlgEdit
-							.findViewById(R.id.btnEditOK);
-					Button btnEditCancel = (Button) dlgEdit
-							.findViewById(R.id.btnEditCancel);
+					final EditText txtEdit = (EditText) dlgEdit.findViewById(R.id.txtEdit);
+					Button btnEditOK = (Button) dlgEdit.findViewById(R.id.btnEditOK);
+					Button btnEditCancel = (Button) dlgEdit.findViewById(R.id.btnEditCancel);
 
 					txtEdit.setText(txtGoal2.getText().toString());
 
@@ -596,14 +535,13 @@ public class ChampionsLeagueActivity extends Activity {
 						}
 					});
 
-					btnEditCancel
-							.setOnClickListener(new View.OnClickListener() {
+					btnEditCancel.setOnClickListener(new View.OnClickListener() {
 
-								@Override
-								public void onClick(View v) {
-									dlgEdit.cancel();
-								}
-							});
+						@Override
+						public void onClick(View v) {
+							dlgEdit.cancel();
+						}
+					});
 
 					dlgEdit.show();
 				}
@@ -615,14 +553,11 @@ public class ChampionsLeagueActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				if (btnPenA1.getBackground().getConstantState() == drMiss
-						.getConstantState()) {
+				if (btnPenA1.getBackground().getConstantState() == drMiss.getConstantState()) {
 					int p = Integer.parseInt(tvPenA.getText().toString());
-					tvPenA.setText(String.valueOf(
-							String.valueOf(p + 1).toString()).toString());
+					tvPenA.setText(String.valueOf(String.valueOf(p + 1).toString()).toString());
 					btnPenA1.setBackgroundResource(R.drawable.pen_button_goal);
-				} else if (btnPenA1.getBackground().getConstantState() == drNone
-						.getConstantState()) {
+				} else if (btnPenA1.getBackground().getConstantState() == drNone.getConstantState()) {
 
 					btnPenA1.setBackgroundResource(R.drawable.pen_button_miss);
 				}
@@ -633,16 +568,12 @@ public class ChampionsLeagueActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				if (btnPenA1.getBackground().getConstantState() != drNone
-						.getConstantState()) {
-					if (btnPenA2.getBackground().getConstantState() == drMiss
-							.getConstantState()) {
+				if (btnPenA1.getBackground().getConstantState() != drNone.getConstantState()) {
+					if (btnPenA2.getBackground().getConstantState() == drMiss.getConstantState()) {
 						int p = Integer.parseInt(tvPenA.getText().toString());
-						tvPenA.setText(String.valueOf(
-								String.valueOf(p + 1).toString()).toString());
+						tvPenA.setText(String.valueOf(String.valueOf(p + 1).toString()).toString());
 						btnPenA2.setBackgroundResource(R.drawable.pen_button_goal);
-					} else if (btnPenA2.getBackground().getConstantState() == drNone
-							.getConstantState()) {
+					} else if (btnPenA2.getBackground().getConstantState() == drNone.getConstantState()) {
 						btnPenA2.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
@@ -653,17 +584,13 @@ public class ChampionsLeagueActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				if (btnPenA1.getBackground().getConstantState() != drNone
-						.getConstantState()
-						&& btnPenA2.getBackground().getConstantState() != drNone
-								.getConstantState()) {
-					if (btnPenA3.getBackground().getConstantState() == drMiss
-							.getConstantState()) {
+				if (btnPenA1.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenA2.getBackground().getConstantState() != drNone.getConstantState()) {
+					if (btnPenA3.getBackground().getConstantState() == drMiss.getConstantState()) {
 						int p = Integer.parseInt(tvPenA.getText().toString());
 						tvPenA.setText(String.valueOf(p + 1).toString());
 						btnPenA3.setBackgroundResource(R.drawable.pen_button_goal);
-					} else if (btnPenA3.getBackground().getConstantState() == drNone
-							.getConstantState()) {
+					} else if (btnPenA3.getBackground().getConstantState() == drNone.getConstantState()) {
 						btnPenA3.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
@@ -674,19 +601,14 @@ public class ChampionsLeagueActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				if (btnPenA1.getBackground().getConstantState() != drNone
-						.getConstantState()
-						&& btnPenA2.getBackground().getConstantState() != drNone
-								.getConstantState()
-						&& btnPenA3.getBackground().getConstantState() != drNone
-								.getConstantState()) {
-					if (btnPenA4.getBackground().getConstantState() == drMiss
-							.getConstantState()) {
+				if (btnPenA1.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenA2.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenA3.getBackground().getConstantState() != drNone.getConstantState()) {
+					if (btnPenA4.getBackground().getConstantState() == drMiss.getConstantState()) {
 						int p = Integer.parseInt(tvPenA.getText().toString());
 						tvPenA.setText(String.valueOf(p + 1).toString());
 						btnPenA4.setBackgroundResource(R.drawable.pen_button_goal);
-					} else if (btnPenA4.getBackground().getConstantState() == drNone
-							.getConstantState()) {
+					} else if (btnPenA4.getBackground().getConstantState() == drNone.getConstantState()) {
 						btnPenA4.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
@@ -697,21 +619,15 @@ public class ChampionsLeagueActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				if (btnPenA1.getBackground().getConstantState() != drNone
-						.getConstantState()
-						&& btnPenA2.getBackground().getConstantState() != drNone
-								.getConstantState()
-						&& btnPenA3.getBackground().getConstantState() != drNone
-								.getConstantState()
-						&& btnPenA4.getBackground().getConstantState() != drNone
-								.getConstantState()) {
-					if (btnPenA5.getBackground().getConstantState() == drMiss
-							.getConstantState()) {
+				if (btnPenA1.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenA2.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenA3.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenA4.getBackground().getConstantState() != drNone.getConstantState()) {
+					if (btnPenA5.getBackground().getConstantState() == drMiss.getConstantState()) {
 						int p = Integer.parseInt(tvPenA.getText().toString());
 						tvPenA.setText(String.valueOf(p + 1).toString());
 						btnPenA5.setBackgroundResource(R.drawable.pen_button_goal);
-					} else if (btnPenA5.getBackground().getConstantState() == drNone
-							.getConstantState()) {
+					} else if (btnPenA5.getBackground().getConstantState() == drNone.getConstantState()) {
 						btnPenA5.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
@@ -724,14 +640,11 @@ public class ChampionsLeagueActivity extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 
-				if (btnPenB1.getBackground().getConstantState() == drMiss
-						.getConstantState()) {
+				if (btnPenB1.getBackground().getConstantState() == drMiss.getConstantState()) {
 					int p = Integer.parseInt(tvPenB.getText().toString());
-					tvPenB.setText(String.valueOf(
-							String.valueOf(p + 1).toString()).toString());
+					tvPenB.setText(String.valueOf(String.valueOf(p + 1).toString()).toString());
 					btnPenB1.setBackgroundResource(R.drawable.pen_button_goal);
-				} else if (btnPenB1.getBackground().getConstantState() == drNone
-						.getConstantState()) {
+				} else if (btnPenB1.getBackground().getConstantState() == drNone.getConstantState()) {
 
 					btnPenB1.setBackgroundResource(R.drawable.pen_button_miss);
 				}
@@ -742,16 +655,12 @@ public class ChampionsLeagueActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				if (btnPenB1.getBackground().getConstantState() != drNone
-						.getConstantState()) {
-					if (btnPenB2.getBackground().getConstantState() == drMiss
-							.getConstantState()) {
+				if (btnPenB1.getBackground().getConstantState() != drNone.getConstantState()) {
+					if (btnPenB2.getBackground().getConstantState() == drMiss.getConstantState()) {
 						int p = Integer.parseInt(tvPenB.getText().toString());
-						tvPenB.setText(String.valueOf(
-								String.valueOf(p + 1).toString()).toString());
+						tvPenB.setText(String.valueOf(String.valueOf(p + 1).toString()).toString());
 						btnPenB2.setBackgroundResource(R.drawable.pen_button_goal);
-					} else if (btnPenB2.getBackground().getConstantState() == drNone
-							.getConstantState()) {
+					} else if (btnPenB2.getBackground().getConstantState() == drNone.getConstantState()) {
 						btnPenB2.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
@@ -762,17 +671,13 @@ public class ChampionsLeagueActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				if (btnPenB1.getBackground().getConstantState() != drNone
-						.getConstantState()
-						&& btnPenB2.getBackground().getConstantState() != drNone
-								.getConstantState()) {
-					if (btnPenB3.getBackground().getConstantState() == drMiss
-							.getConstantState()) {
+				if (btnPenB1.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenB2.getBackground().getConstantState() != drNone.getConstantState()) {
+					if (btnPenB3.getBackground().getConstantState() == drMiss.getConstantState()) {
 						int p = Integer.parseInt(tvPenB.getText().toString());
 						tvPenB.setText(String.valueOf(p + 1).toString());
 						btnPenB3.setBackgroundResource(R.drawable.pen_button_goal);
-					} else if (btnPenB3.getBackground().getConstantState() == drNone
-							.getConstantState()) {
+					} else if (btnPenB3.getBackground().getConstantState() == drNone.getConstantState()) {
 						btnPenB3.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
@@ -783,19 +688,14 @@ public class ChampionsLeagueActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				if (btnPenB1.getBackground().getConstantState() != drNone
-						.getConstantState()
-						&& btnPenB2.getBackground().getConstantState() != drNone
-								.getConstantState()
-						&& btnPenB3.getBackground().getConstantState() != drNone
-								.getConstantState()) {
-					if (btnPenB4.getBackground().getConstantState() == drMiss
-							.getConstantState()) {
+				if (btnPenB1.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenB2.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenB3.getBackground().getConstantState() != drNone.getConstantState()) {
+					if (btnPenB4.getBackground().getConstantState() == drMiss.getConstantState()) {
 						int p = Integer.parseInt(tvPenB.getText().toString());
 						tvPenB.setText(String.valueOf(p + 1).toString());
 						btnPenB4.setBackgroundResource(R.drawable.pen_button_goal);
-					} else if (btnPenB4.getBackground().getConstantState() == drNone
-							.getConstantState()) {
+					} else if (btnPenB4.getBackground().getConstantState() == drNone.getConstantState()) {
 						btnPenB4.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
@@ -806,21 +706,15 @@ public class ChampionsLeagueActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				if (btnPenB1.getBackground().getConstantState() != drNone
-						.getConstantState()
-						&& btnPenB2.getBackground().getConstantState() != drNone
-								.getConstantState()
-						&& btnPenB3.getBackground().getConstantState() != drNone
-								.getConstantState()
-						&& btnPenB4.getBackground().getConstantState() != drNone
-								.getConstantState()) {
-					if (btnPenB5.getBackground().getConstantState() == drMiss
-							.getConstantState()) {
+				if (btnPenB1.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenB2.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenB3.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenB4.getBackground().getConstantState() != drNone.getConstantState()) {
+					if (btnPenB5.getBackground().getConstantState() == drMiss.getConstantState()) {
 						int p = Integer.parseInt(tvPenB.getText().toString());
 						tvPenB.setText(String.valueOf(p + 1).toString());
 						btnPenB5.setBackgroundResource(R.drawable.pen_button_goal);
-					} else if (btnPenB5.getBackground().getConstantState() == drNone
-							.getConstantState()) {
+					} else if (btnPenB5.getBackground().getConstantState() == drNone.getConstantState()) {
 						btnPenB5.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
@@ -941,15 +835,14 @@ public class ChampionsLeagueActivity extends Activity {
 		} else if (id == R.id.clsavedb) {
 			int g1 = Integer.parseInt(btnGoal1.getText().toString());
 			int g2 = Integer.parseInt(btnGoal2.getText().toString());
-			
+
 			if (btnRound.getText().toString().equals("Group Stage")
 					|| btnRound.getText().toString().equals("MILAN FINAL 2016")
 					|| btnRound.getText().toString().contains("1st leg")) {
 				if (g1 != g2) {
 					addToDB(g1, g2, 0, 0);
 				} else {
-					if (btnRound.getText().toString()
-							.equals("MILAN FINAL 2016")) {
+					if (btnRound.getText().toString().equals("MILAN FINAL 2016")) {
 						int pA = Integer.parseInt(tvPenA.getText().toString());
 						int pB = Integer.parseInt(tvPenB.getText().toString());
 						addToDB(g1, g2, pA, pB);
@@ -963,10 +856,8 @@ public class ChampionsLeagueActivity extends Activity {
 				if (agg1 != agg2) {
 					addToDB(g1, g2, 0, 0);
 				} else {
-					int g1_1leg = Integer
-							.parseInt(txtAgg1.getText().toString()) - g1;
-					int g2_1leg = Integer
-							.parseInt(txtAgg2.getText().toString()) - g2;
+					int g1_1leg = Integer.parseInt(txtAgg1.getText().toString()) - g1;
+					int g2_1leg = Integer.parseInt(txtAgg2.getText().toString()) - g2;
 
 					if (g1_1leg > g2 || g2_1leg > g1) {
 						addToDB(g1, g2, 0, 0);
@@ -978,8 +869,7 @@ public class ChampionsLeagueActivity extends Activity {
 				}
 			}
 			errNoti("Result saved!");
-		} else if (id == R.id.clfulltime
-				&& !btnRound.getText().toString().equals("Round")) {
+		} else if (id == R.id.clfulltime && !btnRound.getText().toString().equals("Round")) {
 			int g1 = Integer.parseInt(btnGoal1.getText().toString());
 			int g2 = Integer.parseInt(btnGoal2.getText().toString());
 
@@ -994,8 +884,7 @@ public class ChampionsLeagueActivity extends Activity {
 					miDB.setVisible(true);
 				} else {
 
-					if (btnRound.getText().toString()
-							.equals("MILAN FINAL 2016")) {
+					if (btnRound.getText().toString().equals("MILAN FINAL 2016")) {
 						handlePSO(g1, g2);
 					} else {
 						resultNoti("");
@@ -1014,10 +903,8 @@ public class ChampionsLeagueActivity extends Activity {
 					resultNoti(txtTeam2.getText().toString());
 					miDB.setVisible(true);
 				} else {
-					int g1_1leg = Integer
-							.parseInt(txtAgg1.getText().toString()) - g1;
-					int g2_1leg = Integer
-							.parseInt(txtAgg2.getText().toString()) - g2;
+					int g1_1leg = Integer.parseInt(txtAgg1.getText().toString()) - g1;
+					int g2_1leg = Integer.parseInt(txtAgg2.getText().toString()) - g2;
 
 					if (g1_1leg > g2) {
 						resultNoti(txtTeam1.getText().toString());
@@ -1086,36 +973,26 @@ public class ChampionsLeagueActivity extends Activity {
 	private int remainingShot(String team) {
 		int res = 0;
 		if (team.equalsIgnoreCase("A")) {
-			if (btnPenA1.getBackground().getConstantState() == drNone
-					.getConstantState())
+			if (btnPenA1.getBackground().getConstantState() == drNone.getConstantState())
 				res++;
-			if (btnPenA2.getBackground().getConstantState() == drNone
-					.getConstantState())
+			if (btnPenA2.getBackground().getConstantState() == drNone.getConstantState())
 				res++;
-			if (btnPenA3.getBackground().getConstantState() == drNone
-					.getConstantState())
+			if (btnPenA3.getBackground().getConstantState() == drNone.getConstantState())
 				res++;
-			if (btnPenA4.getBackground().getConstantState() == drNone
-					.getConstantState())
+			if (btnPenA4.getBackground().getConstantState() == drNone.getConstantState())
 				res++;
-			if (btnPenA5.getBackground().getConstantState() == drNone
-					.getConstantState())
+			if (btnPenA5.getBackground().getConstantState() == drNone.getConstantState())
 				res++;
 		} else if (team.equalsIgnoreCase("B")) {
-			if (btnPenB1.getBackground().getConstantState() == drNone
-					.getConstantState())
+			if (btnPenB1.getBackground().getConstantState() == drNone.getConstantState())
 				res++;
-			if (btnPenB2.getBackground().getConstantState() == drNone
-					.getConstantState())
+			if (btnPenB2.getBackground().getConstantState() == drNone.getConstantState())
 				res++;
-			if (btnPenB3.getBackground().getConstantState() == drNone
-					.getConstantState())
+			if (btnPenB3.getBackground().getConstantState() == drNone.getConstantState())
 				res++;
-			if (btnPenB4.getBackground().getConstantState() == drNone
-					.getConstantState())
+			if (btnPenB4.getBackground().getConstantState() == drNone.getConstantState())
 				res++;
-			if (btnPenB5.getBackground().getConstantState() == drNone
-					.getConstantState())
+			if (btnPenB5.getBackground().getConstantState() == drNone.getConstantState())
 				res++;
 		}
 		return res;
@@ -1151,10 +1028,8 @@ public class ChampionsLeagueActivity extends Activity {
 		}
 
 		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(
-					R.layout.fragment_champions_league, container, false);
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			View rootView = inflater.inflate(R.layout.fragment_champions_league, container, false);
 			return rootView;
 		}
 	}
@@ -1193,22 +1068,21 @@ public class ChampionsLeagueActivity extends Activity {
 
 		scorerListA.replace("\n", " ");
 		scorerListB.replace("\n", " ");
-		mDB.addMatch("UEFA Champions League", btnRound.getText().toString(),
-				txtTeam1.getText().toString(), txtTeam2.getText().toString(),
-				g1, g2, scorerListA, scorerListB, pA, pB);
+		mDB.addMatch("UEFA Champions League", btnRound.getText().toString(), txtTeam1.getText().toString(),
+				txtTeam2.getText().toString(), g1, g2, scorerListA, scorerListB, pA, pB);
 	}
 
 	int getButtonResId(Button button) {
-		if (button.getBackground().getConstantState() == getResources()
-				.getDrawable(R.drawable.pen_button_miss).getConstantState()) {
+		if (button.getBackground().getConstantState() == getResources().getDrawable(R.drawable.pen_button_miss)
+				.getConstantState()) {
 			return R.drawable.pen_button_miss;
 
-		} else if (button.getBackground().getConstantState() == getResources()
-				.getDrawable(R.drawable.pen_button_normal).getConstantState()) {
+		} else if (button.getBackground().getConstantState() == getResources().getDrawable(R.drawable.pen_button_normal)
+				.getConstantState()) {
 			return R.drawable.pen_button_normal;
 
-		} else if (button.getBackground().getConstantState() == getResources()
-				.getDrawable(R.drawable.pen_button_goal).getConstantState()) {
+		} else if (button.getBackground().getConstantState() == getResources().getDrawable(R.drawable.pen_button_goal)
+				.getConstantState()) {
 			return R.drawable.pen_button_goal;
 		}
 

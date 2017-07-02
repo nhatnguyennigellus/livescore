@@ -1,8 +1,10 @@
 package com.project.livescore1415;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import com.project.livescore.data.DBAdapter;
+import com.project.livescore.data.Team;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,12 +12,15 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,6 +53,7 @@ public class ConfedCup2017Activity extends Activity {
 	Button btnTime, btnDate;
 	DigitalClock digiClock;
 	MenuItem miDB;
+	Cursor mCursor;
 
 	int idGoal = 0;
 	int idMiss = 0;
@@ -59,7 +65,6 @@ public class ConfedCup2017Activity extends Activity {
 	@SuppressWarnings("deprecation")
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		// TODO Auto-generated method stub
 		Calendar c = Calendar.getInstance();
 		switch (id) {
 		case DATE_PICKER_DIALOG:
@@ -73,7 +78,6 @@ public class ConfedCup2017Activity extends Activity {
 						@Override
 						public void onDateSet(DatePicker view, int year,
 								int monthOfYear, int dayOfMonth) {
-							// TODO Auto-generated method stub
 							yearSelected = year;
 							monthSelected = monthOfYear + 1;
 							daySelected = dayOfMonth;
@@ -92,7 +96,6 @@ public class ConfedCup2017Activity extends Activity {
 						@Override
 						public void onTimeSet(TimePicker view, int hourOfDay,
 								int minute) {
-							// TODO Auto-generated method stub
 							hourSelected = hourOfDay;
 							minuteSelected = minute;
 							btnTime.setText(standardizeTime(hourSelected,
@@ -105,7 +108,6 @@ public class ConfedCup2017Activity extends Activity {
 	
 	public String standardizeDate(int daySelected, int monthSelected,
 			int yearSelected) {
-		// TODO Auto-generated method stub
 		String day = (daySelected > 9) ? String.valueOf(daySelected) : "0"
 				+ daySelected;
 		String month = (monthSelected > 9) ? String.valueOf(monthSelected)
@@ -171,6 +173,21 @@ public class ConfedCup2017Activity extends Activity {
 		}
 		return 0;
 	}
+	
+	private String blockCharacterSet = "0123456789+";
+
+    private InputFilter filter = new InputFilter() {
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+
+            if (source != null && blockCharacterSet.contains(("" + source))) {
+                return "";
+            }
+            return null;
+        }
+    };
+
 
 	void showNoti(String mes) {
 		Toast.makeText(this, mes, Toast.LENGTH_LONG).show();
@@ -402,7 +419,6 @@ public class ConfedCup2017Activity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				if (mp.isPlaying())
 					mp.pause();
 				else
@@ -410,11 +426,10 @@ public class ConfedCup2017Activity extends Activity {
 			}
 		});
 		
-		Resources res = getResources();
+		final Resources res = getResources();
 
 		final CharSequence Round[] = res.getStringArray(R.array.wcround);
 		final CharSequence Group[] = res.getStringArray(R.array.group);
-		final CharSequence Team[] = res.getStringArray(R.array.confedcup);
 		final CharSequence Venue[] = res.getStringArray(R.array.confedcup_venue);
 		final Dialog dlgRnd = new Dialog(this);
 		final Dialog dlgGoal = new Dialog(this);
@@ -428,12 +443,11 @@ public class ConfedCup2017Activity extends Activity {
 		btnTime = (Button) dlgRnd.findViewById(R.id.btnTimeSel);
 		btnDate = (Button) dlgRnd.findViewById(R.id.btnDateSel);
 		
+		
 		btnRound.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-
 				dlgRnd.setTitle("Match Info");
 
 				Button btnOK = (Button) dlgRnd.findViewById(R.id.btnSplOK);
@@ -456,13 +470,11 @@ public class ConfedCup2017Activity extends Activity {
 
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
 						dlgSpl.setItems(Round, new OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
 								btnSpl.setText(Round[which]);
 
 								dialog.cancel();
@@ -489,13 +501,11 @@ public class ConfedCup2017Activity extends Activity {
 
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
 						dlgGroup.setItems(Group, new OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
 								btnGrp.setText("Group " + Group[which]);
 								dialog.cancel();
 							}
@@ -509,13 +519,11 @@ public class ConfedCup2017Activity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						dlgVenue.setItems(Venue, new OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
 								btnVenue.setText(Venue[which]);
 								dialog.cancel();
 							}
@@ -530,7 +538,6 @@ public class ConfedCup2017Activity extends Activity {
 					@SuppressWarnings("deprecation")
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						showDialog(DATE_PICKER_DIALOG);
 
 					}
@@ -542,26 +549,34 @@ public class ConfedCup2017Activity extends Activity {
 					@SuppressWarnings("deprecation")
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						showDialog(TIME_PICKER_DIALOG);
 
 					}
 
 				});
 
+				final ArrayList<String> lstTeam = new ArrayList<String>();
+				mCursor = mDB.getTeamByLeague(res.getString(R.string.confedcup));
+				mCursor.moveToFirst();
+				while (!mCursor.isAfterLast()) {
+					Team team = new Team();
+					team.setName(mCursor.getString(1));
+					
+					lstTeam.add(team.getName());
+					mCursor.moveToNext();
+				}
+				mCursor.close();
+				final String Team[] = lstTeam.toArray(new String[0]);
 				btnTeam1.setOnClickListener(new View.OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						dlgTeam.setItems(Team, new OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
 								if (!Team[which].equals(btnTeam2.getText())) {
-									// TODO Auto-generated method stub
 									btnTeam1.setText(Team[which]);
 									dialog.cancel();
 								} else {
@@ -577,15 +592,12 @@ public class ConfedCup2017Activity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						dlgTeam.setItems(Team, new OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
 								if (!Team[which].equals(btnTeam1.getText())) {
-									// TODO Auto-generated method stub
 									btnTeam2.setText(Team[which]);
 									dialog.cancel();
 								} else {
@@ -601,7 +613,6 @@ public class ConfedCup2017Activity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						dlgRnd.cancel();
 					}
 				});
@@ -615,7 +626,6 @@ public class ConfedCup2017Activity extends Activity {
 										.equals("Team A")
 								|| btnTeam2.getText().toString()
 										.equals("Team B")) {
-							// TODO Auto-generated method stub
 							showNoti("Please select round and teams!");
 						} else if (btnGrp.getVisibility() == View.VISIBLE
 								&& btnGrp.getText().toString().equals("Group")) {
@@ -690,6 +700,30 @@ public class ConfedCup2017Activity extends Activity {
 				chkOG.setText("Own goal");
 				chkPen.setText("Penalty");
 
+				final CharSequence AddTime[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9" };
+				tvInThe.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if(txtMin.getText().toString().contains("45")
+								|| txtMin.getText().toString().contains("90")
+								|| txtMin.getText().toString().contains("105")
+								|| txtMin.getText().toString().contains("120")) {
+								dlgSpl.setItems(AddTime, new OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										txtMin.setText(txtMin.getText().toString() + "+"
+												+ AddTime[which]);
+										dialog.cancel();
+									}
+								});
+								dlgSpl.show();
+							}
+						
+					}
+				});
+				
 				btnGoalCnl.setOnClickListener(new View.OnClickListener() {
 
 					@Override
@@ -703,9 +737,21 @@ public class ConfedCup2017Activity extends Activity {
 
 					@Override
 					public void onClick(View v) {
+						int min = 0;
+						if(!txtMin.getText().toString().isEmpty()
+								&& !txtMin.getText().toString().startsWith("45+")
+								&& !txtMin.getText().toString().startsWith("90+")
+								&& !txtMin.getText().toString().startsWith("105+")
+								&& !txtMin.getText().toString().startsWith("120+")) {
+							min = Integer.parseInt(txtMin.getText().toString());
+						}
+						
 						if (txtMin.getText().toString().equals("")
 								|| txtScorer.getText().toString().equals("")) {
 							showNoti("Please enter goalscorer and minute!");
+						} 
+						else if (min < 0 || min > 120) {
+							showNoti("Invalid minute number!");
 						} else {
 							int goal = Integer.parseInt(btnGoalA.getText()
 									.toString());
@@ -736,8 +782,10 @@ public class ConfedCup2017Activity extends Activity {
 					}
 				});
 				if (!txtTeamA.getText().toString().equals("")
-						&& !txtTeamB.getText().toString().equals(""))
+						&& !txtTeamB.getText().toString().equals("")) {
 					dlgGoal.show();
+				}
+				
 			}
 		});
 
@@ -780,6 +828,30 @@ public class ConfedCup2017Activity extends Activity {
 				chkOG.setText("Own goal");
 				chkPen.setText("Penalty");
 
+				final CharSequence AddTime[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9" };
+				tvInThe.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if(txtMin.getText().toString().contains("45")
+								|| txtMin.getText().toString().contains("90")
+								|| txtMin.getText().toString().contains("105")
+								|| txtMin.getText().toString().contains("120")) {
+								dlgSpl.setItems(AddTime, new OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										txtMin.setText(txtMin.getText().toString() + "+"
+												+ AddTime[which]);
+										dialog.cancel();
+									}
+								});
+								dlgSpl.show();
+							}
+						
+					}
+				});
+				
 				btnGoalCnl.setOnClickListener(new View.OnClickListener() {
 
 					@Override
@@ -793,10 +865,23 @@ public class ConfedCup2017Activity extends Activity {
 
 					@Override
 					public void onClick(View v) {
+						int min = 0;
+						if(!txtMin.getText().toString().isEmpty()
+								&& !txtMin.getText().toString().startsWith("45+")
+								&& !txtMin.getText().toString().startsWith("90+")
+								&& !txtMin.getText().toString().startsWith("105+")
+								&& !txtMin.getText().toString().startsWith("120+")) {
+							min = Integer.parseInt(txtMin.getText().toString());
+						}
+						
 						if (txtMin.getText().toString().equals("")
 								|| txtScorer.getText().toString().equals("")) {
 							showNoti("Please enter goalscorer and minute!");
-						} else {
+						} 
+						else if (min < 0 || min > 120) {
+							showNoti("Invalid minute number!");
+						}
+						else {
 							int goal = Integer.parseInt(btnGoalB.getText()
 									.toString());
 							btnGoalB.setText(String.valueOf(goal + 1)
@@ -835,7 +920,6 @@ public class ConfedCup2017Activity extends Activity {
 
 			@Override
 			public boolean onLongClick(View v) {
-				// TODO Auto-generated method stub
 				if (!txtGoalA.getText().toString().equals("")) {
 					dlgEdit.setContentView(R.layout.edit);
 					final EditText txtEdit = (EditText) dlgEdit
@@ -877,7 +961,6 @@ public class ConfedCup2017Activity extends Activity {
 
 			@Override
 			public boolean onLongClick(View v) {
-				// TODO Auto-generated method stub
 				if (!txtGoalB.getText().toString().equals("")) {
 					dlgEdit.setContentView(R.layout.edit);
 					final EditText txtEdit = (EditText) dlgEdit

@@ -1,23 +1,23 @@
 package com.project.livescore.activities;
 
+import java.util.ArrayList;
+
 import com.project.livescore.data.DBAdapter;
+import com.project.livescore.data.Team;
 import com.project.livescore1415.R;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.view.CollapsibleActionView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,7 +29,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.os.Build;
 
 public class DFBPokalActivity extends Activity {
 
@@ -48,6 +47,7 @@ public class DFBPokalActivity extends Activity {
 	Drawable drGoal = null;
 	Drawable drNone = null;
 	static DBAdapter mDB;
+	Cursor mCursor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -124,10 +124,9 @@ public class DFBPokalActivity extends Activity {
 		btnPenB5.setBackgroundResource(pref.getInt("PenB5Color",
 				R.drawable.pen_button_normal));
 
-		Resources res = getResources();
+		final Resources res = getResources();
 
 		final CharSequence Runde[] = res.getStringArray(R.array.runde);
-		final CharSequence Team[] = res.getStringArray(R.array.dfbpokal);
 		final Dialog dlgRnd = new Dialog(this);
 		final Dialog dlgGoal = new Dialog(this);
 		final Dialog dlgEdit = new Dialog(this);
@@ -138,7 +137,6 @@ public class DFBPokalActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				dlgRnd.setContentView(R.layout.spieltag);
 				dlgRnd.setTitle("Spielinfo");
 
@@ -162,13 +160,11 @@ public class DFBPokalActivity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						dlgSpl.setItems(Runde, new OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
 								btnSpl.setText(Runde[which]);
 								dialog.cancel();
 							}
@@ -177,18 +173,28 @@ public class DFBPokalActivity extends Activity {
 					}
 				});
 
+				final ArrayList<String> lstTeam = new ArrayList<String>();
+				mCursor = mDB.getTeamByLeague(res.getString(R.string.dfb));
+				mCursor.moveToFirst();
+				while (!mCursor.isAfterLast()) {
+					Team team = new Team();
+					team.setName(mCursor.getString(1));
+					
+					lstTeam.add(team.getName());
+					mCursor.moveToNext();
+				}
+				mCursor.close();
+				final String Team[] = lstTeam.toArray(new String[0]);
 				btnTeam1.setOnClickListener(new View.OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						dlgTeam.setItems(Team, new OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
 								if (!Team[which].equals(btnTeam2.getText())) {
-									// TODO Auto-generated method stub
 									btnTeam1.setText(Team[which]);
 									dialog.cancel();
 								} else {
@@ -204,15 +210,12 @@ public class DFBPokalActivity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						dlgTeam.setItems(Team, new OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
 								if (!Team[which].equals(btnTeam1.getText())) {
-									// TODO Auto-generated method stub
 									btnTeam2.setText(Team[which]);
 									dialog.cancel();
 								} else {
@@ -232,7 +235,6 @@ public class DFBPokalActivity extends Activity {
 								|| btnTeam1.getText().toString().equals("Heim")
 								|| btnTeam2.getText().toString()
 										.equals("Auswärt")) {
-							// TODO Auto-generated method stub
 							errNoti("Bitte Teams und Spieltag auswählen");
 						} else {
 							txtTeam1.setText(btnTeam1.getText());
@@ -250,7 +252,6 @@ public class DFBPokalActivity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						dlgRnd.cancel();
 					}
 				});
@@ -299,11 +300,19 @@ public class DFBPokalActivity extends Activity {
 
 					@Override
 					public void onClick(View v) {
+						int min = 0;
+						if(!txtMin.getText().toString().isEmpty()
+								&& !txtMin.getText().toString().startsWith("45+")
+								&& !txtMin.getText().toString().startsWith("90+")
+								&& !txtMin.getText().toString().startsWith("105+")
+								&& !txtMin.getText().toString().startsWith("120+")) {
+							min = Integer.parseInt(txtMin.getText().toString());
+						}
 						if (txtMin.getText().toString().equals("")
 								|| txtScorer.getText().toString().equals("")) {
-							// TODO Auto-generated method stub
-
 							errNoti("Bitte die Minute und den Torschützer eingeben!");
+						} else if (min < 0 || min > 120) {
+							errNoti("Ungültige Nummer!");
 						} else {
 							int goal = Integer.parseInt(btnTor1.getText()
 									.toString());
@@ -377,11 +386,20 @@ public class DFBPokalActivity extends Activity {
 
 					@Override
 					public void onClick(View v) {
+						int min = 0;
+						if(!txtMin.getText().toString().isEmpty()
+								&& !txtMin.getText().toString().startsWith("45+")
+								&& !txtMin.getText().toString().startsWith("90+")
+								&& !txtMin.getText().toString().startsWith("105+")
+								&& !txtMin.getText().toString().startsWith("120+")) {
+							min = Integer.parseInt(txtMin.getText().toString());
+						}
 						if (txtMin.getText().toString().equals("")
 								|| txtScorer.getText().toString().equals("")) {
-							// TODO Auto-generated method stub
-
 							errNoti("Bitte die Minute und den Torschützer eingeben!");
+						}
+						else if (min < 0 || min > 120) {
+							errNoti("Ungültige Nummer!");
 						} else {
 							int goal = Integer.parseInt(btnTor2.getText()
 									.toString());
@@ -1048,5 +1066,14 @@ public class DFBPokalActivity extends Activity {
 		}
 
 		return -1;
+	}
+	
+	private Team crsToObj(Cursor c) {
+		Team team = new Team();
+		team.setId(c.getInt(0));
+		team.setName(c.getString(1));
+		team.setCountry(c.getString(2));
+		team.setLiga(c.getString(3));
+		return team;
 	}
 }

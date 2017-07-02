@@ -1,11 +1,24 @@
 package com.project.livescore.activities;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import com.project.livescore.data.Champs;
+import com.project.livescore.data.DBAdapter;
+import com.project.livescore1415.AdminActivity;
+import com.project.livescore1415.ConfedCup2017Activity;
+import com.project.livescore1415.Euro2016Activity;
+import com.project.livescore1415.R;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.res.Resources;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,15 +28,11 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.project.livescore.data.DBAdapter;
-import com.project.livescore1415.ConfedCup2017Activity;
-import com.project.livescore1415.Euro2016Activity;
-import com.project.livescore1415.R;
-
 public class MainActivity extends Activity {
 
-	ImageButton imgbBL, imgbCL, imgbDFB, imgbWC, imgbDFLS;
+	ImageButton imgbBL, imgbCL, imgbDFB, imgbWC, imgbDFLS, imgbCfC, imgbEuro;
 	static DBAdapter mDB;
+	Cursor mCursor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +47,23 @@ public class MainActivity extends Activity {
 		imgbWC = (ImageButton) this.findViewById(R.id.imgbWC);
 		imgbDFB = (ImageButton) this.findViewById(R.id.imgbDFB);
 		imgbDFLS = (ImageButton) this.findViewById(R.id.imgbDFLS);
+		imgbCfC = (ImageButton) this.findViewById(R.id.imgbCfC);
+		imgbEuro = (ImageButton) this.findViewById(R.id.imgbEuro);
 
+		Resources res = getResources();
+		final CharSequence Champ[] = res.getStringArray(R.array.champs);
+		
+		imgbBL.setVisibility(setVisible(Champ[0].toString()));
+		imgbDFB.setVisibility(setVisible(Champ[1].toString()));
+		imgbDFLS.setVisibility(setVisible(Champ[2].toString()));
+		imgbCL.setVisibility(setVisible(Champ[3].toString()));
+		imgbEuro.setVisibility(setVisible(Champ[4].toString()));
+		imgbWC.setVisibility(setVisible(Champ[6].toString()));
+		imgbCfC.setVisibility(setVisible(Champ[7].toString()));
+		
 		imgbBL.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				Intent news = new Intent(MainActivity.this,
 						BundesligaActivity.class);
 				onStop();
@@ -55,7 +76,6 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				Intent news = new Intent(MainActivity.this,
 						DFBPokalActivity.class);
 				onStop();
@@ -67,7 +87,6 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				Intent news = new Intent(MainActivity.this,
 						ChampionsLeagueActivity.class);
 				onStop();
@@ -79,7 +98,17 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				Intent news = new Intent(MainActivity.this,
+						WorldCup2014Activity.class);
+				onStop();
+				startActivity(news);
+			}
+		});
+		
+		imgbCfC.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
 				Intent news = new Intent(MainActivity.this,
 						ConfedCup2017Activity.class);
 				onStop();
@@ -91,13 +120,43 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				Intent news = new Intent(MainActivity.this,
 						DFLSupercupActivity.class);
 				onStop();
 				startActivity(news);
 			}
 		});
+		
+		imgbEuro.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent news = new Intent(MainActivity.this,
+						Euro2016Activity.class);
+				onStop();
+				startActivity(news);
+			}
+		});
+	}
+	
+	private Champs crsToObj(Cursor c) {
+		Champs ch = new Champs();
+		ch.setName(c.getString(0));
+		ch.setOn(c.getInt(1) == 0 ? false : true);
+		
+		return ch;
+	}
+
+	private int setVisible(String champ) {
+		mCursor = mDB.getChamp(champ);
+		mCursor.moveToFirst();
+		while (!mCursor.isAfterLast()) {
+			Champs ch = crsToObj(mCursor);
+			return ch.isOn() ? View.VISIBLE : View.GONE;
+		}
+		
+		
+		return View.GONE;
 	}
 
 	@Override
@@ -108,6 +167,20 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		Resources res = getResources();
+		final CharSequence Champ[] = res.getStringArray(R.array.champs);
+		
+		imgbBL.setVisibility(setVisible(Champ[0].toString()));
+		imgbDFB.setVisibility(setVisible(Champ[1].toString()));
+		imgbDFLS.setVisibility(setVisible(Champ[2].toString()));
+		imgbCL.setVisibility(setVisible(Champ[3].toString()));
+		imgbWC.setVisibility(setVisible(Champ[6].toString()));
+		imgbCfC.setVisibility(setVisible(Champ[7].toString()));
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
@@ -123,7 +196,6 @@ public class MainActivity extends Activity {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					dialog.cancel();
 				}
 			});
@@ -138,7 +210,6 @@ public class MainActivity extends Activity {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					System.exit(0);
 				}
 			});
@@ -147,7 +218,6 @@ public class MainActivity extends Activity {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					dialog.cancel();
 				}
 			});
@@ -158,7 +228,12 @@ public class MainActivity extends Activity {
 					MatchesListActivity.class);
 			onStop();
 			startActivity(intent);
-		} 
+		} else if (id == R.id.admin) {
+			Intent news = new Intent(MainActivity.this,
+					AdminActivity.class);
+			onStop();
+			startActivity(news);
+		}
 		return super.onOptionsItemSelected(item);
 	}
 	
@@ -167,11 +242,10 @@ public class MainActivity extends Activity {
 	}
 
 	private String Intro() {
-		// TODO Auto-generated method stub
 		String mes = "";
-		mes += "Livescore v1.2 App for Galaxy Tab 8.9";
+		mes += "Livescore v1.4 App for Galaxy Tab A";
 		mes += "\nAuthor : Nigellus Nguyen";
-		mes += "\nYear released : 2016";
+		mes += "\nYear released : 2017";
 		return mes;
 	}
 

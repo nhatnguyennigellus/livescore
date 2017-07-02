@@ -1,8 +1,6 @@
 package com.project.livescore.activities;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import com.project.livescore.data.DBAdapter;
 import com.project.livescore1415.R;
@@ -71,7 +69,6 @@ public class WorldCup2014Activity extends Activity {
 						@Override
 						public void onDateSet(DatePicker view, int year,
 								int monthOfYear, int dayOfMonth) {
-							// TODO Auto-generated method stub
 							yearSelected = year;
 							monthSelected = monthOfYear + 1;
 							daySelected = dayOfMonth;
@@ -320,7 +317,6 @@ public class WorldCup2014Activity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						showDialog(TIME_PICKER_DIALOG);
 
 					}
@@ -331,15 +327,12 @@ public class WorldCup2014Activity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						dlgTeam.setItems(Team, new OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
 								if (!Team[which].equals(btnTeam2.getText())) {
-									// TODO Auto-generated method stub
 									btnTeam1.setText(Team[which]);
 									dialog.cancel();
 								} else {
@@ -355,15 +348,12 @@ public class WorldCup2014Activity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						dlgTeam.setItems(Team, new OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
 								if (!Team[which].equals(btnTeam1.getText())) {
-									// TODO Auto-generated method stub
 									btnTeam2.setText(Team[which]);
 									dialog.cancel();
 								} else {
@@ -379,7 +369,6 @@ public class WorldCup2014Activity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						dlgRnd.cancel();
 					}
 				});
@@ -393,7 +382,6 @@ public class WorldCup2014Activity extends Activity {
 										.equals("Team A")
 								|| btnTeam2.getText().toString()
 										.equals("Team B")) {
-							// TODO Auto-generated method stub
 							errNoti("Please select round and teams!");
 						} else if (btnGrp.getVisibility() == View.VISIBLE
 								&& btnGrp.getText().toString().equals("Group")) {
@@ -478,11 +466,21 @@ public class WorldCup2014Activity extends Activity {
 
 					@Override
 					public void onClick(View v) {
+						int min = 0;
+						if(!txtMin.getText().toString().isEmpty()
+								&& !txtMin.getText().toString().startsWith("45+")
+								&& !txtMin.getText().toString().startsWith("90+")
+								&& !txtMin.getText().toString().startsWith("105+")
+								&& !txtMin.getText().toString().startsWith("120+")) {
+							min = Integer.parseInt(txtMin.getText().toString());
+						}
+						
 						if (txtMin.getText().toString().equals("")
 								|| txtScorer.getText().toString().equals("")) {
-							// TODO Auto-generated method stub
-
 							errNoti("Please enter goalscorer and minute!");
+						} 
+						else if (min < 0 || min > 120) {
+							errNoti("Invalid minute number!");
 						} else {
 							int goal = Integer.parseInt(btnGoal1.getText()
 									.toString());

@@ -47,8 +47,6 @@ public class MatchesListActivity extends ListActivity {
 		mDB = new DBAdapter(this);
 		mDB.open();
 
-		// List<String> item = null ;
-
 		if (mDB.countRows() == 0) {
 			tvNoData.setVisibility(View.VISIBLE);
 		} else {
@@ -62,7 +60,6 @@ public class MatchesListActivity extends ListActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int pos,
 					long id) {
-				// TODO Auto-generated method stub
 				TextView tvId = (TextView) view.findViewById(R.id.tvID);
 				final int matchId = Integer.parseInt(tvId.getText().toString());
 
@@ -75,7 +72,6 @@ public class MatchesListActivity extends ListActivity {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
 						mDB.removeMatch(matchId);
 						loadData(currentCondition);
 						dialog.cancel();
@@ -86,7 +82,6 @@ public class MatchesListActivity extends ListActivity {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
 						dialog.cancel();
 					}
 				});
@@ -154,7 +149,6 @@ public class MatchesListActivity extends ListActivity {
 	}
 
 	private Match cursorToObject(Cursor c) {
-		// TODO Auto-generated method stub
 		Match m = new Match();
 		m.setId(c.getInt(0));
 		m.setLeague(c.getString(1));
@@ -217,13 +211,13 @@ public class MatchesListActivity extends ListActivity {
 		} else if (id == R.id.sort) {
 			final AlertDialog.Builder dlgLiga = new AlertDialog.Builder(this);
 			final CharSequence Liga[] = { "All", "Bundesliga",
-					"Champions League", "DFB Pokal", "World Cup 2014" };
+					"Champions League", "DFB Pokal", "World Cup 2014",
+					"EURO 2016", "Confederations Cup 2017"};
 
 			dlgLiga.setItems(Liga, new OnClickListener() {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					if (Liga[which].equals("Bundesliga")) {
 						loadData("Bundesliga");
 					} else if (Liga[which].equals("Champions League")) {
