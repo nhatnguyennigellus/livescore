@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="rus">
+        <item>#B61122</item>
+    	<item>#EBEBEB</item>
+    	<item>#EBEBEB</item>
+    </string-array>
+    <string-array name="ksa">
+        <item>#E9EDF0</item>
+    	<item>#418554</item>
+    	<item>#418554</item>
+    </string-array>
+    <string-array name="egy">
+        <item>#C81532</item>
+    	<item>#FFFFFF</item>
+    	<item>#FFFFFF</item>
+    </string-array>
+    <string-array name="uru">
+        <item>#72B0D5</item>
+    	<item>#FFFFFF</item>
+    	<item>#FFFFFF</item>
+    </string-array>
+    <string-array name="por">
+        <item>#C91D33</item>
+    	<item>#FFFFFF</item>
+    	<item>#FFFFFF</item>
+    </string-array>
+    <string-array name="esp">
+        <item>#D03A17</item>
+    	<item>#FFFFFF</item>
+    	<item>#FFFFFF</item>
+    </string-array>
+    <string-array name="mar">
+        <item>#C51D36</item>
+    	<item>#FFFFFF</item>
+    	<item>#33956F</item>
+    </string-array>
+    <string-array name="irn">
+        <item>#FFFFFF</item>
+    	<item>#FF0000</item>
+    	<item>#FF0000</item>
+    </string-array>
+    <string-array name="fra">
+        <item>#25334D</item>
+    	<item>#FFFFFF</item>
+    	<item>#FFFFFF</item>
+    </string-array>
+    <string-array name="aus">
+        <item>#FFCA00</item>
+    	<item>#2C4240</item>
+    	<item>#2C4240</item>
+    </string-array>
+    <string-array name="per">
+        <item>#FFFFFF</item>
+    	<item>#FF1525</item>
+    	<item>#FF1525</item>
+    </string-array>
+    <string-array name="den">
+        <item>#F42626</item>
+    	<item>#F9F9F9</item>
+    	<item>#F9F9F9</item>
+    </string-array>
+    <string-array name="arg">
+        <item>#9CB9E1</item>
+    	<item>#292927</item>
+    	<item>#292927</item>
+    </string-array>
+    <string-array name="isl">
+        <item>#186AF2</item>
+    	<item>#FFFFFF</item>
+    	<item>#FFFFFF</item>
+    </string-array>
+    <string-array name="cro">
+        <item>#F81830</item>
+    	<item>#2E3851</item>
+    	<item>#2E3851</item>
+    </string-array>
+    <string-array name="nga">
+        <item>#BBDF99</item>
+    	<item>#2E4441</item>
+    	<item>#2E4441</item>
+    </string-array>
+    <string-array name="bra">
+        <item>#FEDB38</item>
+    	<item>#0868BC</item>
+    	<item>#0868BC</item>
+    </string-array>
+    <string-array name="sui">
+        <item>#BB022A</item>
+    	<item>#FFFFFF</item>
+    	<item>#FFFFFF</item>
+    	<item></item>
+    </string-array>
+    <string-array name="crc">
+        <item>#E50110</item>
+    	<item>#FFFFFF</item>
+    	<item>#FFFFFF</item>
+    </string-array>
+    <string-array name="srb">
+        <item>#FF0224</item>
+    	<item>#FFFFFF</item>
+    	<item>#FFFFFF</item>
+    	<item></item>
+    </string-array>
+    <string-array name="ger">
+        <item>#ffffff</item>
+    	<item>#50ABB0</item>
+    	<item>#50ABB0</item>
+    </string-array>
+    <string-array name="mex">
+        <item>#2F5856</item>
+    	<item>#FFFFFF</item>
+    	<item>#FFFFFF</item>
+    </string-array>
+    <string-array name="swe">
+        <item>#E8E564</item>
+    	<item>#155DB0</item>
+    	<item>#155DB0</item>
+    </string-array>
+    <string-array name="kor">
+        <item>#F4564A</item>
+    	<item>#FFFFFF</item>
+    	<item>#FFFFFF</item>
+    </string-array>
+    <string-array name="bel">
+        <item>#D0243C</item>
+    	<item>#EEC445</item>
+    	<item>#EEC445</item>
+    </string-array>
+    <string-array name="pan">
+        <item>#FF2A3E</item>
+    	<item>#FFFFFF</item>
+    	<item>#FFFFFF</item>
+    </string-array>
+    <string-array name="tun">
+        <item>#ED353F</item>
+    	<item>#F0F0F0</item>
+    	<item>#F0F0F0</item>
+    </string-array>
+    <string-array name="eng">
+        <item>#FFFFFF</item>
+    	<item>#EA3335</item>
+    	<item>#EA3335</item>
+    </string-array>
+    <string-array name="pol">
+        <item>#B32535</item>
+    	<item>#E6EAED</item>
+    	<item>#E6EAED</item>
+    </string-array>
+    <string-array name="sen">
+        <item>#0C7D52</item>
+    	<item>#F6F6F8</item>
+    	<item>#F6F6F8</item>
+    </string-array>
+    <string-array name="col">
+        <item>#DAD765</item>
+    	<item>#2179DA</item>
+    	<item>#2179DA</item>
+    </string-array>
+    <string-array name="jpn">
+        <item>#213472</item>
+    	<item>#D9DBDA</item>
+    	<item>#D9DBDA</item>
+    </string-array>
+</resources>

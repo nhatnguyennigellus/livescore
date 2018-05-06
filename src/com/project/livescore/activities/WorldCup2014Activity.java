@@ -1,9 +1,10 @@
 package com.project.livescore.activities;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
-import com.project.livescore.data.DBAdapter;
 import com.project.livescore1415.R;
+import com.project.livescore.data.*;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -15,8 +16,10 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -38,24 +41,31 @@ import android.widget.Toast;
 public class WorldCup2014Activity extends Activity {
 
 	Button btnRound, btnGoal1, btnGoal2;
-	Button btnPenA1, btnPenA2, btnPenA3, btnPenA4, btnPenA5, btnPenB1,
-			btnPenB2, btnPenB3, btnPenB4, btnPenB5;
-	TextView txtTeam1, txtTeam2, txtGoal1, txtGoal2, tvPenA, tvPenB,
-			tvPenStage, txtDateTime;
+	Button btnPenA1, btnPenA2, btnPenA3, btnPenA4, btnPenA5, btnPenB1, btnPenB2, btnPenB3, btnPenB4, btnPenB5;
+	Button btnKitColorA, btnKitColorB;
+	TextView txtTeam1, txtTeam2, txtGoal1, txtGoal2, tvPenA, tvPenB, tvPenStage, txtDateTime;
 	LinearLayout llPen;
-	MediaPlayer mp;
+	MediaPlayer mp, mpgoal;
 	ImageView imgTrophy, imgFlagA, imgFlagB;
 	static DBAdapter mDB;
 	static final int DATE_PICKER_DIALOG = 0;
 	static final int TIME_PICKER_DIALOG = 1;
-	public int yearSelected = 0, monthSelected = 0, daySelected = 0,
-			hourSelected = 0, minuteSelected = 0;
+	public int yearSelected = 0, monthSelected = 0, daySelected = 0, hourSelected = 0, minuteSelected = 0;
 	Button btnTime, btnDate;
 	DigitalClock digiClock;
 
+	CharSequence kitColorA[];
+	CharSequence kitColorB[];
+	CharSequence kit[] = {"Home", "Away", "3rd Kit"};
+	int idGoal = 0;
+	int idMiss = 0;
+	int idNone = 0;
+	Drawable drMiss = null;
+	Drawable drGoal = null;
+	Drawable drNone = null;
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		// TODO Auto-generated method stub
+
 		Calendar c = Calendar.getInstance();
 		switch (id) {
 		case DATE_PICKER_DIALOG:
@@ -63,37 +73,31 @@ public class WorldCup2014Activity extends Activity {
 			int cmonth = c.get(Calendar.MONTH);
 			int cday = c.get(Calendar.DAY_OF_MONTH);
 
-			return new DatePickerDialog(this,
-					new DatePickerDialog.OnDateSetListener() {
+			return new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
 
-						@Override
-						public void onDateSet(DatePicker view, int year,
-								int monthOfYear, int dayOfMonth) {
-							yearSelected = year;
-							monthSelected = monthOfYear + 1;
-							daySelected = dayOfMonth;
-							btnDate.setText(standardizeDate(daySelected,
-									monthSelected, yearSelected));
-						}
-					}, cyear, cmonth, cday);
+				@Override
+				public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+					yearSelected = year;
+					monthSelected = monthOfYear + 1;
+					daySelected = dayOfMonth;
+					btnDate.setText(standardizeDate(daySelected, monthSelected, yearSelected));
+				}
+			}, cyear, cmonth, cday);
 
 		case TIME_PICKER_DIALOG:
 			int mHour = c.get(Calendar.HOUR_OF_DAY);
 			int mMinute = c.get(Calendar.MINUTE);
 
-			return new TimePickerDialog(this,
-					new TimePickerDialog.OnTimeSetListener() {
+			return new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
 
-						@Override
-						public void onTimeSet(TimePicker view, int hourOfDay,
-								int minute) {
-							// TODO Auto-generated method stub
-							hourSelected = hourOfDay;
-							minuteSelected = minute;
-							btnTime.setText(standardizeTime(hourSelected,
-									minuteSelected));
-						}
-					}, mHour, mMinute, true);
+				@Override
+				public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+					// TODO Auto-generated method stub
+					hourSelected = hourOfDay;
+					minuteSelected = minute;
+					btnTime.setText(standardizeTime(hourSelected, minuteSelected));
+				}
+			}, mHour, mMinute, true);
 		}
 		return super.onCreateDialog(id);
 	}
@@ -106,6 +110,14 @@ public class WorldCup2014Activity extends Activity {
 		mDB = new DBAdapter(this);
 		mDB.open();
 
+		idGoal = R.drawable.pen_button_goal;
+		idMiss = R.drawable.pen_button_miss;
+		idNone = R.drawable.pen_button_normal;
+
+		drMiss = getResources().getDrawable(idMiss);
+		drGoal = getResources().getDrawable(idGoal);
+		drNone = getResources().getDrawable(idNone);
+		
 		digiClock = (DigitalClock) this.findViewById(R.id.digitalClock1);
 		btnRound = (Button) this.findViewById(R.id.btnWCRound);
 		btnGoal1 = (Button) this.findViewById(R.id.btnWCGoalA);
@@ -144,16 +156,29 @@ public class WorldCup2014Activity extends Activity {
 		tvPenA.setText(pref.getString("tvPenA", "0"));
 		tvPenB.setText(pref.getString("tvPenB", "0"));
 		llPen.setVisibility(pref.getInt("llPenVisible", 8));
-		btnPenA1.setBackgroundColor(pref.getInt("PenA1Color", 0));
-		btnPenA2.setBackgroundColor(pref.getInt("PenA2Color", 0));
-		btnPenA3.setBackgroundColor(pref.getInt("PenA3Color", 0));
-		btnPenA4.setBackgroundColor(pref.getInt("PenA4Color", 0));
-		btnPenA5.setBackgroundColor(pref.getInt("PenA5Color", 0));
-		btnPenB1.setBackgroundColor(pref.getInt("PenB1Color", 0));
-		btnPenB2.setBackgroundColor(pref.getInt("PenB2Color", 0));
-		btnPenB3.setBackgroundColor(pref.getInt("PenB3Color", 0));
-		btnPenB4.setBackgroundColor(pref.getInt("PenB4Color", 0));
-		btnPenB5.setBackgroundColor(pref.getInt("PenB5Color", 0));
+		btnPenA1.setBackgroundResource(pref.getInt("PenA1Color",
+				R.drawable.pen_button_normal));
+		btnPenA2.setBackgroundResource(pref.getInt("PenA2Color",
+				R.drawable.pen_button_normal));
+		btnPenA3.setBackgroundResource(pref.getInt("PenA3Color",
+				R.drawable.pen_button_normal));
+		btnPenA4.setBackgroundResource(pref.getInt("PenA4Color",
+				R.drawable.pen_button_normal));
+		btnPenA5.setBackgroundResource(pref.getInt("PenA5Color",
+				R.drawable.pen_button_normal));
+		btnPenB1.setBackgroundResource(pref.getInt("PenB1Color",
+				R.drawable.pen_button_normal));
+		btnPenB2.setBackgroundResource(pref.getInt("PenB2Color",
+				R.drawable.pen_button_normal));
+		btnPenB3.setBackgroundResource(pref.getInt("PenB3Color",
+				R.drawable.pen_button_normal));
+		btnPenB4.setBackgroundResource(pref.getInt("PenB4Color",
+				R.drawable.pen_button_normal));
+		btnPenB5.setBackgroundResource(pref.getInt("PenB5Color",
+				R.drawable.pen_button_normal));
+		
+		btnKitColorA = (Button) this.findViewById(R.id.btnKitColorA);
+		btnKitColorB = (Button) this.findViewById(R.id.btnKitColorB);
 
 		imgTrophy = (ImageView) this.findViewById(R.id.imgWCTrophy);
 		imgFlagA = (ImageView) this.findViewById(R.id.imgWCFlagA);
@@ -161,16 +186,19 @@ public class WorldCup2014Activity extends Activity {
 		imgFlagA.setImageResource(setFlag(pref.getString("TeamCL1", "")));
 		imgFlagB.setImageResource(setFlag(pref.getString("TeamCL2", "")));
 
+		btnKitColorA.setBackgroundColor(Color.WHITE);
+		btnKitColorB.setBackgroundColor(Color.WHITE);
+		
 		Calendar c = Calendar.getInstance();
-		if (c.get(Calendar.SECOND) % 2 == 1)
+	/*	if (c.get(Calendar.SECOND) % 2 == 1)
 			mp = MediaPlayer.create(this, R.raw.wc);
-		else
-			mp = MediaPlayer.create(this, R.raw.weareone);
+		else*/
+			mp = MediaPlayer.create(this, R.raw.confedcup);
 		mp.start();
+		mpgoal = MediaPlayer.create(this, R.raw.torhymne);
 
 		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+			getFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment()).commit();
 		}
 
 		imgTrophy.setOnClickListener(new View.OnClickListener() {
@@ -185,15 +213,17 @@ public class WorldCup2014Activity extends Activity {
 			}
 		});
 
-		Resources res = getResources();
+		final Resources res = getResources();
 
 		final CharSequence Round[] = res.getStringArray(R.array.wcround);
 		final CharSequence Group[] = res.getStringArray(R.array.group);
-		final CharSequence Team[] = res.getStringArray(R.array.worldcup);
-		final CharSequence Venue[] = res.getStringArray(R.array.wc_venue);
+		// final CharSequence Team[] = res.getStringArray(R.array.worldcup);
+		// final CharSequence Venue[] =
+		// res.getStringArray(R.array.wc2018_venue);
 		final Dialog dlgRnd = new Dialog(this);
 		final Dialog dlgGoal = new Dialog(this);
 		final Dialog dlgEdit = new Dialog(this);
+		final Dialog dlgKitColor = new Dialog(this);
 
 		final AlertDialog.Builder dlgSpl = new AlertDialog.Builder(this);
 		final AlertDialog.Builder dlgTeam = new AlertDialog.Builder(this);
@@ -207,51 +237,42 @@ public class WorldCup2014Activity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-
 				dlgRnd.setTitle("Match Info");
 
 				Button btnOK = (Button) dlgRnd.findViewById(R.id.btnSplOK);
-				Button btnCancel = (Button) dlgRnd
-						.findViewById(R.id.btnSplCancel);
-				final Button btnSpl = (Button) dlgRnd
-						.findViewById(R.id.btnWCSelRound);
-				final Button btnGrp = (Button) dlgRnd
-						.findViewById(R.id.btnWCSelGroup);
+				Button btnCancel = (Button) dlgRnd.findViewById(R.id.btnSplCancel);
+				final Button btnSpl = (Button) dlgRnd.findViewById(R.id.btnWCSelRound);
+				final Button btnGrp = (Button) dlgRnd.findViewById(R.id.btnWCSelGroup);
 
-				final Button btnVenue = (Button) dlgRnd
-						.findViewById(R.id.btnVenueSel);
+				final Button btnVenue = (Button) dlgRnd.findViewById(R.id.btnVenueSel);
 
-				final Button btnTeam1 = (Button) dlgRnd
-						.findViewById(R.id.btnSplTeam1);
-				final Button btnTeam2 = (Button) dlgRnd
-						.findViewById(R.id.btnSplTeam2);
-
+				final Button btnTeam1 = (Button) dlgRnd.findViewById(R.id.btnSplTeam1);
+				final Button btnTeam2 = (Button) dlgRnd.findViewById(R.id.btnSplTeam2);
+				
+				final Button btnKCA = (Button) dlgRnd.findViewById(R.id.btnKCA);
+				final Button btnKCB = (Button) dlgRnd.findViewById(R.id.btnKCB);
+				
+				btnKCA.setEnabled(false);
+				btnKCB.setEnabled(false);
 				btnSpl.setOnClickListener(new View.OnClickListener() {
 
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
 						dlgSpl.setItems(Round, new OnClickListener() {
 
 							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								// TODO Auto-generated method stub
+							public void onClick(DialogInterface dialog, int which) {
 								btnSpl.setText(Round[which]);
 
 								dialog.cancel();
-								if (btnSpl.getText().toString()
-										.equals("Group Stage")) {
+								if (btnSpl.getText().toString().equals("Group Stage")) {
 									btnGrp.setVisibility(View.VISIBLE);
 								} else {
 									btnGrp.setVisibility(View.GONE);
-									if(btnSpl.getText().toString()
-											.equals("FINAL"))
-									{
-										btnVenue.setText("Rio de Janeiro");
-										btnDate.setText("14.07.2014");
-										btnTime.setText("02:00");
+									if (btnSpl.getText().toString().equals("FINAL")) {
+										btnVenue.setText("Moscow");
+										btnDate.setText("15.07.2014");
+										btnTime.setText("01:00");
 									}
 								}
 							}
@@ -265,13 +286,10 @@ public class WorldCup2014Activity extends Activity {
 
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
 						dlgGroup.setItems(Group, new OnClickListener() {
 
 							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								// TODO Auto-generated method stub
+							public void onClick(DialogInterface dialog, int which) {
 								btnGrp.setText("Group " + Group[which]);
 								dialog.cancel();
 							}
@@ -281,17 +299,26 @@ public class WorldCup2014Activity extends Activity {
 					}
 				});
 
+				Cursor cVenue;
+				final ArrayList<String> lstVenue = new ArrayList<String>();
+				cVenue = mDB.getVenueByLeague(res.getString(R.string.worldcup));
+				cVenue.moveToFirst();
+				while (!cVenue.isAfterLast()) {
+					Venue venue = new Venue(cVenue.getString(0), cVenue.getString(1), cVenue.getString(2),
+							cVenue.getString(3));
+					lstVenue.add(venue.getCity());
+					cVenue.moveToNext();
+				}
+				cVenue.close();
+				final String[] Venue = lstVenue.toArray(new String[0]);
 				btnVenue.setOnClickListener(new View.OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						dlgVenue.setItems(Venue, new OnClickListener() {
 
 							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								// TODO Auto-generated method stub
+							public void onClick(DialogInterface dialog, int which) {
 								btnVenue.setText(Venue[which]);
 								dialog.cancel();
 							}
@@ -302,43 +329,51 @@ public class WorldCup2014Activity extends Activity {
 				});
 
 				btnDate.setOnClickListener(new View.OnClickListener() {
-
 					@SuppressWarnings("deprecation")
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						showDialog(DATE_PICKER_DIALOG);
-
 					}
 
 				});
 
 				btnTime.setOnClickListener(new View.OnClickListener() {
-
 					@Override
 					public void onClick(View v) {
 						showDialog(TIME_PICKER_DIALOG);
-
 					}
-
 				});
 
+				Cursor mCursor;
+				final ArrayList<String> lstTeam = new ArrayList<String>();
+				mCursor = mDB.getTeamByLeague(res.getString(R.string.worldcup));
+				mCursor.moveToFirst();
+				while (!mCursor.isAfterLast()) {
+					Team team = new Team();
+					team.setName(mCursor.getString(1));
+
+					lstTeam.add(team.getName());
+					mCursor.moveToNext();
+				}
+				mCursor.close();
+				final String Team[] = lstTeam.toArray(new String[0]);
 				btnTeam1.setOnClickListener(new View.OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
 						dlgTeam.setItems(Team, new OnClickListener() {
-
 							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
+							public void onClick(DialogInterface dialog, int which) {
 								if (!Team[which].equals(btnTeam2.getText())) {
 									btnTeam1.setText(Team[which]);
+									kitColorA = setKitColorList(Team[which], res);
+									btnKCA.setEnabled(true);
 									dialog.cancel();
 								} else {
 									errNoti("Please select a team!");
 								}
 							}
+
 						});
 						dlgTeam.show();
 					}
@@ -351,10 +386,11 @@ public class WorldCup2014Activity extends Activity {
 						dlgTeam.setItems(Team, new OnClickListener() {
 
 							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
+							public void onClick(DialogInterface dialog, int which) {
 								if (!Team[which].equals(btnTeam1.getText())) {
 									btnTeam2.setText(Team[which]);
+									kitColorB = setKitColorList(Team[which], res);
+									btnKCB.setEnabled(true);
 									dialog.cancel();
 								} else {
 									errNoti("Please select a team!");
@@ -365,6 +401,97 @@ public class WorldCup2014Activity extends Activity {
 					}
 				});
 
+				
+				
+				btnKCA.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+
+						dlgKitColor.setContentView(R.layout.select_kitcolor);
+						dlgKitColor.setTitle("Choose kit");
+						
+						Button btnHomeKit = (Button) dlgKitColor.findViewById(R.id.btnHomeKit);
+						Button btnAwayKit = (Button) dlgKitColor.findViewById(R.id.btnAwayKit);
+						Button btn3rdKit = (Button) dlgKitColor.findViewById(R.id.btn3rdKit);
+						
+						btnHomeKit.setBackgroundColor(Color.parseColor(kitColorA[0].toString()));
+						btnAwayKit.setBackgroundColor(Color.parseColor(kitColorA[1].toString()));
+						btn3rdKit.setBackgroundColor(Color.parseColor(kitColorA[2].toString()));
+						
+						btnHomeKit.setOnClickListener(new View.OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								btnKCA.setBackgroundColor(Color.parseColor(kitColorA[0].toString()));
+								dlgKitColor.cancel();
+							}
+						});
+						btnAwayKit.setOnClickListener(new View.OnClickListener() {
+													
+							@Override
+							public void onClick(View v) {
+								btnKCA.setBackgroundColor(Color.parseColor(kitColorA[1].toString()));
+								dlgKitColor.cancel();
+							}
+						});
+						btn3rdKit.setOnClickListener(new View.OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								btnKCA.setBackgroundColor(Color.parseColor(kitColorA[2].toString()));
+								dlgKitColor.cancel();
+							}
+						});
+						
+						dlgKitColor.show();
+					}
+				});
+				
+				btnKCB.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						dlgKitColor.setContentView(R.layout.select_kitcolor);
+						dlgKitColor.setTitle("Choose kit");
+						
+						Button btnHomeKit = (Button) dlgKitColor.findViewById(R.id.btnHomeKit);
+						Button btnAwayKit = (Button) dlgKitColor.findViewById(R.id.btnAwayKit);
+						Button btn3rdKit = (Button) dlgKitColor.findViewById(R.id.btn3rdKit);
+						
+						btnHomeKit.setBackgroundColor(Color.parseColor(kitColorB[0].toString()));
+						btnAwayKit.setBackgroundColor(Color.parseColor(kitColorB[1].toString()));
+						btn3rdKit.setBackgroundColor(Color.parseColor(kitColorB[2].toString()));
+						
+						btnHomeKit.setOnClickListener(new View.OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								btnKCB.setBackgroundColor(Color.parseColor(kitColorB[0].toString()));
+								dlgKitColor.cancel();
+							}
+						});
+						btnAwayKit.setOnClickListener(new View.OnClickListener() {
+													
+							@Override
+							public void onClick(View v) {
+								btnKCB.setBackgroundColor(Color.parseColor(kitColorB[1].toString()));
+								dlgKitColor.cancel();
+							}
+						});
+						btn3rdKit.setOnClickListener(new View.OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								btnKCB.setBackgroundColor(Color.parseColor(kitColorB[2].toString()));
+								dlgKitColor.cancel();
+							}
+						});
+						
+						dlgKitColor.show();
+					}
+				});
+				
 				btnCancel.setOnClickListener(new View.OnClickListener() {
 
 					@Override
@@ -378,10 +505,8 @@ public class WorldCup2014Activity extends Activity {
 					@Override
 					public void onClick(View v) {
 						if (btnSpl.getText().toString().equals("Round")
-								|| btnTeam1.getText().toString()
-										.equals("Team A")
-								|| btnTeam2.getText().toString()
-										.equals("Team B")) {
+								|| btnTeam1.getText().toString().equals("Team A")
+								|| btnTeam2.getText().toString().equals("Team B")) {
 							errNoti("Please select round and teams!");
 						} else if (btnGrp.getVisibility() == View.VISIBLE
 								&& btnGrp.getText().toString().equals("Group")) {
@@ -392,13 +517,11 @@ public class WorldCup2014Activity extends Activity {
 							if (btnGrp.getVisibility() == View.GONE)
 								btnRound.setText(btnSpl.getText());
 							else
-								btnRound.setText(btnSpl.getText() + " - "
-										+ btnGrp.getText().toString());
+								btnRound.setText(btnSpl.getText() + " - " + btnGrp.getText().toString());
 							btnGoal1.setEnabled(true);
 							btnGoal2.setEnabled(true);
 							btnRound.setClickable(false);
-							txtDateTime.setText(btnDate.getText() + " "
-									+ btnTime.getText() + " GMT+07 - "
+							txtDateTime.setText(btnDate.getText() + " " + btnTime.getText() + " GMT+07 - "
 									+ btnVenue.getText().toString());
 
 							String teamA = txtTeam1.getText().toString();
@@ -406,6 +529,11 @@ public class WorldCup2014Activity extends Activity {
 
 							imgFlagA.setImageResource(setFlag(teamA));
 							imgFlagB.setImageResource(setFlag(teamB));
+							
+							ColorDrawable clKCA = (ColorDrawable) btnKCA.getBackground();
+							btnKitColorA.setBackgroundColor(clKCA.getColor());
+							ColorDrawable clKCB = (ColorDrawable) btnKCB.getBackground();
+							btnKitColorB.setBackgroundColor(clKCB.getColor());
 
 							dlgRnd.cancel();
 						}
@@ -425,26 +553,16 @@ public class WorldCup2014Activity extends Activity {
 				dlgGoal.setContentView(R.layout.goalalert);
 				dlgGoal.setTitle("GOOAAAALLL!!!!");
 
-				final EditText txtMin = (EditText) dlgGoal
-						.findViewById(R.id.txtMinute);
-				final EditText txtScorer = (EditText) dlgGoal
-						.findViewById(R.id.txtScorerName);
-				final Button btnGoalOK = (Button) dlgGoal
-						.findViewById(R.id.btnGoalOK);
-				final Button btnGoalCnl = (Button) dlgGoal
-						.findViewById(R.id.btnGoalCancel);
-				final TextView tvGoalFor = (TextView) dlgGoal
-						.findViewById(R.id.tvGoalFor);
-				final TextView tvScoredBy = (TextView) dlgGoal
-						.findViewById(R.id.tvScoredBy);
-				final TextView tvInThe = (TextView) dlgGoal
-						.findViewById(R.id.tvInThe);
-				final TextView tvMin = (TextView) dlgGoal
-						.findViewById(R.id.tvMinute);
-				final CheckBox chkOG = (CheckBox) dlgGoal
-						.findViewById(R.id.chkOG);
-				final CheckBox chkPen = (CheckBox) dlgGoal
-						.findViewById(R.id.chkPen);
+				final EditText txtMin = (EditText) dlgGoal.findViewById(R.id.txtMinute);
+				final EditText txtScorer = (EditText) dlgGoal.findViewById(R.id.txtScorerName);
+				final Button btnGoalOK = (Button) dlgGoal.findViewById(R.id.btnGoalOK);
+				final Button btnGoalCnl = (Button) dlgGoal.findViewById(R.id.btnGoalCancel);
+				final TextView tvGoalFor = (TextView) dlgGoal.findViewById(R.id.tvGoalFor);
+				final TextView tvScoredBy = (TextView) dlgGoal.findViewById(R.id.tvScoredBy);
+				final TextView tvInThe = (TextView) dlgGoal.findViewById(R.id.tvInThe);
+				final TextView tvMin = (TextView) dlgGoal.findViewById(R.id.tvMinute);
+				final CheckBox chkOG = (CheckBox) dlgGoal.findViewById(R.id.chkOG);
+				final CheckBox chkPen = (CheckBox) dlgGoal.findViewById(R.id.chkPen);
 
 				tvGoalFor.setText("GOAAALLLL for " + txtTeam1.getText());
 				tvScoredBy.setText("Goal scored by ");
@@ -467,42 +585,31 @@ public class WorldCup2014Activity extends Activity {
 					@Override
 					public void onClick(View v) {
 						int min = 0;
-						if(!txtMin.getText().toString().isEmpty()
-								&& !txtMin.getText().toString().startsWith("45+")
+						if (!txtMin.getText().toString().isEmpty() && !txtMin.getText().toString().startsWith("45+")
 								&& !txtMin.getText().toString().startsWith("90+")
 								&& !txtMin.getText().toString().startsWith("105+")
 								&& !txtMin.getText().toString().startsWith("120+")) {
 							min = Integer.parseInt(txtMin.getText().toString());
 						}
-						
-						if (txtMin.getText().toString().equals("")
-								|| txtScorer.getText().toString().equals("")) {
+
+						if (txtMin.getText().toString().equals("") || txtScorer.getText().toString().equals("")) {
 							errNoti("Please enter goalscorer and minute!");
-						} 
-						else if (min < 0 || min > 120) {
+						} else if (min < 0 || min > 120) {
 							errNoti("Invalid minute number!");
 						} else {
-							int goal = Integer.parseInt(btnGoal1.getText()
-									.toString());
-							btnGoal1.setText(String.valueOf(goal + 1)
-									.toString());
+							int goal = Integer.parseInt(btnGoal1.getText().toString());
+							btnGoal1.setText(String.valueOf(goal + 1).toString());
 
-							String mes = txtScorer.getText() + " "
-									+ txtMin.getText() + "'";
+							String mes = txtScorer.getText() + " " + txtMin.getText() + "'";
 							if (chkOG.isChecked()) {
 								mes += "(OG)";
 							}
 							if (chkPen.isChecked()) {
 								mes += "(P)";
 							}
-							if (txtGoal1.getText().toString()
-									.contains(txtScorer.getText())) {
-								String temp = txtGoal1
-										.getText()
-										.toString()
-										.replace(
-												txtScorer.getText().toString(),
-												mes);
+							if (txtGoal1.getText().toString().contains(txtScorer.getText())) {
+								String temp = txtGoal1.getText().toString().replace(txtScorer.getText().toString(),
+										mes);
 								txtGoal1.setText(temp);
 							} else
 								txtGoal1.append(mes + "\n");
@@ -511,9 +618,9 @@ public class WorldCup2014Activity extends Activity {
 					}
 				});
 
-				if (!txtTeam1.getText().toString().equals("")
-						&& !txtTeam2.getText().toString().equals(""))
+				if (!txtTeam1.getText().toString().equals("") && !txtTeam2.getText().toString().equals("")) {
 					dlgGoal.show();
+				}
 			}
 		});
 
@@ -525,26 +632,16 @@ public class WorldCup2014Activity extends Activity {
 				dlgGoal.setContentView(R.layout.goalalert);
 				dlgGoal.setTitle("GOOAAAALLL!!!!");
 
-				final EditText txtMin = (EditText) dlgGoal
-						.findViewById(R.id.txtMinute);
-				final EditText txtScorer = (EditText) dlgGoal
-						.findViewById(R.id.txtScorerName);
-				final Button btnGoalOK = (Button) dlgGoal
-						.findViewById(R.id.btnGoalOK);
-				final Button btnGoalCnl = (Button) dlgGoal
-						.findViewById(R.id.btnGoalCancel);
-				final TextView tvGoalFor = (TextView) dlgGoal
-						.findViewById(R.id.tvGoalFor);
-				final CheckBox chkOG = (CheckBox) dlgGoal
-						.findViewById(R.id.chkOG);
-				final CheckBox chkPen = (CheckBox) dlgGoal
-						.findViewById(R.id.chkPen);
-				final TextView tvScoredBy = (TextView) dlgGoal
-						.findViewById(R.id.tvScoredBy);
-				final TextView tvInThe = (TextView) dlgGoal
-						.findViewById(R.id.tvInThe);
-				final TextView tvMin = (TextView) dlgGoal
-						.findViewById(R.id.tvMinute);
+				final EditText txtMin = (EditText) dlgGoal.findViewById(R.id.txtMinute);
+				final EditText txtScorer = (EditText) dlgGoal.findViewById(R.id.txtScorerName);
+				final Button btnGoalOK = (Button) dlgGoal.findViewById(R.id.btnGoalOK);
+				final Button btnGoalCnl = (Button) dlgGoal.findViewById(R.id.btnGoalCancel);
+				final TextView tvGoalFor = (TextView) dlgGoal.findViewById(R.id.tvGoalFor);
+				final CheckBox chkOG = (CheckBox) dlgGoal.findViewById(R.id.chkOG);
+				final CheckBox chkPen = (CheckBox) dlgGoal.findViewById(R.id.chkPen);
+				final TextView tvScoredBy = (TextView) dlgGoal.findViewById(R.id.tvScoredBy);
+				final TextView tvInThe = (TextView) dlgGoal.findViewById(R.id.tvInThe);
+				final TextView tvMin = (TextView) dlgGoal.findViewById(R.id.tvMinute);
 
 				tvGoalFor.setText("GOAAALLLL for " + txtTeam2.getText() + " ");
 				tvScoredBy.setText("Goal scored by ");
@@ -566,33 +663,24 @@ public class WorldCup2014Activity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						if (txtMin.getText().toString().equals("")
-								|| txtScorer.getText().toString().equals("")) {
+						if (txtMin.getText().toString().equals("") || txtScorer.getText().toString().equals("")) {
 							// TODO Auto-generated method stub
 
 							errNoti("Please enter goalscorer and minute!");
 						} else {
-							int goal = Integer.parseInt(btnGoal2.getText()
-									.toString());
-							btnGoal2.setText(String.valueOf(goal + 1)
-									.toString());
+							int goal = Integer.parseInt(btnGoal2.getText().toString());
+							btnGoal2.setText(String.valueOf(goal + 1).toString());
 
-							String mes = txtScorer.getText() + " "
-									+ txtMin.getText() + "'";
+							String mes = txtScorer.getText() + " " + txtMin.getText() + "'";
 							if (chkOG.isChecked()) {
 								mes += "(OG)";
 							}
 							if (chkPen.isChecked()) {
 								mes += "(P)";
 							}
-							if (txtGoal2.getText().toString()
-									.contains(txtScorer.getText())) {
-								String temp = txtGoal2
-										.getText()
-										.toString()
-										.replace(
-												txtScorer.getText().toString(),
-												mes);
+							if (txtGoal2.getText().toString().contains(txtScorer.getText())) {
+								String temp = txtGoal2.getText().toString().replace(txtScorer.getText().toString(),
+										mes);
 								txtGoal2.setText(temp);
 							} else
 								txtGoal2.append(mes + "\n");
@@ -601,8 +689,7 @@ public class WorldCup2014Activity extends Activity {
 						}
 					}
 				});
-				if (!txtTeam1.getText().toString().equals("")
-						&& !txtTeam2.getText().toString().equals(""))
+				if (!txtTeam1.getText().toString().equals("") && !txtTeam2.getText().toString().equals(""))
 					dlgGoal.show();
 			}
 		});
@@ -614,12 +701,9 @@ public class WorldCup2014Activity extends Activity {
 				// TODO Auto-generated method stub
 				if (!txtGoal1.getText().toString().equals("")) {
 					dlgEdit.setContentView(R.layout.edit);
-					final EditText txtEdit = (EditText) dlgEdit
-							.findViewById(R.id.txtEdit);
-					Button btnEditOK = (Button) dlgEdit
-							.findViewById(R.id.btnEditOK);
-					Button btnEditCancel = (Button) dlgEdit
-							.findViewById(R.id.btnEditCancel);
+					final EditText txtEdit = (EditText) dlgEdit.findViewById(R.id.txtEdit);
+					Button btnEditOK = (Button) dlgEdit.findViewById(R.id.btnEditOK);
+					Button btnEditCancel = (Button) dlgEdit.findViewById(R.id.btnEditCancel);
 
 					txtEdit.setText(txtGoal1.getText().toString());
 
@@ -633,15 +717,14 @@ public class WorldCup2014Activity extends Activity {
 						}
 					});
 
-					btnEditCancel
-							.setOnClickListener(new View.OnClickListener() {
+					btnEditCancel.setOnClickListener(new View.OnClickListener() {
 
-								@Override
-								public void onClick(View v) {
-									// TODO Auto-generated method stub
-									dlgEdit.cancel();
-								}
-							});
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							dlgEdit.cancel();
+						}
+					});
 
 					dlgEdit.show();
 				}
@@ -656,12 +739,9 @@ public class WorldCup2014Activity extends Activity {
 				// TODO Auto-generated method stub
 				if (!txtGoal2.getText().toString().equals("")) {
 					dlgEdit.setContentView(R.layout.edit);
-					final EditText txtEdit = (EditText) dlgEdit
-							.findViewById(R.id.txtEdit);
-					Button btnEditOK = (Button) dlgEdit
-							.findViewById(R.id.btnEditOK);
-					Button btnEditCancel = (Button) dlgEdit
-							.findViewById(R.id.btnEditCancel);
+					final EditText txtEdit = (EditText) dlgEdit.findViewById(R.id.txtEdit);
+					Button btnEditOK = (Button) dlgEdit.findViewById(R.id.btnEditOK);
+					Button btnEditCancel = (Button) dlgEdit.findViewById(R.id.btnEditCancel);
 
 					txtEdit.setText(txtGoal2.getText().toString());
 
@@ -675,15 +755,14 @@ public class WorldCup2014Activity extends Activity {
 						}
 					});
 
-					btnEditCancel
-							.setOnClickListener(new View.OnClickListener() {
+					btnEditCancel.setOnClickListener(new View.OnClickListener() {
 
-								@Override
-								public void onClick(View v) {
-									// TODO Auto-generated method stub
-									dlgEdit.cancel();
-								}
-							});
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							dlgEdit.cancel();
+						}
+					});
 
 					dlgEdit.show();
 				}
@@ -695,15 +774,16 @@ public class WorldCup2014Activity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				ColorDrawable bgPen1 = (ColorDrawable) btnPenA1.getBackground();
-				if (bgPen1.getColor() == Color.RED) {
+				if (btnPenA1.getBackground().getConstantState() == drMiss
+						.getConstantState()) {
 					int p = Integer.parseInt(tvPenA.getText().toString());
 					tvPenA.setText(String.valueOf(
 							String.valueOf(p + 1).toString()).toString());
-					btnPenA1.setBackgroundColor(Color.GREEN);
-				} else if (bgPen1.getColor() == Color.parseColor("#CCCCCC")) {
-					btnPenA1.setBackgroundColor(Color.RED);
+					btnPenA1.setBackgroundResource(R.drawable.pen_button_goal);
+				} else if (btnPenA1.getBackground().getConstantState() == drNone
+						.getConstantState()) {
+
+					btnPenA1.setBackgroundResource(R.drawable.pen_button_miss);
 				}
 			}
 		});
@@ -712,18 +792,17 @@ public class WorldCup2014Activity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-
-				ColorDrawable bgPen1 = (ColorDrawable) btnPenA1.getBackground();
-				ColorDrawable bgPen2 = (ColorDrawable) btnPenA2.getBackground();
-				if (bgPen1.getColor() != Color.parseColor("#CCCCCC")) {
-					if (bgPen2.getColor() == Color.RED) {
+				if (btnPenA1.getBackground().getConstantState() != drNone
+						.getConstantState()) {
+					if (btnPenA2.getBackground().getConstantState() == drMiss
+							.getConstantState()) {
 						int p = Integer.parseInt(tvPenA.getText().toString());
 						tvPenA.setText(String.valueOf(
 								String.valueOf(p + 1).toString()).toString());
-						btnPenA2.setBackgroundColor(Color.GREEN);
-					} else if (bgPen2.getColor() == Color.parseColor("#CCCCCC")) {
-						btnPenA2.setBackgroundColor(Color.RED);
+						btnPenA2.setBackgroundResource(R.drawable.pen_button_goal);
+					} else if (btnPenA2.getBackground().getConstantState() == drNone
+							.getConstantState()) {
+						btnPenA2.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
 			}
@@ -733,18 +812,18 @@ public class WorldCup2014Activity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				ColorDrawable bgPen1 = (ColorDrawable) btnPenA1.getBackground();
-				ColorDrawable bgPen2 = (ColorDrawable) btnPenA2.getBackground();
-				ColorDrawable bgPen3 = (ColorDrawable) btnPenA3.getBackground();
-				if ((bgPen2.getColor() != Color.parseColor("#CCCCCC"))
-						&& (bgPen1.getColor() != Color.parseColor("#CCCCCC"))) {
-					if (bgPen3.getColor() == Color.RED) {
+				if (btnPenA1.getBackground().getConstantState() != drNone
+						.getConstantState()
+						&& btnPenA2.getBackground().getConstantState() != drNone
+								.getConstantState()) {
+					if (btnPenA3.getBackground().getConstantState() == drMiss
+							.getConstantState()) {
 						int p = Integer.parseInt(tvPenA.getText().toString());
 						tvPenA.setText(String.valueOf(p + 1).toString());
-						btnPenA3.setBackgroundColor(Color.GREEN);
-					} else if (bgPen3.getColor() == Color.parseColor("#CCCCCC")) {
-						btnPenA3.setBackgroundColor(Color.RED);
+						btnPenA3.setBackgroundResource(R.drawable.pen_button_goal);
+					} else if (btnPenA3.getBackground().getConstantState() == drNone
+							.getConstantState()) {
+						btnPenA3.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
 			}
@@ -754,21 +833,20 @@ public class WorldCup2014Activity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				ColorDrawable bgPen1 = (ColorDrawable) btnPenA1.getBackground();
-				ColorDrawable bgPen2 = (ColorDrawable) btnPenA2.getBackground();
-				ColorDrawable bgPen3 = (ColorDrawable) btnPenA3.getBackground();
-				ColorDrawable bgPen4 = (ColorDrawable) btnPenA4.getBackground();
-
-				if ((bgPen3.getColor() != Color.parseColor("#CCCCCC"))
-						&& (bgPen2.getColor() != Color.parseColor("#CCCCCC"))
-						&& (bgPen1.getColor() != Color.parseColor("#CCCCCC"))) {
-					if (bgPen4.getColor() == Color.RED) {
+				if (btnPenA1.getBackground().getConstantState() != drNone
+						.getConstantState()
+						&& btnPenA2.getBackground().getConstantState() != drNone
+								.getConstantState()
+						&& btnPenA3.getBackground().getConstantState() != drNone
+								.getConstantState()) {
+					if (btnPenA4.getBackground().getConstantState() == drMiss
+							.getConstantState()) {
 						int p = Integer.parseInt(tvPenA.getText().toString());
 						tvPenA.setText(String.valueOf(p + 1).toString());
-						btnPenA4.setBackgroundColor(Color.GREEN);
-					} else if (bgPen4.getColor() == Color.parseColor("#CCCCCC")) {
-						btnPenA4.setBackgroundColor(Color.RED);
+						btnPenA4.setBackgroundResource(R.drawable.pen_button_goal);
+					} else if (btnPenA4.getBackground().getConstantState() == drNone
+							.getConstantState()) {
+						btnPenA4.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
 			}
@@ -778,22 +856,22 @@ public class WorldCup2014Activity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				ColorDrawable bgPen1 = (ColorDrawable) btnPenA1.getBackground();
-				ColorDrawable bgPen2 = (ColorDrawable) btnPenA2.getBackground();
-				ColorDrawable bgPen3 = (ColorDrawable) btnPenA3.getBackground();
-				ColorDrawable bgPen4 = (ColorDrawable) btnPenA4.getBackground();
-				ColorDrawable bgPen5 = (ColorDrawable) btnPenA5.getBackground();
-				if ((bgPen4.getColor() != Color.parseColor("#CCCCCC"))
-						&& (bgPen3.getColor() != Color.parseColor("#CCCCCC"))
-						&& (bgPen2.getColor() != Color.parseColor("#CCCCCC"))
-						&& (bgPen1.getColor() != Color.parseColor("#CCCCCC"))) {
-					if (bgPen5.getColor() == Color.RED) {
+				if (btnPenA1.getBackground().getConstantState() != drNone
+						.getConstantState()
+						&& btnPenA2.getBackground().getConstantState() != drNone
+								.getConstantState()
+						&& btnPenA3.getBackground().getConstantState() != drNone
+								.getConstantState()
+						&& btnPenA4.getBackground().getConstantState() != drNone
+								.getConstantState()) {
+					if (btnPenA5.getBackground().getConstantState() == drMiss
+							.getConstantState()) {
 						int p = Integer.parseInt(tvPenA.getText().toString());
 						tvPenA.setText(String.valueOf(p + 1).toString());
-						btnPenA5.setBackgroundColor(Color.GREEN);
-					} else if (bgPen5.getColor() == Color.parseColor("#CCCCCC")) {
-						btnPenA5.setBackgroundColor(Color.RED);
+						btnPenA5.setBackgroundResource(R.drawable.pen_button_goal);
+					} else if (btnPenA5.getBackground().getConstantState() == drNone
+							.getConstantState()) {
+						btnPenA5.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
 			}
@@ -803,15 +881,16 @@ public class WorldCup2014Activity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				ColorDrawable bgPen1 = (ColorDrawable) btnPenB1.getBackground();
-				if (bgPen1.getColor() == Color.RED) {
+				if (btnPenB1.getBackground().getConstantState() == drMiss
+						.getConstantState()) {
 					int p = Integer.parseInt(tvPenB.getText().toString());
 					tvPenB.setText(String.valueOf(
 							String.valueOf(p + 1).toString()).toString());
-					btnPenB1.setBackgroundColor(Color.GREEN);
-				} else if (bgPen1.getColor() == Color.parseColor("#CCCCCC")) {
-					btnPenB1.setBackgroundColor(Color.RED);
+					btnPenB1.setBackgroundResource(R.drawable.pen_button_goal);
+				} else if (btnPenB1.getBackground().getConstantState() == drNone
+						.getConstantState()) {
+
+					btnPenB1.setBackgroundResource(R.drawable.pen_button_miss);
 				}
 			}
 		});
@@ -820,18 +899,17 @@ public class WorldCup2014Activity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-
-				ColorDrawable bgPen1 = (ColorDrawable) btnPenB1.getBackground();
-				ColorDrawable bgPen2 = (ColorDrawable) btnPenB2.getBackground();
-				if (bgPen1.getColor() != Color.parseColor("#CCCCCC")) {
-					if (bgPen2.getColor() == Color.RED) {
+				if (btnPenB1.getBackground().getConstantState() != drNone
+						.getConstantState()) {
+					if (btnPenB2.getBackground().getConstantState() == drMiss
+							.getConstantState()) {
 						int p = Integer.parseInt(tvPenB.getText().toString());
 						tvPenB.setText(String.valueOf(
 								String.valueOf(p + 1).toString()).toString());
-						btnPenB2.setBackgroundColor(Color.GREEN);
-					} else if (bgPen2.getColor() == Color.parseColor("#CCCCCC")) {
-						btnPenB2.setBackgroundColor(Color.RED);
+						btnPenB2.setBackgroundResource(R.drawable.pen_button_goal);
+					} else if (btnPenB2.getBackground().getConstantState() == drNone
+							.getConstantState()) {
+						btnPenB2.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
 			}
@@ -841,18 +919,18 @@ public class WorldCup2014Activity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				ColorDrawable bgPen1 = (ColorDrawable) btnPenB1.getBackground();
-				ColorDrawable bgPen2 = (ColorDrawable) btnPenB2.getBackground();
-				ColorDrawable bgPen3 = (ColorDrawable) btnPenB3.getBackground();
-				if ((bgPen2.getColor() != Color.parseColor("#CCCCCC"))
-						&& (bgPen1.getColor() != Color.parseColor("#CCCCCC"))) {
-					if (bgPen3.getColor() == Color.RED) {
+				if (btnPenB1.getBackground().getConstantState() != drNone
+						.getConstantState()
+						&& btnPenB2.getBackground().getConstantState() != drNone
+								.getConstantState()) {
+					if (btnPenB3.getBackground().getConstantState() == drMiss
+							.getConstantState()) {
 						int p = Integer.parseInt(tvPenB.getText().toString());
 						tvPenB.setText(String.valueOf(p + 1).toString());
-						btnPenB3.setBackgroundColor(Color.GREEN);
-					} else if (bgPen3.getColor() == Color.parseColor("#CCCCCC")) {
-						btnPenB3.setBackgroundColor(Color.RED);
+						btnPenB3.setBackgroundResource(R.drawable.pen_button_goal);
+					} else if (btnPenB3.getBackground().getConstantState() == drNone
+							.getConstantState()) {
+						btnPenB3.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
 			}
@@ -862,21 +940,20 @@ public class WorldCup2014Activity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				ColorDrawable bgPen1 = (ColorDrawable) btnPenB1.getBackground();
-				ColorDrawable bgPen2 = (ColorDrawable) btnPenB2.getBackground();
-				ColorDrawable bgPen3 = (ColorDrawable) btnPenB3.getBackground();
-				ColorDrawable bgPen4 = (ColorDrawable) btnPenB4.getBackground();
-
-				if ((bgPen3.getColor() != Color.parseColor("#CCCCCC"))
-						&& (bgPen2.getColor() != Color.parseColor("#CCCCCC"))
-						&& (bgPen1.getColor() != Color.parseColor("#CCCCCC"))) {
-					if (bgPen4.getColor() == Color.RED) {
+				if (btnPenB1.getBackground().getConstantState() != drNone
+						.getConstantState()
+						&& btnPenB2.getBackground().getConstantState() != drNone
+								.getConstantState()
+						&& btnPenB3.getBackground().getConstantState() != drNone
+								.getConstantState()) {
+					if (btnPenB4.getBackground().getConstantState() == drMiss
+							.getConstantState()) {
 						int p = Integer.parseInt(tvPenB.getText().toString());
 						tvPenB.setText(String.valueOf(p + 1).toString());
-						btnPenB4.setBackgroundColor(Color.GREEN);
-					} else if (bgPen4.getColor() == Color.parseColor("#CCCCCC")) {
-						btnPenB4.setBackgroundColor(Color.RED);
+						btnPenB4.setBackgroundResource(R.drawable.pen_button_goal);
+					} else if (btnPenB4.getBackground().getConstantState() == drNone
+							.getConstantState()) {
+						btnPenB4.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
 			}
@@ -886,40 +963,109 @@ public class WorldCup2014Activity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				ColorDrawable bgPen1 = (ColorDrawable) btnPenB1.getBackground();
-				ColorDrawable bgPen2 = (ColorDrawable) btnPenB2.getBackground();
-				ColorDrawable bgPen3 = (ColorDrawable) btnPenB3.getBackground();
-				ColorDrawable bgPen4 = (ColorDrawable) btnPenB4.getBackground();
-				ColorDrawable bgPen5 = (ColorDrawable) btnPenB5.getBackground();
-				if ((bgPen4.getColor() != Color.parseColor("#CCCCCC"))
-						&& (bgPen3.getColor() != Color.parseColor("#CCCCCC"))
-						&& (bgPen2.getColor() != Color.parseColor("#CCCCCC"))
-						&& (bgPen1.getColor() != Color.parseColor("#CCCCCC"))) {
-					if (bgPen5.getColor() == Color.RED) {
+				if (btnPenB1.getBackground().getConstantState() != drNone
+						.getConstantState()
+						&& btnPenB2.getBackground().getConstantState() != drNone
+								.getConstantState()
+						&& btnPenB3.getBackground().getConstantState() != drNone
+								.getConstantState()
+						&& btnPenB4.getBackground().getConstantState() != drNone
+								.getConstantState()) {
+					if (btnPenB5.getBackground().getConstantState() == drMiss
+							.getConstantState()) {
 						int p = Integer.parseInt(tvPenB.getText().toString());
 						tvPenB.setText(String.valueOf(p + 1).toString());
-						btnPenB5.setBackgroundColor(Color.GREEN);
-					} else if (bgPen5.getColor() == Color.parseColor("#CCCCCC")) {
-						btnPenB5.setBackgroundColor(Color.RED);
+						btnPenB5.setBackgroundResource(R.drawable.pen_button_goal);
+					} else if (btnPenB5.getBackground().getConstantState() == drNone
+							.getConstantState()) {
+						btnPenB5.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
 			}
 		});
 
 	}
+	
+	private CharSequence[] setKitColorList(String team, Resources res) {
+		if (team.equals("")) {
+			return null;
+		} else if (team.equals("BRAZIL")) {
+			return res.getStringArray(R.array.bra);
+		} else if (team.equals("MEXICO")) {
+			return res.getStringArray(R.array.mex);
+		} else if (team.equals("CROATIA")) {
+			return res.getStringArray(R.array.cro);
+		} else if (team.equals("SERBIA")) {
+			return res.getStringArray(R.array.srb);
+		} else if (team.equals("POLAND")) {
+			return res.getStringArray(R.array.pol);
+		} else if (team.equals("AUSTRALIA")) {
+			return res.getStringArray(R.array.aus);
+		} else if (team.equals("ARGENTINA")) {
+			return res.getStringArray(R.array.arg);
+		} else if (team.equals("BELGIUM")) {
+			return res.getStringArray(R.array.bel);
+		} else if (team.equals("ICELAND")) {
+			return res.getStringArray(R.array.isl);
+		} else if (team.equals("SWEDEN")) {
+			return res.getStringArray(R.array.swe);
+		} else if (team.equals("DENMARK")) {
+			return res.getStringArray(R.array.den);
+		} else if (team.equals("COLOMBIA")) {
+			return res.getStringArray(R.array.col);
+		} else if (team.equals("COSTA RICA")) {
+			return res.getStringArray(R.array.crc);
+		} else if (team.equals("SAUDI ARABIA")) {
+			return res.getStringArray(R.array.ksa);
+		} else if (team.equals("ENGLAND")) {
+			return res.getStringArray(R.array.eng);
+		} else if (team.equals("SPAIN")) {
+			return res.getStringArray(R.array.esp);
+		} else if (team.equals("FRANCE")) {
+			return res.getStringArray(R.array.fra);
+		} else if (team.equals("GERMANY")) {
+			return res.getStringArray(R.array.ger);
+		} else if (team.equals("PANAMA")) {
+			return res.getStringArray(R.array.pan);
+		} else if (team.equals("PERU")) {
+			return res.getStringArray(R.array.per);
+		} else if (team.equals("TUNISIA")) {
+			return res.getStringArray(R.array.tun);
+		} else if (team.equals("IR IRAN")) {
+			return res.getStringArray(R.array.irn);
+		} else if (team.equals("MOROCCO")) {
+			return res.getStringArray(R.array.mar);
+		} else if (team.equals("JAPAN")) {
+			return res.getStringArray(R.array.jpn);
+		} else if (team.equals("KOREA REPUBLIC")) {
+			return res.getStringArray(R.array.kor);
+		} else if (team.equals("SENEGAL")) {
+			return res.getStringArray(R.array.sen);
+		} else if (team.equals("NIGERIA")) {
+			return res.getStringArray(R.array.nga);
+		} else if (team.equals("PORTUGAL")) {
+			return res.getStringArray(R.array.por);
+		} else if (team.equals("RUSSIA")) {
+			return res.getStringArray(R.array.rus);
+		} else if (team.equals("SWITZERLAND")) {
+			return res.getStringArray(R.array.sui);
+		} else if (team.equals("URUGUAY")) {
+			return res.getStringArray(R.array.uru);
+		} else if (team.equals("EGYPT")) {
+			return res.getStringArray(R.array.egy);
+		}
+
+		return null;
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.world_cup2014, menu);
 		return true;
 	}
 
 	@Override
 	protected void onStop() {
-		// TODO Auto-generated method stub
 		super.onStop();
 
 		saveData();
@@ -927,7 +1073,6 @@ public class WorldCup2014Activity extends Activity {
 
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
 
 		saveData();
@@ -1036,7 +1181,6 @@ public class WorldCup2014Activity extends Activity {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					onPause();
 					System.exit(0);
 				}
@@ -1046,7 +1190,6 @@ public class WorldCup2014Activity extends Activity {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					dialog.cancel();
 				}
 			});
@@ -1054,8 +1197,7 @@ public class WorldCup2014Activity extends Activity {
 			dlgExit.show();
 		} else if (id == R.id.wcrefresh) {
 			refresh();
-		} else if (id == R.id.wcfulltime
-				&& !btnRound.getText().toString().equals("Round")) {
+		} else if (id == R.id.wcfulltime && !btnRound.getText().toString().equals("Round")) {
 			int g1 = Integer.parseInt(btnGoal1.getText().toString());
 			int g2 = Integer.parseInt(btnGoal2.getText().toString());
 
@@ -1131,9 +1273,8 @@ public class WorldCup2014Activity extends Activity {
 
 		scorerListA.replace("\n", " ");
 		scorerListB.replace("\n", " ");
-		mDB.addMatch("FIFA World Cup - Brazil 2014", btnRound.getText()
-				.toString(), txtTeam1.getText().toString(), txtTeam2.getText()
-				.toString(), g1, g2, scorerListA, scorerListB, pA, pB);
+		mDB.addMatch("FIFA World Cup - Brazil 2014", btnRound.getText().toString(), txtTeam1.getText().toString(),
+				txtTeam2.getText().toString(), g1, g2, scorerListA, scorerListB, pA, pB);
 	}
 
 	void errNoti(String mes) {
@@ -1159,85 +1300,85 @@ public class WorldCup2014Activity extends Activity {
 	}
 
 	private void refreshPen() {
-		btnPenA1.setBackgroundColor(Color.parseColor("#CCCCCC"));
-		btnPenA2.setBackgroundColor(Color.parseColor("#CCCCCC"));
-		btnPenA3.setBackgroundColor(Color.parseColor("#CCCCCC"));
-		btnPenA4.setBackgroundColor(Color.parseColor("#CCCCCC"));
-		btnPenA5.setBackgroundColor(Color.parseColor("#CCCCCC"));
-		btnPenB1.setBackgroundColor(Color.parseColor("#CCCCCC"));
-		btnPenB2.setBackgroundColor(Color.parseColor("#CCCCCC"));
-		btnPenB3.setBackgroundColor(Color.parseColor("#CCCCCC"));
-		btnPenB4.setBackgroundColor(Color.parseColor("#CCCCCC"));
-		btnPenB5.setBackgroundColor(Color.parseColor("#CCCCCC"));
+		btnPenA1.setBackgroundColor(R.drawable.pen_button_normal);
+		btnPenA2.setBackgroundColor(R.drawable.pen_button_normal);
+		btnPenA3.setBackgroundColor(R.drawable.pen_button_normal);
+		btnPenA4.setBackgroundColor(R.drawable.pen_button_normal);
+		btnPenA5.setBackgroundColor(R.drawable.pen_button_normal);
+		btnPenB1.setBackgroundColor(R.drawable.pen_button_normal);
+		btnPenB2.setBackgroundColor(R.drawable.pen_button_normal);
+		btnPenB3.setBackgroundColor(R.drawable.pen_button_normal);
+		btnPenB4.setBackgroundColor(R.drawable.pen_button_normal);
+		btnPenB5.setBackgroundColor(R.drawable.pen_button_normal);
 	}
 
 	private int setFlag(String team) {
 		if (team.equals("")) {
 			return R.drawable.trophywc;
 		} else if (team.equals("BRAZIL")) {
-			return R.drawable.bra;
+			return R.drawable.bra_wc;
 		} else if (team.equals("MEXICO")) {
-			return R.drawable.mex;
+			return R.drawable.mex_wc;
 		} else if (team.equals("CROATIA")) {
-			return R.drawable.cro;
-		} else if (team.equals("CAMEROON")) {
-			return R.drawable.cmr;
-		} else if (team.equals("ALGERIA")) {
-			return R.drawable.alg;
+			return R.drawable.cro_wc;
+		} else if (team.equals("SERBIA")) {
+			return R.drawable.srb_wc;
+		} else if (team.equals("POLAND")) {
+			return R.drawable.pol_wc;
 		} else if (team.equals("AUSTRALIA")) {
-			return R.drawable.aus;
+			return R.drawable.aus_wc;
 		} else if (team.equals("ARGENTINA")) {
-			return R.drawable.arg;
+			return R.drawable.arg_wc;
 		} else if (team.equals("BELGIUM")) {
-			return R.drawable.bel;
-		} else if (team.equals("BOSNIA-HERZEGOVINA")) {
-			return R.drawable.bih;
-		} else if (team.equals("CHILE")) {
-			return R.drawable.chi;
-		} else if (team.equals("CÔTE D\'IVOIRE")) {
-			return R.drawable.civ;
+			return R.drawable.bel_wc;
+		} else if (team.equals("ICELAND")) {
+			return R.drawable.isl_wc;
+		} else if (team.equals("SWEDEN")) {
+			return R.drawable.swe_wc;
+		} else if (team.equals("DENMARK")) {
+			return R.drawable.den_wc;
 		} else if (team.equals("COLOMBIA")) {
-			return R.drawable.col;
+			return R.drawable.col_wc;
 		} else if (team.equals("COSTA RICA")) {
-			return R.drawable.crc;
-		} else if (team.equals("ECUADOR")) {
-			return R.drawable.ecu;
+			return R.drawable.crc_wc;
+		} else if (team.equals("SAUDI ARABIA")) {
+			return R.drawable.ksa_wc;
 		} else if (team.equals("ENGLAND")) {
-			return R.drawable.eng;
+			return R.drawable.eng_wc;
 		} else if (team.equals("SPAIN")) {
-			return R.drawable.esp;
+			return R.drawable.esp_wc;
 		} else if (team.equals("FRANCE")) {
-			return R.drawable.fra;
+			return R.drawable.fra_wc;
 		} else if (team.equals("GERMANY")) {
-			return R.drawable.ger;
-		} else if (team.equals("GHANA")) {
-			return R.drawable.gha;
-		} else if (team.equals("GREECE")) {
-			return R.drawable.gre;
-		} else if (team.equals("HONDURAS")) {
-			return R.drawable.hon;
-		} else if (team.equals("IRAN")) {
-			return R.drawable.irn;
-		} else if (team.equals("ITALY")) {
-			return R.drawable.ita;
+			return R.drawable.ger_wc;
+		} else if (team.equals("PANAMA")) {
+			return R.drawable.pan_wc;
+		} else if (team.equals("PERU")) {
+			return R.drawable.per_wc;
+		} else if (team.equals("TUNISIA")) {
+			return R.drawable.tun_wc;
+		} else if (team.equals("IR IRAN")) {
+			return R.drawable.irn_wc;
+		} else if (team.equals("MOROCCO")) {
+			return R.drawable.mar_wc;
 		} else if (team.equals("JAPAN")) {
-			return R.drawable.jpn;
+			return R.drawable.jpn_wc;
 		} else if (team.equals("KOREA REPUBLIC")) {
-			return R.drawable.kor;
-		} else if (team.equals("NETHERLANDS")) {
-			return R.drawable.ned;
+			return R.drawable.kor_wc;
+		} else if (team.equals("SENEGAL")) {
+			return R.drawable.sen_wc;
 		} else if (team.equals("NIGERIA")) {
-			return R.drawable.nga;
+			return R.drawable.nga_wc;
 		} else if (team.equals("PORTUGAL")) {
-			return R.drawable.por;
+			return R.drawable.por_wc;
 		} else if (team.equals("RUSSIA")) {
-			return R.drawable.rus;
+			return R.drawable.rus_wc;
 		} else if (team.equals("SWITZERLAND")) {
-			return R.drawable.sui;
+			return R.drawable.sui_wc;
 		} else if (team.equals("URUGUAY")) {
-			return R.drawable.uru;
-		} else if (team.equals("UNITED STATES")) {
-			return R.drawable.usa;
+			return R.drawable.uru_wc;
+		} else if (team.equals("EGYPT")) {
+			return R.drawable.egy_wc;
 		}
 
 		return R.drawable.trophywc;
@@ -1245,37 +1386,37 @@ public class WorldCup2014Activity extends Activity {
 
 	private int remainingShot(String team) {
 		int res = 0;
-		ColorDrawable bgPen1 = (ColorDrawable) btnPenA1.getBackground();
-		ColorDrawable bgPen2 = (ColorDrawable) btnPenA2.getBackground();
-		ColorDrawable bgPen3 = (ColorDrawable) btnPenA3.getBackground();
-		ColorDrawable bgPen4 = (ColorDrawable) btnPenA4.getBackground();
-		ColorDrawable bgPen5 = (ColorDrawable) btnPenA5.getBackground();
-		ColorDrawable bgPenB1 = (ColorDrawable) btnPenB1.getBackground();
-		ColorDrawable bgPenB2 = (ColorDrawable) btnPenB2.getBackground();
-		ColorDrawable bgPenB3 = (ColorDrawable) btnPenB3.getBackground();
-		ColorDrawable bgPenB4 = (ColorDrawable) btnPenB4.getBackground();
-		ColorDrawable bgPenB5 = (ColorDrawable) btnPenB5.getBackground();
 		if (team.equalsIgnoreCase("A")) {
-			if (bgPen1.getColor() == Color.parseColor("#CCCCCC"))
+			if (btnPenA1.getBackground().getConstantState() == drNone
+					.getConstantState())
 				res++;
-			if (bgPen2.getColor() == Color.parseColor("#CCCCCC"))
+			if (btnPenA2.getBackground().getConstantState() == drNone
+					.getConstantState())
 				res++;
-			if (bgPen3.getColor() == Color.parseColor("#CCCCCC"))
+			if (btnPenA3.getBackground().getConstantState() == drNone
+					.getConstantState())
 				res++;
-			if (bgPen4.getColor() == Color.parseColor("#CCCCCC"))
+			if (btnPenA4.getBackground().getConstantState() == drNone
+					.getConstantState())
 				res++;
-			if (bgPen5.getColor() == Color.parseColor("#CCCCCC"))
+			if (btnPenA5.getBackground().getConstantState() == drNone
+					.getConstantState())
 				res++;
 		} else if (team.equalsIgnoreCase("B")) {
-			if (bgPenB1.getColor() == Color.parseColor("#CCCCCC"))
+			if (btnPenB1.getBackground().getConstantState() == drNone
+					.getConstantState())
 				res++;
-			if (bgPenB2.getColor() == Color.parseColor("#CCCCCC"))
+			if (btnPenB2.getBackground().getConstantState() == drNone
+					.getConstantState())
 				res++;
-			if (bgPenB3.getColor() == Color.parseColor("#CCCCCC"))
+			if (btnPenB3.getBackground().getConstantState() == drNone
+					.getConstantState())
 				res++;
-			if (bgPenB4.getColor() == Color.parseColor("#CCCCCC"))
+			if (btnPenB4.getBackground().getConstantState() == drNone
+					.getConstantState())
 				res++;
-			if (bgPenB5.getColor() == Color.parseColor("#CCCCCC"))
+			if (btnPenB5.getBackground().getConstantState() == drNone
+					.getConstantState())
 				res++;
 		}
 		return res;
@@ -1307,24 +1448,20 @@ public class WorldCup2014Activity extends Activity {
 		tvPenStage.setText("0");
 		imgFlagA.setImageResource(R.drawable.trophywc);
 		imgFlagB.setImageResource(R.drawable.trophywc);
+		
+		btnKitColorA.setBackgroundColor(Color.WHITE);
+		btnKitColorB.setBackgroundColor(Color.WHITE);
 	}
 
-	public String standardizeDate(int daySelected, int monthSelected,
-			int yearSelected) {
-		// TODO Auto-generated method stub
-		String day = (daySelected > 9) ? String.valueOf(daySelected) : "0"
-				+ daySelected;
-		String month = (monthSelected > 9) ? String.valueOf(monthSelected)
-				: "0" + monthSelected;
+	public String standardizeDate(int daySelected, int monthSelected, int yearSelected) {
+		String day = (daySelected > 9) ? String.valueOf(daySelected) : "0" + daySelected;
+		String month = (monthSelected > 9) ? String.valueOf(monthSelected) : "0" + monthSelected;
 		return day + "." + month + "." + yearSelected;
 	}
 
 	public String standardizeTime(int hourSelected, int minuteSelected) {
-		// TODO Auto-generated method stub
-		String hour = (hourSelected > 9) ? String.valueOf(hourSelected) : "0"
-				+ hourSelected;
-		String minute = (minuteSelected > 9) ? String.valueOf(minuteSelected)
-				: "0" + minuteSelected;
+		String hour = (hourSelected > 9) ? String.valueOf(hourSelected) : "0" + hourSelected;
+		String minute = (minuteSelected > 9) ? String.valueOf(minuteSelected) : "0" + minuteSelected;
 		return hour + ":" + minute;
 	}
 
@@ -1337,12 +1474,9 @@ public class WorldCup2014Activity extends Activity {
 		}
 
 		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_world_cup2014,
-					container, false);
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			View rootView = inflater.inflate(R.layout.fragment_world_cup2014, container, false);
 			return rootView;
 		}
 	}
-
 }

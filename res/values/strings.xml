@@ -2,13 +2,13 @@
 <resources>
 
     <string name="app_name">Livescore</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world"></string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_bundesliga">Bundesliga</string>
     <string name="title_activity_dfbpokal">DFB-Pokal</string>
     <string name="title_activity_champions_league">Champions League</string>
     <string name="title_activity_matches_list">Results</string>
-    <string name="title_activity_world_cup2014">FIFA World Cup 2014</string>
+    <string name="title_activity_world_cup2014">FIFA World Cup 2018</string>
 
     <string-array name="wc_venue">
         <item>São Paulo</item>
@@ -59,7 +59,7 @@
     <string name="title_activity_dflsupercup">DFL Supercup</string>
     <string name="title_activity_euro2016">UEFA EURO 2016 - France</string>
     <string name="title_activity_confedcup2017">FIFA Confederations Cup - Russia 2017</string>
-    <string name="title_activity_confed_cup2017">FIFA Confederations Cup - Russia 2017</string>
+    <string name="title_activity_confed_cup2017">FIFA World Cup™ - Russia 2018</string>
     <string name="title_activity_admin">Data Admin</string>
     <string name="title_section1">League</string>
     <string name="title_section2">Team</string>
@@ -74,6 +74,7 @@
     <string name="confedcup">FIFA Confederations Cup 2017/18</string>
     <string name="bundesliga">Bundesliga 2017/18</string>
     <string name="dflsupercup">DFL-Supercup 2017</string>
+	<string name="worldcup">FIFA World Cup 2018</string>
 
     <string-array name="countries">
         <item>Afghanistan</item>

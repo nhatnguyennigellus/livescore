@@ -129,7 +129,7 @@ public class ConfedCup2017Activity extends Activity {
 
 		scorerListA.replace("\n", " ");
 		scorerListB.replace("\n", " ");
-		mDB.addMatch("FIFA Confederations Cup - Russia 2017", btnRound.getText().toString(),
+		mDB.addMatch("FIFA World Cup - Russia 2018", btnRound.getText().toString(),
 				txtTeamA.getText().toString(), txtTeamB.getText().toString(),
 				g1, g2, scorerListA, scorerListB, pA, pB);
 	}
@@ -155,21 +155,69 @@ public class ConfedCup2017Activity extends Activity {
 		if (team.equals("")) {
 			return R.drawable.confedcup_logo;
 		} else if (team.equals("GERMANY")) {
-			return R.drawable.ger;
+			return R.drawable.ger_wc;
 		} else if (team.equals("PORTUGAL")) {
-			return R.drawable.por;
+			return R.drawable.por_wc;
 		} else if (team.equals("RUSSIA")) {
-			return R.drawable.rus;
-		} else if (team.equals("CAMEROON")) {
-			return R.drawable.cmr;
-		} else if (team.equals("NEW ZEALAND")) {
-			return R.drawable.nzl;
+			return R.drawable.rus_wc;
+		} else if (team.equals("ARGENTINA")) {
+			return R.drawable.arg_wc;
+		} else if (team.equals("BELGIUM")) {
+			return R.drawable.bel_wc;
 		} else if (team.equals("AUSTRALIA")) {
-			return R.drawable.aus;
+			return R.drawable.aus_wc;
 		} else if (team.equals("MEXICO")) {
-			return R.drawable.mex;
-		} else if (team.equals("CHILE")) {
-			return R.drawable.chi;
+			return R.drawable.mex_wc;
+		} else if (team.equals("BRAZIL")) {
+			return R.drawable.bra_wc;
+		} else if (team.equals("COLOMBIA")) {
+			return R.drawable.col_wc;
+		} else if (team.equals("COSTA RICA")) {
+			return R.drawable.crc_wc;
+		} else if (team.equals("CROATIA")) {
+			return R.drawable.cro_wc;
+		} else if (team.equals("DENMARK")) {
+			return R.drawable.den_wc;
+		} else if (team.equals("EGYPT")) {
+			return R.drawable.egy_wc;
+		} else if (team.equals("ENGLAND")) {
+			return R.drawable.eng_wc;
+		} else if (team.equals("SPAIN")) {
+			return R.drawable.esp_wc;
+		} else if (team.equals("FRANCE")) {
+			return R.drawable.fra_wc;
+		} else if (team.equals("IRAN")) {
+			return R.drawable.irn_wc;
+		} else if (team.equals("ICELAND")) {
+			return R.drawable.isl_wc;
+		} else if (team.equals("JAPAN")) {
+			return R.drawable.jpn_wc;
+		} else if (team.equals("KOREA REPUBLIC")) {
+			return R.drawable.kor_wc;
+		} else if (team.equals("SAUDI ARABIA")) {
+			return R.drawable.ksa_wc;
+		} else if (team.equals("MOROCCO")) {
+			return R.drawable.mar_wc;
+		} else if (team.equals("NIGERIA")) {
+			return R.drawable.nga_wc;
+		} else if (team.equals("PANAMA")) {
+			return R.drawable.pan_wc;
+		} else if (team.equals("PERU")) {
+			return R.drawable.per_wc;
+		} else if (team.equals("POLAND")) {
+			return R.drawable.pol_wc;
+		} else if (team.equals("SENEGAL")) {
+			return R.drawable.sen_wc;
+		} else if (team.equals("SERBIA")) {
+			return R.drawable.srb_wc;
+		} else if (team.equals("SWITZERLAND")) {
+			return R.drawable.sui_wc;
+		} else if (team.equals("SWEDEN")) {
+			return R.drawable.swe_wc;
+		} else if (team.equals("TUNISIA")) {
+			return R.drawable.tun_wc;
+		} else if (team.equals("URUGUAY")) {
+			return R.drawable.uru_wc;
 		}
 		return 0;
 	}
@@ -212,8 +260,8 @@ public class ConfedCup2017Activity extends Activity {
 		refreshPen();
 		tvPenStage.setText("0");
 		miDB.setVisible(false);
-		imgFlagA.setImageResource(R.drawable.confedcup_logo);
-		imgFlagB.setImageResource(R.drawable.confedcup_logo);
+		imgFlagA.setImageResource(R.drawable.logowc);
+		imgFlagB.setImageResource(R.drawable.logowc);
 	}
 	
 	private void handlePSO(int g1, int g2) {
@@ -311,10 +359,10 @@ public class ConfedCup2017Activity extends Activity {
 		String mes = "";
 		if (!team.equals("")) {
 			if (btnRound.getText().toString().equals("FINAL"))
-				mes = team + " - CONFEDERATIONS CUP WINNER!!!";
+				mes = team + " - WORLD CHAMPION!!!";
 			else if (btnRound.getText().toString().contains("Group Stage"))
 				mes = team + " has won the match!!!";
-			else if (btnRound.getText().toString().contains("Round 1 of 16"))
+			else if (btnRound.getText().toString().contains("Round of 16"))
 				mes = team + " has qualified to Quarter Final round!!!";
 			else if (btnRound.getText().toString().contains("Quarter Final"))
 				mes = team + " has qualified to Semi Final round!!!";
@@ -430,7 +478,7 @@ public class ConfedCup2017Activity extends Activity {
 
 		final CharSequence Round[] = res.getStringArray(R.array.wcround);
 		final CharSequence Group[] = res.getStringArray(R.array.group);
-		final CharSequence Venue[] = res.getStringArray(R.array.confedcup_venue);
+		final CharSequence Venue[] = res.getStringArray(R.array.wc2018_venue);
 		final Dialog dlgRnd = new Dialog(this);
 		final Dialog dlgGoal = new Dialog(this);
 		final Dialog dlgEdit = new Dialog(this);
@@ -556,7 +604,7 @@ public class ConfedCup2017Activity extends Activity {
 				});
 
 				final ArrayList<String> lstTeam = new ArrayList<String>();
-				mCursor = mDB.getTeamByLeague(res.getString(R.string.confedcup));
+				mCursor = mDB.getTeamByLeague(res.getString(R.string.worldcup));
 				mCursor.moveToFirst();
 				while (!mCursor.isAfterLast()) {
 					Team team = new Team();
@@ -987,7 +1035,6 @@ public class ConfedCup2017Activity extends Activity {
 
 								@Override
 								public void onClick(View v) {
-									// TODO Auto-generated method stub
 									dlgEdit.cancel();
 								}
 							});
@@ -1002,8 +1049,6 @@ public class ConfedCup2017Activity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-
 				if (btnPenA1.getBackground().getConstantState() == drMiss
 						.getConstantState()) {
 					int p = Integer.parseInt(tvPenA.getText().toString());
@@ -1111,8 +1156,6 @@ public class ConfedCup2017Activity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-
 				if (btnPenB1.getBackground().getConstantState() == drMiss
 						.getConstantState()) {
 					int p = Integer.parseInt(tvPenB.getText().toString());

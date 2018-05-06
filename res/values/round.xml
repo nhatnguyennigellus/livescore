@@ -38,7 +38,7 @@
     </string-array>
     <string-array name="round">
         <item>Group Stage</item>
-        <item>Round 1 of 16</item>
+        <item>Round of 16</item>
         <item>Quarter Final</item>
         <item>Semi Final</item>
         <item>MILAN FINAL 2016</item>
@@ -57,8 +57,8 @@
     </string-array>
     <string-array name="wcround">
         <item>Group Stage</item>
-       <!--  <item>Round 1 of 16</item>
-        <item>Quarter Final</item> -->
+        <item>Round of 16</item>
+        <item>Quarter Final</item>
         <item>Semi Final</item>
         <item>Third Place</item>
         <item>FINAL</item>
@@ -66,12 +66,12 @@
     <string-array name="group">
         <item>A</item>
         <item>B</item>
-        <!-- <item>C</item>
+        <item>C</item>
         <item>D</item>
         <item>E</item>
-        <item>F</item> -->
-      <!--   <item>G</item>
-        <item>H</item> -->
+        <item>F</item>
+        <item>G</item>
+        <item>H</item>
     </string-array>
     
 </resources>
