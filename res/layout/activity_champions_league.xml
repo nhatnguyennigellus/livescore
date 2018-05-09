@@ -190,7 +190,7 @@
         android:visibility="visible" >
 
         <Button
-            android:id="@+id/btnPenA1"
+            android:id="@+id/btnPenCLA1"
             android:layout_width="55dp"
             android:layout_height="wrap_content"
             android:background="@drawable/pen_button_normal"
@@ -207,7 +207,7 @@
             android:textSize="30sp" />
 
         <Button
-            android:id="@+id/btnPenA2"
+            android:id="@+id/btnPenCLA2"
             android:layout_width="55dp"
             android:layout_height="wrap_content"
             android:background="@drawable/pen_button_normal"
@@ -224,7 +224,7 @@
             android:textSize="30sp" />
 
         <Button
-            android:id="@+id/btnPenA3"
+            android:id="@+id/btnPenCLA3"
             android:layout_width="55dp"
             android:layout_height="wrap_content"
             android:background="@drawable/pen_button_normal"
@@ -241,7 +241,7 @@
             android:textSize="30sp" />
 
         <Button
-            android:id="@+id/btnPenA4"
+            android:id="@+id/btnPenCLA4"
             android:layout_width="55dp"
             android:layout_height="wrap_content"
             android:background="@drawable/pen_button_normal"
@@ -258,7 +258,7 @@
             android:textSize="30sp" />
 
         <Button
-            android:id="@+id/btnPenA5"
+            android:id="@+id/btnPenCLA5"
             android:layout_width="55dp"
             android:layout_height="wrap_content"
             android:background="@drawable/pen_button_normal"
@@ -298,7 +298,7 @@
             android:textSize="30sp" />
 
         <Button
-            android:id="@+id/btnPenB1"
+            android:id="@+id/btnPenCLB1"
             android:layout_width="55dp"
             android:layout_height="wrap_content"
             android:background="@drawable/pen_button_normal"
@@ -315,7 +315,7 @@
             android:textSize="30sp" />
 
         <Button
-            android:id="@+id/btnPenB2"
+            android:id="@+id/btnPenCLB2"
             android:layout_width="55dp"
             android:layout_height="wrap_content"
             android:background="@drawable/pen_button_normal" />
@@ -331,7 +331,7 @@
             android:textSize="30sp" />
 
         <Button
-            android:id="@+id/btnPenB3"
+            android:id="@+id/btnPenCLB3"
             android:layout_width="55dp"
             android:layout_height="wrap_content"
             android:background="@drawable/pen_button_normal"
@@ -348,7 +348,7 @@
             android:textSize="30sp" />
 
         <Button
-            android:id="@+id/btnPenB4"
+            android:id="@+id/btnPenCLB4"
             android:layout_width="55dp"
             android:layout_height="wrap_content"
             android:background="@drawable/pen_button_normal"
@@ -373,7 +373,7 @@
             android:visibility="gone" />
 
         <Button
-            android:id="@+id/btnPenB5"
+            android:id="@+id/btnPenCLB5"
             android:layout_width="55dp"
             android:layout_height="wrap_content"
             android:background="@drawable/pen_button_normal"

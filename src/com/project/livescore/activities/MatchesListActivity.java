@@ -212,7 +212,7 @@ public class MatchesListActivity extends ListActivity {
 			final AlertDialog.Builder dlgLiga = new AlertDialog.Builder(this);
 			final CharSequence Liga[] = { "All", "Bundesliga",
 					"Champions League", "DFB Pokal", "World Cup 2014",
-					"EURO 2016", "Confederations Cup 2017"};
+					"EURO 2016", "Confederations Cup 2017", "World Cup 2018"};
 
 			dlgLiga.setItems(Liga, new OnClickListener() {
 
@@ -226,6 +226,8 @@ public class MatchesListActivity extends ListActivity {
 						loadData("DFB Pokal");
 					} else if (Liga[which].equals("World Cup 2014")) {
 						loadData("World Cup");
+					} else if (Liga[which].equals("World Cup 2018")) {
+						loadData("World Cup 2018");
 					} else
 						loadData("All");
 					dialog.cancel();

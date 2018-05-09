@@ -31,7 +31,8 @@
         android:gravity="center"
         android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#fff" />
+        android:textColor="#fff"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/btnWCRound"
@@ -125,7 +126,8 @@
         android:layout_height="wrap_content"
         android:background="#FFB4B4"
         android:gravity="center_horizontal"
-        android:padding="10dp" >
+        android:padding="10dp"
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/txtWCScorerA"

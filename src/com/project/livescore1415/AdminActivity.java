@@ -2,6 +2,7 @@ package com.project.livescore1415;
 
 import com.project.livescore.navigationdrawer.ChampsFragment;
 import com.project.livescore.navigationdrawer.LeagueFragment;
+import com.project.livescore.navigationdrawer.PlayerFragment;
 import com.project.livescore.navigationdrawer.TeamFragment;
 import com.project.livescore.navigationdrawer.VenueFragment;
 
@@ -56,31 +57,29 @@ public class AdminActivity extends Activity implements NavigationDrawerFragment.
 		Fragment fragment = null;
 		FragmentManager fragmentManager = getFragmentManager();
 		switch (number) {
-		case 1:
-			mTitle = getString(R.string.title_section1);
-			fragment = LeagueFragment.newInstance(number);
-			fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
-			break;
-		case 2:
-			mTitle = getString(R.string.title_section2);
-			fragment = TeamFragment.newInstance(number);
-			fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
-			break;
-		case 3:
-			mTitle = getString(R.string.title_section3);
-			break;
-		case 4:
-			mTitle = getString(R.string.title_section4);
-			fragment = VenueFragment.newInstance(number);
-			fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
-			break;
-		case 5:
-			mTitle = getString(R.string.title_section5);
-			fragment = ChampsFragment.newInstance(number);
-			fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
-			break;
+			case 1:
+				mTitle = getString(R.string.title_section1);
+				fragment = LeagueFragment.newInstance(number);
+				break;
+			case 2:
+				mTitle = getString(R.string.title_section2);
+				fragment = TeamFragment.newInstance(number);
+				break;
+			case 3:
+				mTitle = getString(R.string.title_section3);
+				fragment = PlayerFragment.newInstance(number);
+				break;
+			case 4:
+				mTitle = getString(R.string.title_section4);
+				fragment = VenueFragment.newInstance(number);
+				break;
+			case 5:
+				mTitle = getString(R.string.title_section5);
+				fragment = ChampsFragment.newInstance(number);
+				break;
 		}
 
+		fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
 	}
 
 	public void restoreActionBar() {

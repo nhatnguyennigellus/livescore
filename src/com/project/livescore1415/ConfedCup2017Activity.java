@@ -773,7 +773,6 @@ public class ConfedCup2017Activity extends Activity {
 				});
 				
 				btnGoalCnl.setOnClickListener(new View.OnClickListener() {
-
 					@Override
 					public void onClick(View arg0) {
 						mpgoal.pause();
@@ -782,7 +781,6 @@ public class ConfedCup2017Activity extends Activity {
 				});
 
 				btnGoalOK.setOnClickListener(new View.OnClickListener() {
-
 					@Override
 					public void onClick(View v) {
 						int min = 0;
@@ -901,7 +899,6 @@ public class ConfedCup2017Activity extends Activity {
 				});
 				
 				btnGoalCnl.setOnClickListener(new View.OnClickListener() {
-
 					@Override
 					public void onClick(View arg0) {
 						mpgoal.pause();
@@ -910,7 +907,6 @@ public class ConfedCup2017Activity extends Activity {
 				});
 
 				btnGoalOK.setOnClickListener(new View.OnClickListener() {
-
 					@Override
 					public void onClick(View v) {
 						int min = 0;

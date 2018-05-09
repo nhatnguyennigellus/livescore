@@ -81,16 +81,16 @@ public class ChampionsLeagueActivity extends Activity {
 		tvPenB = (TextView) this.findViewById(R.id.tvPenB);
 		llCLAgg = (LinearLayout) this.findViewById(R.id.llCLAgg);
 		llPen = (LinearLayout) this.findViewById(R.id.llPen);
-		btnPenA1 = (Button) this.findViewById(R.id.btnPenA1);
-		btnPenA2 = (Button) this.findViewById(R.id.btnPenA2);
-		btnPenA3 = (Button) this.findViewById(R.id.btnPenA3);
-		btnPenA4 = (Button) this.findViewById(R.id.btnPenA4);
-		btnPenA5 = (Button) this.findViewById(R.id.btnPenA5);
-		btnPenB1 = (Button) this.findViewById(R.id.btnPenB1);
-		btnPenB2 = (Button) this.findViewById(R.id.btnPenB2);
-		btnPenB3 = (Button) this.findViewById(R.id.btnPenB3);
-		btnPenB4 = (Button) this.findViewById(R.id.btnPenB4);
-		btnPenB5 = (Button) this.findViewById(R.id.btnPenB5);
+		btnPenA1 = (Button) this.findViewById(R.id.btnPenCLA1);
+		btnPenA2 = (Button) this.findViewById(R.id.btnPenCLA2);
+		btnPenA3 = (Button) this.findViewById(R.id.btnPenCLA3);
+		btnPenA4 = (Button) this.findViewById(R.id.btnPenCLA4);
+		btnPenA5 = (Button) this.findViewById(R.id.btnPenCLA5);
+		btnPenB1 = (Button) this.findViewById(R.id.btnPenCLB1);
+		btnPenB2 = (Button) this.findViewById(R.id.btnPenCLB2);
+		btnPenB3 = (Button) this.findViewById(R.id.btnPenCLB3);
+		btnPenB4 = (Button) this.findViewById(R.id.btnPenCLB4);
+		btnPenB5 = (Button) this.findViewById(R.id.btnPenCLB5);
 		tvPenStage = (TextView) this.findViewById(R.id.tvPenStage);
 
 		mpGoal = MediaPlayer.create(this, R.raw.torhymne);
@@ -112,7 +112,7 @@ public class ChampionsLeagueActivity extends Activity {
 		tvPenB.setText(pref.getString("tvPenB", "0"));
 		llPen.setVisibility(pref.getInt("llPenVisible", 8));
 		llCLAgg.setVisibility(pref.getInt("llAggVisible", 8));
-
+		
 		btnPenA1.setBackgroundResource(pref.getInt("PenA1Color", R.drawable.pen_button_normal));
 		btnPenA2.setBackgroundResource(pref.getInt("PenA2Color", R.drawable.pen_button_normal));
 		btnPenA3.setBackgroundResource(pref.getInt("PenA3Color", R.drawable.pen_button_normal));
@@ -192,7 +192,7 @@ public class ChampionsLeagueActivity extends Activity {
 
 								dialog.cancel();
 								if (!btnSpl.getText().toString().equals("Group Stage")
-										&& !btnSpl.getText().toString().equals("MILAN FINAL 2016")) {
+										&& !btnSpl.getText().toString().equals("FINAL KYIV 2018")) {
 									btnLeg.setVisibility(View.VISIBLE);
 								} else {
 									btnLeg.setVisibility(View.GONE);
@@ -740,16 +740,16 @@ public class ChampionsLeagueActivity extends Activity {
 		tvPenB = (TextView) this.findViewById(R.id.tvPenB);
 		llPen = (LinearLayout) this.findViewById(R.id.llPen);
 		llCLAgg = (LinearLayout) this.findViewById(R.id.llCLAgg);
-		btnPenA1 = (Button) this.findViewById(R.id.btnPenA1);
-		btnPenA2 = (Button) this.findViewById(R.id.btnPenA2);
-		btnPenA3 = (Button) this.findViewById(R.id.btnPenA3);
-		btnPenA4 = (Button) this.findViewById(R.id.btnPenA4);
-		btnPenA5 = (Button) this.findViewById(R.id.btnPenA5);
-		btnPenB1 = (Button) this.findViewById(R.id.btnPenB1);
-		btnPenB2 = (Button) this.findViewById(R.id.btnPenB2);
-		btnPenB3 = (Button) this.findViewById(R.id.btnPenB3);
-		btnPenB4 = (Button) this.findViewById(R.id.btnPenB4);
-		btnPenB5 = (Button) this.findViewById(R.id.btnPenB5);
+		btnPenA1 = (Button) this.findViewById(R.id.btnPenCLA1);
+		btnPenA2 = (Button) this.findViewById(R.id.btnPenCLA2);
+		btnPenA3 = (Button) this.findViewById(R.id.btnPenCLA3);
+		btnPenA4 = (Button) this.findViewById(R.id.btnPenCLA4);
+		btnPenA5 = (Button) this.findViewById(R.id.btnPenCLA5);
+		btnPenB1 = (Button) this.findViewById(R.id.btnPenCLB1);
+		btnPenB2 = (Button) this.findViewById(R.id.btnPenCLB2);
+		btnPenB3 = (Button) this.findViewById(R.id.btnPenCLB3);
+		btnPenB4 = (Button) this.findViewById(R.id.btnPenCLB4);
+		btnPenB5 = (Button) this.findViewById(R.id.btnPenCLB5);
 
 		SharedPreferences pref = getPreferences(MODE_PRIVATE);
 		SharedPreferences.Editor editor = pref.edit();
@@ -837,12 +837,12 @@ public class ChampionsLeagueActivity extends Activity {
 			int g2 = Integer.parseInt(btnGoal2.getText().toString());
 
 			if (btnRound.getText().toString().equals("Group Stage")
-					|| btnRound.getText().toString().equals("MILAN FINAL 2016")
+					|| btnRound.getText().toString().equals("FINAL KYIV 2018")
 					|| btnRound.getText().toString().contains("1st leg")) {
 				if (g1 != g2) {
 					addToDB(g1, g2, 0, 0);
 				} else {
-					if (btnRound.getText().toString().equals("MILAN FINAL 2016")) {
+					if (btnRound.getText().toString().equals("FINAL KYIV 2018")) {
 						int pA = Integer.parseInt(tvPenA.getText().toString());
 						int pB = Integer.parseInt(tvPenB.getText().toString());
 						addToDB(g1, g2, pA, pB);
@@ -874,7 +874,7 @@ public class ChampionsLeagueActivity extends Activity {
 			int g2 = Integer.parseInt(btnGoal2.getText().toString());
 
 			if (btnRound.getText().toString().equals("Group Stage")
-					|| btnRound.getText().toString().equals("MILAN FINAL 2016")
+					|| btnRound.getText().toString().equals("FINAL KYIV 2018")
 					|| btnRound.getText().toString().contains("1st leg")) {
 				if (g1 > g2) {
 					resultNoti(txtTeam1.getText().toString());
@@ -884,7 +884,7 @@ public class ChampionsLeagueActivity extends Activity {
 					miDB.setVisible(true);
 				} else {
 
-					if (btnRound.getText().toString().equals("MILAN FINAL 2016")) {
+					if (btnRound.getText().toString().equals("FINAL KYIV 2018")) {
 						handlePSO(g1, g2);
 					} else {
 						resultNoti("");
@@ -1041,12 +1041,12 @@ public class ChampionsLeagueActivity extends Activity {
 	void resultNoti(String team) {
 		String mes = "";
 		if (!team.equals("")) {
-			if (btnRound.getText().toString().equals("MILAN FINAL 2016"))
-				mes = team + " - UEFA CHAMPIONS LEAGUE 2016 WINNER!!!";
+			if (btnRound.getText().toString().equals("FINAL KYIV 2018"))
+				mes = team + " - UEFA CHAMPIONS LEAGUE 2018 WINNER!!!";
 			else if (btnRound.getText().toString().equals("Group Stage")
 					|| btnRound.getText().toString().contains("1st leg"))
 				mes = team + " has won the match!!!";
-			else if (btnRound.getText().toString().contains("Round 1 of 16"))
+			else if (btnRound.getText().toString().contains("Round of 16"))
 				mes = team + " has qualified to the Quarter-Final!!!";
 			else if (btnRound.getText().toString().contains("Quarter Final"))
 				mes = team + " has qualified to the Semi-Final!!!";

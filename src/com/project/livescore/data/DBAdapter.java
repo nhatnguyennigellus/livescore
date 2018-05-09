@@ -35,6 +35,13 @@ public class DBAdapter {
 	public static final String KEY_CHAMP_NAME = "Name";
 	public static final String KEY_COUNTRY = "Country";
 	public static final String KEY_ON = "Status";
+	
+	public static final String KEY_FIRSTNAME = "Firstname";
+	public static final String KEY_LASTNAME = "Lastname";
+	public static final String KEY_KIT_NO = "KitNo";
+	public static final String KEY_TEAM_PLAYER = "Team";
+	public static final String KEY_COUNTRY_PLAYER = "Country";
+	public static final String KEY_LEAGUE_PLAYER = "League";
 
 	private static final String DATABASE_NAME = "LivescoreDB";
 	private static final String DB_TBL_MATCH = "Match";
@@ -42,6 +49,7 @@ public class DBAdapter {
 	private static final String DB_TBL_TEAM = "Team";
 	private static final String DB_TBL_VENUE = "Venue";
 	private static final String DB_TBL_CHAMP = "Champ";
+	private static final String DB_TBL_PLAYER = "Player";
 	
 	private DatabaseHelper mDbHelper;
 	private SQLiteDatabase mDB;
@@ -78,6 +86,16 @@ public class DBAdapter {
 			+ KEY_LIGA_NAME + " text primary key, " 
 			+ KEY_ON + " integer not null);";
 	
+	private static final String DB_CR_PLAYER = "create table if not exists " 
+			+ DB_TBL_PLAYER + " ("
+			+ KEY_ID + " integer primary key autoincrement, " 
+			+ KEY_FIRSTNAME + " text,"
+			+ KEY_LASTNAME + " text not null,"
+			+ KEY_KIT_NO + " integer not null,"
+			+ KEY_COUNTRY_PLAYER + " text not null,"
+			+ KEY_TEAM_PLAYER + " text not null,"
+			+ KEY_LEAGUE_PLAYER + " text not null"
+			+ ");";
 	
 	private static final int DATABASE_VERSION = 3;
 
@@ -97,6 +115,7 @@ public class DBAdapter {
 			db.execSQL(DB_CR_TEAM);
 			db.execSQL(DB_CR_VENUE);
 			db.execSQL(DB_CR_CHAMPS);
+			db.execSQL(DB_CR_PLAYER);
 		}
 
 		@Override
@@ -106,6 +125,7 @@ public class DBAdapter {
 			db.execSQL("DROP TABLE IF EXISTS Team");
 			db.execSQL("DROP TABLE IF EXISTS Venue");
 			db.execSQL("DROP TABLE IF EXISTS Champ");
+			db.execSQL("DROP TABLE IF EXISTS Player");
 			onCreate(db);
 		}
 
@@ -124,6 +144,7 @@ public class DBAdapter {
 		mDB.execSQL(DB_CR_TEAM);
 		mDB.execSQL(DB_CR_VENUE);
 		mDB.execSQL(DB_CR_CHAMPS);
+		mDB.execSQL(DB_CR_PLAYER);
 		return this;
 	}
 
@@ -293,6 +314,37 @@ public class DBAdapter {
 		return mDB.query(DB_TBL_TEAM, 
 				new String[] { KEY_ID, KEY_TEAM_NAME, KEY_COUNTRY, KEY_LIGA_NAME}, 
 				KEY_LIGA_NAME + "= '" + liga + "'", null, null, null, null);
+	}
+	
+	/*
+	 * Player
+	 */
+	public void addPlayer(Player player) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(KEY_FIRSTNAME, player.getFirstname());
+		initialValues.put(KEY_LASTNAME, player.getLastname());
+		initialValues.put(KEY_KIT_NO, player.getKitNo());
+		initialValues.put(KEY_LEAGUE_PLAYER, player.getLeague());
+		initialValues.put(KEY_COUNTRY_PLAYER, player.getCountry());
+		initialValues.put(KEY_TEAM_PLAYER, player.getTeam());
+		mDB.insertOrThrow(DB_TBL_PLAYER, null, initialValues);
+	}
+
+	public void deleteAllPlayer() {
+		mDB.delete(DB_TBL_PLAYER, null, null);
+	}
+	
+	public void deletePlayer(int id) {
+		mDB.delete(DB_TBL_PLAYER, KEY_ID + " = " + id, null);
+	}
+
+	public Cursor getPlayerByLeagueAndTeam(String liga, String team) {
+		return mDB.query(DB_TBL_PLAYER, 
+				new String[] { KEY_ID, KEY_FIRSTNAME, KEY_LASTNAME, KEY_KIT_NO, 
+						KEY_LEAGUE_PLAYER, KEY_COUNTRY_PLAYER, KEY_TEAM_PLAYER}, 
+						KEY_LEAGUE_PLAYER + " LIKE '%" + liga + "%' AND " 
+								+ KEY_TEAM_PLAYER + " LIKE '%" + team + "%'", 
+				null, null, null, KEY_KIT_NO);
 	}
 	
 	/*

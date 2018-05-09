@@ -1,29 +1,34 @@
 package com.project.livescore.data;
 
 public class Player {
-	private String id;
+	private int id;
 	private String firstname;
 	private String lastname;
 	private int kitNo;
 	private String team;
+	private String country;
+	private String league;
 	
 	public Player() {
 	}
 
-	public Player(String id, String firstname, String lastname, int kitNo, String team) {
+	public Player(String firstname, String lastname, int kitNo, String team, String country, String league) {
 		super();
-		this.id = id;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.kitNo = kitNo;
 		this.team = team;
+		this.country = country;
+		this.league = league;
 	}
 
-	public String getId() {
+
+
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -57,6 +62,22 @@ public class Player {
 
 	public void setTeam(String team) {
 		this.team = team;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getLeague() {
+		return league;
+	}
+
+	public void setLeague(String league) {
+		this.league = league;
 	}
 
 	@Override
