@@ -29,6 +29,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.DatePicker;
 import android.widget.DigitalClock;
 import android.widget.EditText;
@@ -195,8 +197,10 @@ public class WorldCup2014Activity extends Activity {
 		btnKitColorB.setBackgroundColor(pref.getInt("KitB", Color.WHITE));
 		
 		Calendar c = Calendar.getInstance();
-		if (c.get(Calendar.SECOND) % 2 == 1)
+		if (c.get(Calendar.SECOND) % 3 == 1)
 			mp = MediaPlayer.create(this, R.raw.wc2018);
+		else if (c.get(Calendar.SECOND) % 3 == 2)
+			mp = MediaPlayer.create(this, R.raw.wc2018_2);
 		else
 			mp = MediaPlayer.create(this, R.raw.confedcup);
 		mp.start();
@@ -221,10 +225,7 @@ public class WorldCup2014Activity extends Activity {
 		final Resources res = getResources();
 
 		final CharSequence Round[] = res.getStringArray(R.array.wcround);
-		final CharSequence Group[] = res.getStringArray(R.array.group);
-		// final CharSequence Team[] = res.getStringArray(R.array.worldcup);
-		// final CharSequence Venue[] =
-		// res.getStringArray(R.array.wc2018_venue);
+		final CharSequence Group[] = res.getStringArray(R.array.group); 
 		final Dialog dlgRnd = new Dialog(this);
 		final Dialog dlgGoal = new Dialog(this);
 		final Dialog dlgEdit = new Dialog(this);
@@ -546,6 +547,9 @@ public class WorldCup2014Activity extends Activity {
 				dlgRnd.show();
 			}
 		});
+		
+		
+		final AlertDialog.Builder dlgScr = new AlertDialog.Builder(this);
 
 		btnGoal1.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -554,19 +558,19 @@ public class WorldCup2014Activity extends Activity {
 					mpgoal.start();
 				} 
 				
-				dlgGoal.setContentView(R.layout.goalalert);
+				dlgGoal.setContentView(R.layout.goalalert_new);
 				dlgGoal.setTitle("GOOAAAALLL!!!!");
 
-				final EditText txtMin = (EditText) dlgGoal.findViewById(R.id.txtMinute);
-				final EditText txtScorer = (EditText) dlgGoal.findViewById(R.id.txtScorerName);
-				final Button btnGoalOK = (Button) dlgGoal.findViewById(R.id.btnGoalOK);
-				final Button btnGoalCnl = (Button) dlgGoal.findViewById(R.id.btnGoalCancel);
-				final TextView tvGoalFor = (TextView) dlgGoal.findViewById(R.id.tvGoalFor);
-				final TextView tvScoredBy = (TextView) dlgGoal.findViewById(R.id.tvScoredBy);
-				final TextView tvInThe = (TextView) dlgGoal.findViewById(R.id.tvInThe);
-				final TextView tvMin = (TextView) dlgGoal.findViewById(R.id.tvMinute);
-				final CheckBox chkOG = (CheckBox) dlgGoal.findViewById(R.id.chkOG);
-				final CheckBox chkPen = (CheckBox) dlgGoal.findViewById(R.id.chkPen);
+				final EditText txtMin = (EditText) dlgGoal.findViewById(R.id.txtMinute2);
+				final Button btnScorer = (Button) dlgGoal.findViewById(R.id.btnScorerList);
+				final Button btnGoalOK = (Button) dlgGoal.findViewById(R.id.btnGoalOK2);
+				final Button btnGoalCnl = (Button) dlgGoal.findViewById(R.id.btnGoalCancel2);
+				final TextView tvGoalFor = (TextView) dlgGoal.findViewById(R.id.tvGoalFor2);
+				final TextView tvScoredBy = (TextView) dlgGoal.findViewById(R.id.tvScoredBy2);
+				final TextView tvInThe = (TextView) dlgGoal.findViewById(R.id.tvInThe2);
+				final TextView tvMin = (TextView) dlgGoal.findViewById(R.id.tvMinute2);
+				final CheckBox chkOG = (CheckBox) dlgGoal.findViewById(R.id.chkOG2);
+				final CheckBox chkPen = (CheckBox) dlgGoal.findViewById(R.id.chkPen2);
 
 				tvGoalFor.setText("GOAAALLLL for " + txtTeam1.getText());
 				tvScoredBy.setText("Goal scored by ");
@@ -574,6 +578,28 @@ public class WorldCup2014Activity extends Activity {
 				tvInThe.setText(" in the minute ");
 				chkOG.setText("Own goal");
 				chkPen.setText("Penalty");
+				 
+				btnScorer.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						final ArrayList<String> lstPlayer = !chkOG.isChecked() 
+								? getPlayerList(res, txtTeam1.getText().toString())
+								: getPlayerList(res, txtTeam2.getText().toString());
+						final String[] Team = lstPlayer.toArray(new String[0]);
+						
+						dlgScr.setItems(Team, new OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								btnScorer.setText(Team[which]);
+								dialog.cancel();
+							}
+						});
+						
+						dlgScr.show();
+					}
+
+					
+				});
 
 				btnGoalCnl.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -594,7 +620,7 @@ public class WorldCup2014Activity extends Activity {
 							min = Integer.parseInt(txtMin.getText().toString());
 						}
 
-						if (txtMin.getText().toString().equals("") || txtScorer.getText().toString().equals("")) {
+						if (txtMin.getText().toString().equals("") || btnScorer.getText().toString().equals("")) {
 							errNoti("Please enter goal scorer and goal time!");
 						} else if (min < 0 || min > 120) {
 							errNoti("Invalid minute number!");
@@ -602,15 +628,15 @@ public class WorldCup2014Activity extends Activity {
 							int goal = Integer.parseInt(btnGoal1.getText().toString());
 							btnGoal1.setText(String.valueOf(goal + 1).toString());
 
-							String mes = txtScorer.getText() + " " + txtMin.getText() + "'";
+							String mes = btnScorer.getText() + " " + txtMin.getText() + "'";
 							if (chkOG.isChecked()) {
 								mes += "(OG)";
 							}
 							if (chkPen.isChecked()) {
 								mes += "(P)";
 							}
-							if (txtGoal1.getText().toString().contains(txtScorer.getText())) {
-								String temp = txtGoal1.getText().toString().replace(txtScorer.getText().toString(),
+							if (txtGoal1.getText().toString().contains(btnScorer.getText())) {
+								String temp = txtGoal1.getText().toString().replace(btnScorer.getText().toString(),
 										mes);
 								txtGoal1.setText(temp);
 							} else
@@ -634,19 +660,19 @@ public class WorldCup2014Activity extends Activity {
 				if (!txtTeam1.getText().equals("GERMANY")) {
 					mpgoal.start();
 				} 
-				dlgGoal.setContentView(R.layout.goalalert);
+				dlgGoal.setContentView(R.layout.goalalert_new);
 				dlgGoal.setTitle("GOOAAAALLL!!!!");
 
-				final EditText txtMin = (EditText) dlgGoal.findViewById(R.id.txtMinute);
-				final EditText txtScorer = (EditText) dlgGoal.findViewById(R.id.txtScorerName);
-				final Button btnGoalOK = (Button) dlgGoal.findViewById(R.id.btnGoalOK);
-				final Button btnGoalCnl = (Button) dlgGoal.findViewById(R.id.btnGoalCancel);
-				final TextView tvGoalFor = (TextView) dlgGoal.findViewById(R.id.tvGoalFor);
-				final CheckBox chkOG = (CheckBox) dlgGoal.findViewById(R.id.chkOG);
-				final CheckBox chkPen = (CheckBox) dlgGoal.findViewById(R.id.chkPen);
-				final TextView tvScoredBy = (TextView) dlgGoal.findViewById(R.id.tvScoredBy);
-				final TextView tvInThe = (TextView) dlgGoal.findViewById(R.id.tvInThe);
-				final TextView tvMin = (TextView) dlgGoal.findViewById(R.id.tvMinute);
+				final EditText txtMin = (EditText) dlgGoal.findViewById(R.id.txtMinute2);
+				final Button btnScorer = (Button) dlgGoal.findViewById(R.id.btnScorerList);
+				final Button btnGoalOK = (Button) dlgGoal.findViewById(R.id.btnGoalOK2);
+				final Button btnGoalCnl = (Button) dlgGoal.findViewById(R.id.btnGoalCancel2);
+				final TextView tvGoalFor = (TextView) dlgGoal.findViewById(R.id.tvGoalFor2);
+				final CheckBox chkOG = (CheckBox) dlgGoal.findViewById(R.id.chkOG2);
+				final CheckBox chkPen = (CheckBox) dlgGoal.findViewById(R.id.chkPen2);
+				final TextView tvScoredBy = (TextView) dlgGoal.findViewById(R.id.tvScoredBy2);
+				final TextView tvInThe = (TextView) dlgGoal.findViewById(R.id.tvInThe2);
+				final TextView tvMin = (TextView) dlgGoal.findViewById(R.id.tvMinute2);
 
 				tvGoalFor.setText("GOAAALLLL for " + txtTeam2.getText() + " ");
 				tvScoredBy.setText("Goal scored by ");
@@ -654,7 +680,26 @@ public class WorldCup2014Activity extends Activity {
 				tvInThe.setText(" in the minute ");
 				chkOG.setText("Own goal");
 				chkPen.setText("Penalty");
-
+				
+				btnScorer.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						final ArrayList<String> lstPlayer = !chkOG.isChecked() 
+								? getPlayerList(res, txtTeam2.getText().toString())
+								: getPlayerList(res, txtTeam1.getText().toString());
+						final String[] Team = lstPlayer.toArray(new String[0]);
+						
+						dlgScr.setItems(Team, new OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								btnScorer.setText(Team[which]);
+								dialog.cancel();
+							}
+						});
+						dlgScr.show();
+					}
+				});
+				
 				btnGoalCnl.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View arg0) {
@@ -666,21 +711,21 @@ public class WorldCup2014Activity extends Activity {
 				btnGoalOK.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if (txtMin.getText().toString().equals("") || txtScorer.getText().toString().equals("")) {
+						if (txtMin.getText().toString().equals("") || btnScorer.getText().toString().equals("")) {
 							errNoti("Please enter goal scorer and goal time!");
 						} else {
 							int goal = Integer.parseInt(btnGoal2.getText().toString());
 							btnGoal2.setText(String.valueOf(goal + 1).toString());
 
-							String mes = txtScorer.getText() + " " + txtMin.getText() + "'";
+							String mes = btnScorer.getText() + " " + txtMin.getText() + "'";
 							if (chkOG.isChecked()) {
 								mes += "(OG)";
 							}
 							if (chkPen.isChecked()) {
 								mes += "(P)";
 							}
-							if (txtGoal2.getText().toString().contains(txtScorer.getText())) {
-								String temp = txtGoal2.getText().toString().replace(txtScorer.getText().toString(),
+							if (txtGoal2.getText().toString().contains(btnScorer.getText())) {
+								String temp = txtGoal2.getText().toString().replace(btnScorer.getText().toString(),
 										mes);
 								txtGoal2.setText(temp);
 							} else
@@ -1267,6 +1312,20 @@ public class WorldCup2014Activity extends Activity {
 		Toast.makeText(this, mes, Toast.LENGTH_LONG).show();
 	}
 
+	protected ArrayList<String> getPlayerList(final Resources res, String team) {
+		Cursor cPlayer;
+		final ArrayList<String> lstPlayer = new ArrayList<String>();
+		cPlayer = mDB.getPlayerByLeagueAndTeam(res.getString(R.string.worldcup), team);
+		cPlayer.moveToFirst();
+		while (!cPlayer.isAfterLast()) {
+			Player player = new Player(cPlayer.getString(1), cPlayer.getString(2), cPlayer.getInt(3),
+					cPlayer.getString(4), cPlayer.getString(5), cPlayer.getString(6));
+			lstPlayer.add(player.getLastname());
+			cPlayer.moveToNext();
+		}
+		cPlayer.close();
+		return lstPlayer;
+	}
 	void resultNoti(String team) {
 		String mes = "";
 		if (!team.equals("")) {

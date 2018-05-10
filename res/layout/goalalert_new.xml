@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llAgg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_vertical_margin"
+    android:paddingTop="@dimen/activity_vertical_margin" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/tvGoalFor2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TOORRRR für  "
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="25dp" />
+
+        <TextView
+            android:id="@+id/tvInThe2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="in der "
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="25dp" />
+
+        <EditText
+            android:id="@+id/txtMinute2"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="right|center_vertical"
+            android:inputType="number"
+            android:textSize="25dp" >
+
+            <requestFocus />
+        </EditText>
+
+        <TextView
+            android:id="@+id/tvMinute2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=". Minute"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="25dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/tvScoredBy2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="durch den Torschützer "
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="25dp" />
+
+        <Button
+            android:id="@+id/btnScorerList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Scorer" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <CheckBox
+            android:id="@+id/chkOG2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Eigentor"
+            android:textSize="25dp" />
+
+        <CheckBox
+            android:id="@+id/chkPen2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Elfmeter"
+            android:textSize="25dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="439dp"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/btnGoalOK2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.56"
+            android:text="OK"
+            android:textSize="25dp" />
+
+        <Button
+            android:id="@+id/btnGoalCancel2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.24"
+            android:text="Abbrechen"
+            android:textSize="25dp" />
+    </LinearLayout>
+
+</LinearLayout>
