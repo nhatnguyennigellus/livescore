@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -33,8 +34,9 @@ public class PlayerFragment extends Fragment {
 	}
 
 	EditText txtFirstname, txtLastname;
-	Button btnAdd, btnCountry, btnLiga, btnKitNo, btnTeam;
+	Button btnAdd, btnCountry, btnLiga, btnKitNo, btnTeam, btnUpdate;
 	ListView listPlayer;
+	TextView tvPlayerIdHid;
 	static DBAdapter mDB;
 	Cursor mCursor;
 	String criteriaTeam = "";
@@ -62,12 +64,14 @@ public class PlayerFragment extends Fragment {
 		txtFirstname = (EditText) rootView.findViewById(R.id.txtFirstname);
 		txtLastname = (EditText) rootView.findViewById(R.id.txtLastname);
 		btnAdd = (Button) rootView.findViewById(R.id.btnAddPlayer);
+		btnUpdate = (Button) rootView.findViewById(R.id.btnPlayerUpdate);
 		btnCountry = (Button) rootView.findViewById(R.id.btnCountryPlayer);
 		btnLiga = (Button) rootView.findViewById(R.id.btnLigaPlayer);
 		btnKitNo = (Button) rootView.findViewById(R.id.btnKitNo);
 		btnTeam = (Button) rootView.findViewById(R.id.btnTeamPlayer);
 		listPlayer = (ListView) rootView.findViewById(R.id.listPlayer);
-
+		tvPlayerIdHid = (TextView) rootView.findViewById(R.id.tvPlayerIdHidden);
+		
 		mDB = new DBAdapter(getActivity());
 		mDB.open();
 
@@ -258,6 +262,7 @@ public class PlayerFragment extends Fragment {
 		listPlayer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+				
 				TextView tvId = (TextView) view.findViewById(R.id.txtPlayerId);
 				final int playerId = Integer.parseInt(tvId.getText().toString());
 
@@ -284,8 +289,63 @@ public class PlayerFragment extends Fragment {
 						dialog.cancel();
 					}
 				});
-				dlgDelCfm.show();
+				if(btnUpdate.getVisibility() != View.VISIBLE) {
+					dlgDelCfm.show();
+				}
 
+			}
+		});
+		
+		listPlayer.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				TextView tvId = (TextView) view.findViewById(R.id.txtPlayerId);
+				tvPlayerIdHid.setText(tvId.getText().toString());
+				tvPlayerIdHid.setVisibility(View.INVISIBLE);
+				mCursor = mDB.getPlayerById(tvId.getText().toString());
+				mCursor.moveToFirst();
+				while (!mCursor.isAfterLast()) {
+					Player player = crsToObj(mCursor);
+					btnLiga.setText(player.getLeague());
+					btnTeam.setText(player.getTeam());
+					btnCountry.setText(player.getCountry());
+					btnKitNo.setText(String.valueOf(player.getKitNo()));
+					txtFirstname.setText(player.getFirstname());
+					txtLastname.setText(player.getLastname());
+					mCursor.moveToNext();
+				}
+				mCursor.close();
+				btnUpdate.setVisibility(View.VISIBLE);
+				btnAdd.setVisibility(View.GONE);
+				return false;
+			}
+			
+		});
+		
+		btnUpdate.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Player player = new Player(txtFirstname.getText().toString(), 
+						txtLastname.getText().toString(), 
+						Integer.parseInt(btnKitNo.getText().toString()), 
+						btnTeam.getText().toString(), 
+						btnCountry.getText().toString(), 
+						btnLiga.getText().toString());
+				player.setId(Integer.parseInt(tvPlayerIdHid.getText().toString()));
+				
+				mDB.updatePlayer(player);
+				noti("Player updated!");
+				
+				btnAdd.setVisibility(View.VISIBLE);
+				btnUpdate.setVisibility(View.GONE);
+				
+				txtLastname.setText("");
+				txtFirstname.setText("");
+				btnKitNo.setText("Select Kit No...");
+				if (!criteriaTeam.equals("Select Team...") && !criteriaLeague.equals("Select League...")) {
+					loadData(criteriaLeague, criteriaTeam);
+				}
 			}
 		});
 		return rootView;

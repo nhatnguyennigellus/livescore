@@ -68,6 +68,20 @@
             android:layout_height="wrap_content"
             android:text="ADD" />
 
+        <Button
+            android:id="@+id/btnPlayerUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SAVE"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvPlayerIdHidden"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColorHint="#FFFFFF" />
+
     </LinearLayout>
 
     <TextView

@@ -590,7 +590,7 @@ public class WorldCup2014Activity extends Activity {
 						dlgScr.setItems(Team, new OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
-								btnScorer.setText(Team[which]);
+								btnScorer.setText(Team[which].substring(Team[which].indexOf("-") + 1));
 								dialog.cancel();
 							}
 						});
@@ -1320,7 +1320,7 @@ public class WorldCup2014Activity extends Activity {
 		while (!cPlayer.isAfterLast()) {
 			Player player = new Player(cPlayer.getString(1), cPlayer.getString(2), cPlayer.getInt(3),
 					cPlayer.getString(4), cPlayer.getString(5), cPlayer.getString(6));
-			lstPlayer.add(player.getLastname());
+			lstPlayer.add(player.getKitNo() + "-" + player.getLastname());
 			cPlayer.moveToNext();
 		}
 		cPlayer.close();

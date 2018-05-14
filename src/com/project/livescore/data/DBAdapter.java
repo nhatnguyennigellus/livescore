@@ -220,54 +220,6 @@ public class DBAdapter {
 		return c.getCount();
 	}
 	
-	public boolean export(List<Match> list) {		
-		File sd = Environment.getExternalStorageDirectory();
-		
-		try {
-			File file = new File(sd + "/Android/data/com.project.livescore/201415.txt");
-			if (!file.exists()) {
-				file.mkdir();
-			}
-			FileWriter fw = new FileWriter(file);
-            BufferedWriter bw = new BufferedWriter(fw);
-            
-            bw.write("\tRESULT 2014 - 2015 SEASON");
-            bw.newLine();
-            return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-	
-	private void print(List<Match> list, BufferedWriter bw) throws IOException {
-		if (list.size() > 0) {
-			bw.write("-------\t-------");
-			bw.newLine();
-			for (Match m : list) {
-				
-				bw.write(m.getTeamA() + " " + m.getGoalA() + ":"
-						+ m.getGoalB() + " " + m.getTeamB());
-				bw.newLine();
-				if (m.getPSO_A() > 0 && m.getPSO_B() > 0) {
-					bw.write(" (" + m.getPSO_A() + ":" + m.getPSO_B() + " PSO)");
-					bw.newLine();
-				}
-				bw.write(m.getLeague() + " - " + m.getRound());
-				bw.newLine();
-				if (m.getScorerListA().equals("")) {
-					bw.write(m.getScorerListB());
-				} else if (m.getScorerListB().equals("")) {
-					bw.write(m.getScorerListA());
-				} else
-					bw.write(m.getScorerListA() + " ; " + m.getScorerListB());
-				bw.newLine();
-			}
-		} else {
-			bw.write("\tNo data");
-			bw.newLine();
-		}
-	}
 	
 	/*
 	 * League
@@ -337,6 +289,19 @@ public class DBAdapter {
 	public void deletePlayer(int id) {
 		mDB.delete(DB_TBL_PLAYER, KEY_ID + " = " + id, null);
 	}
+	
+	public void updatePlayer(Player player) {
+		ContentValues initialValues = new ContentValues();
+	//	initialValues.put(KEY_ID, player.getId());
+		initialValues.put(KEY_FIRSTNAME, player.getFirstname());
+		initialValues.put(KEY_LASTNAME, player.getLastname());
+		initialValues.put(KEY_KIT_NO, player.getKitNo());
+		initialValues.put(KEY_LEAGUE_PLAYER, player.getLeague());
+		initialValues.put(KEY_COUNTRY_PLAYER, player.getCountry());
+		initialValues.put(KEY_TEAM_PLAYER, player.getTeam());
+		
+		mDB.update(DB_TBL_PLAYER, initialValues, KEY_ID + " = " + String.valueOf(player.getId()) + "", null);
+	}
 
 	public Cursor getPlayerByLeagueAndTeam(String liga, String team) {
 		return mDB.query(DB_TBL_PLAYER, 
@@ -345,6 +310,13 @@ public class DBAdapter {
 						KEY_LEAGUE_PLAYER + " LIKE '%" + liga + "%' AND " 
 								+ KEY_TEAM_PLAYER + " LIKE '%" + team + "%'", 
 				null, null, null, KEY_KIT_NO);
+	}
+	
+	public Cursor getPlayerById(String id) {
+		return mDB.query(DB_TBL_PLAYER, 
+				new String[] { KEY_ID, KEY_FIRSTNAME, KEY_LASTNAME, KEY_KIT_NO, 
+						KEY_LEAGUE_PLAYER, KEY_COUNTRY_PLAYER, KEY_TEAM_PLAYER}, 
+						KEY_ID + " = " + id, null, null, null, KEY_KIT_NO);
 	}
 	
 	/*

@@ -268,29 +268,9 @@ public class MatchesListActivity extends ListActivity {
 
 			dlgEdit.show();
 		} else if (id == R.id.export) {
-			export();
+			
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	private void export() {
-		mCursor = mDB.getAllMatches();
-		mCursor.moveToFirst();
-		List<Match> listMatch = new ArrayList<Match>();
-		
-		while (!mCursor.isAfterLast()) {
-			Match m = cursorToObject(mCursor);
-			listMatch.add(m);
-
-			mCursor.moveToNext();
-		}
-
-		mDB.export(listMatch);
-		mCursor.close();
-
-		if (mDB.countRows() == 0) {
-			Toast.makeText(this, "No data", Toast.LENGTH_SHORT);
-		}
 	}
 
 	/**
