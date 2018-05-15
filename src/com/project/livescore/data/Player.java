@@ -8,11 +8,12 @@ public class Player {
 	private String team;
 	private String country;
 	private String league;
+	private int lineUp;
 	
 	public Player() {
 	}
 
-	public Player(String firstname, String lastname, int kitNo, String team, String country, String league) {
+	public Player(String firstname, String lastname, int kitNo, String team, String country, String league, int lineUp) {
 		super();
 		this.firstname = firstname;
 		this.lastname = lastname;
@@ -20,6 +21,7 @@ public class Player {
 		this.team = team;
 		this.country = country;
 		this.league = league;
+		this.lineUp = lineUp;
 	}
 
 
@@ -78,6 +80,14 @@ public class Player {
 
 	public void setLeague(String league) {
 		this.league = league;
+	}
+
+	public int getLineUp() {
+		return lineUp;
+	}
+
+	public void setLineUp(int lineUp) {
+		this.lineUp = lineUp;
 	}
 
 	@Override

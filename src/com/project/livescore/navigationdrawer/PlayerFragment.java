@@ -2,7 +2,6 @@ package com.project.livescore.navigationdrawer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import com.project.livescore.data.DBAdapter;
 import com.project.livescore.data.League;
@@ -10,6 +9,7 @@ import com.project.livescore.data.Player;
 import com.project.livescore.data.Team;
 import com.project.livescore1415.R;
 
+import android.R.bool;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
@@ -23,9 +23,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +40,7 @@ public class PlayerFragment extends Fragment {
 	Button btnAdd, btnCountry, btnLiga, btnKitNo, btnTeam, btnUpdate;
 	ListView listPlayer;
 	TextView tvPlayerIdHid;
+	Switch swLineup;
 	static DBAdapter mDB;
 	Cursor mCursor;
 	String criteriaTeam = "";
@@ -71,6 +75,7 @@ public class PlayerFragment extends Fragment {
 		btnTeam = (Button) rootView.findViewById(R.id.btnTeamPlayer);
 		listPlayer = (ListView) rootView.findViewById(R.id.listPlayer);
 		tvPlayerIdHid = (TextView) rootView.findViewById(R.id.tvPlayerIdHidden);
+		swLineup = (Switch) rootView.findViewById(R.id.swLineup);
 		
 		mDB = new DBAdapter(getActivity());
 		mDB.open();
@@ -99,12 +104,17 @@ public class PlayerFragment extends Fragment {
 					noti("Please choose a team!");
 					return;
 				}
-				Player player = new Player(txtFirstname.getText().toString(), 
-						txtLastname.getText().toString(),
+				StringBuffer sbFN = new StringBuffer();
+				sbFN.append(Character.toUpperCase(txtFirstname.getText().toString().charAt(0)));
+				sbFN.append(txtFirstname.getText().toString().substring(1));
+				String newFirstname = sbFN.toString();
+				Player player = new Player(newFirstname, 
+						txtLastname.getText().toString().toUpperCase(),
 						Integer.parseInt(btnKitNo.getText().toString()), 
 						btnTeam.getText().toString(),
 						btnCountry.getText().toString(), 
-						btnLiga.getText().toString());
+						btnLiga.getText().toString(), 
+						swLineup.isChecked() ? 1 : 0);
 
 				mDB.addPlayer(player);
 				noti("Player added!");
@@ -112,7 +122,7 @@ public class PlayerFragment extends Fragment {
 				txtFirstname.setText("");
 				btnKitNo.setText("Select Kit No...");
 				if (!criteriaTeam.equals("Select Team...") && !criteriaLeague.equals("Select League...")) {
-					loadData(criteriaLeague, criteriaTeam);
+					loadData(criteriaLeague, criteriaTeam, "ALL");
 				}
 			}
 		});
@@ -141,7 +151,7 @@ public class PlayerFragment extends Fragment {
 					public void onClick(DialogInterface dialog, int which) {
 						btnLiga.setText(Ligen[which]);
 						criteriaLeague = btnLiga.getText().toString();
-						loadData(criteriaLeague, criteriaTeam);
+						loadData(criteriaLeague, criteriaTeam, "ALL");
 						dialog.cancel();
 					}
 				});
@@ -177,7 +187,7 @@ public class PlayerFragment extends Fragment {
 					public void onClick(DialogInterface dialog, int which) {
 						btnTeam.setText(Team[which]);
 						criteriaTeam = btnTeam.getText().toString();
-						loadData(criteriaLeague, criteriaTeam);
+						loadData(criteriaLeague, criteriaTeam, "ALL");
 						dialog.cancel();
 					}
 				});
@@ -276,7 +286,7 @@ public class PlayerFragment extends Fragment {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						mDB.deletePlayer(playerId);
-						loadData(criteriaLeague, criteriaTeam);
+						loadData(criteriaLeague, criteriaTeam, "ALL");
 						dialog.cancel();
 					}
 
@@ -313,6 +323,7 @@ public class PlayerFragment extends Fragment {
 					btnKitNo.setText(String.valueOf(player.getKitNo()));
 					txtFirstname.setText(player.getFirstname());
 					txtLastname.setText(player.getLastname());
+					swLineup.setChecked(player.getLineUp() == 1 ? true : false);
 					mCursor.moveToNext();
 				}
 				mCursor.close();
@@ -326,12 +337,18 @@ public class PlayerFragment extends Fragment {
 		btnUpdate.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Player player = new Player(txtFirstname.getText().toString(), 
+				StringBuffer sbFN = new StringBuffer();
+				sbFN.append(Character.toUpperCase(txtFirstname.getText().toString().charAt(0)));
+				sbFN.append(txtFirstname.getText().toString().substring(1));
+				String newFirstname = sbFN.toString();
+				
+				Player player = new Player(newFirstname, 
 						txtLastname.getText().toString(), 
 						Integer.parseInt(btnKitNo.getText().toString()), 
 						btnTeam.getText().toString(), 
 						btnCountry.getText().toString(), 
-						btnLiga.getText().toString());
+						btnLiga.getText().toString(),
+						swLineup.isChecked() ? 1 : 0);
 				player.setId(Integer.parseInt(tvPlayerIdHid.getText().toString()));
 				
 				mDB.updatePlayer(player);
@@ -344,27 +361,43 @@ public class PlayerFragment extends Fragment {
 				txtFirstname.setText("");
 				btnKitNo.setText("Select Kit No...");
 				if (!criteriaTeam.equals("Select Team...") && !criteriaLeague.equals("Select League...")) {
-					loadData(criteriaLeague, criteriaTeam);
+					loadData(criteriaLeague, criteriaTeam, "ALL");
+				}
+			}
+		});
+		
+		swLineup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				criteriaTeam = btnTeam.getText().toString();
+				criteriaLeague = btnLiga.getText().toString();
+				if ((!criteriaTeam.equals("Select Team...") && !criteriaLeague.equals("Select League..."))
+						|| btnUpdate.getVisibility() == View.VISIBLE
+						) {
+					loadData(criteriaLeague, criteriaTeam, isChecked ? "on" : "sub");
 				}
 			}
 		});
 		return rootView;
 	}
 
-	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+	ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
 
-	private ArrayList<HashMap<String, String>> loadData(String liga, String team) {
-		final ArrayList<HashMap<String, String>> lstPlayer = new ArrayList<HashMap<String, String>>();
+	private ArrayList<HashMap<String, Object>> loadData(String liga, String team, String lineUp) {
+		final ArrayList<HashMap<String, Object>> lstPlayer = new ArrayList<HashMap<String, Object>>();
 		SimpleAdapter adapter = new SimpleAdapter(getActivity(), lstPlayer, R.layout.list_player_item_row,
-				new String[] { "Id", "Firstname", "Lastname", "KitNo", "Country", "Team" },
+				new String[] { "Id", "Firstname", "Lastname", "KitNo", "Country", "Team", "Lineup" },
 				new int[] { R.id.txtPlayerId, R.id.txtListFirstname, R.id.txtListLastName, R.id.txtListKitNo,
-						R.id.tvLandPlayer, R.id.tvTeamPlayer });
-		mCursor = mDB.getPlayerByLeagueAndTeam(liga, team);
+						R.id.tvLandPlayer, R.id.tvTeamPlayer, R.id.txtLineup });
+		mCursor = lineUp.equals("ALL") 
+				? mDB.getPlayerByLeagueAndTeam(liga, team)
+				: mDB.getPlayerByLeagueAndTeam(liga, team, lineUp.equals("on") ? 1 : 0);
 		mCursor.moveToFirst();
 		list.clear();
 		while (!mCursor.isAfterLast()) {
 			Player player = crsToObj(mCursor);
-			HashMap<String, String> temp = new HashMap<String, String>();
+			HashMap<String, Object> temp = new HashMap<String, Object>();
 			temp.put("Id", String.valueOf(player.getId()));
 			temp.put("Firstname", player.getFirstname());
 			temp.put("Lastname", player.getLastname());
@@ -372,6 +405,7 @@ public class PlayerFragment extends Fragment {
 			temp.put("League", player.getLeague());
 			temp.put("Country", player.getCountry());
 			temp.put("Team", player.getTeam());
+			temp.put("Lineup", player.getLineUp() == 1 ? "ON" : "SUB");
 
 			lstPlayer.add(temp);
 			list.add(temp);
@@ -393,6 +427,7 @@ public class PlayerFragment extends Fragment {
 		player.setLeague(c.getString(4));
 		player.setCountry(c.getString(5));
 		player.setTeam(c.getString(6));
+		player.setLineUp(c.getInt(7));
 		return player;
 	}
 

@@ -42,6 +42,7 @@ public class DBAdapter {
 	public static final String KEY_TEAM_PLAYER = "Team";
 	public static final String KEY_COUNTRY_PLAYER = "Country";
 	public static final String KEY_LEAGUE_PLAYER = "League";
+	public static final String KEY_LINE_UP = "LineUp";
 
 	private static final String DATABASE_NAME = "LivescoreDB";
 	private static final String DB_TBL_MATCH = "Match";
@@ -94,10 +95,11 @@ public class DBAdapter {
 			+ KEY_KIT_NO + " integer not null,"
 			+ KEY_COUNTRY_PLAYER + " text not null,"
 			+ KEY_TEAM_PLAYER + " text not null,"
-			+ KEY_LEAGUE_PLAYER + " text not null"
+			+ KEY_LEAGUE_PLAYER + " text not null,"
+			+ KEY_LINE_UP + " integer not null"
 			+ ");";
 	
-	private static final int DATABASE_VERSION = 3;
+	private static final int DATABASE_VERSION = 4;
 
 	private final Context mContext;
 
@@ -120,12 +122,17 @@ public class DBAdapter {
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			db.execSQL("DROP TABLE IF EXISTS Match");
+			/*db.execSQL("DROP TABLE IF EXISTS Match");
 			db.execSQL("DROP TABLE IF EXISTS League");
 			db.execSQL("DROP TABLE IF EXISTS Team");
 			db.execSQL("DROP TABLE IF EXISTS Venue");
 			db.execSQL("DROP TABLE IF EXISTS Champ");
-			db.execSQL("DROP TABLE IF EXISTS Player");
+			db.execSQL("DROP TABLE IF EXISTS Player");*/
+			// If you need to add a new column
+		    if (newVersion > oldVersion) {
+		        db.execSQL("ALTER TABLE " + DB_TBL_PLAYER 
+		        		+ " ADD COLUMN " + KEY_LINE_UP + " INTEGER DEFAULT 0");
+		    }
 			onCreate(db);
 		}
 
@@ -279,6 +286,7 @@ public class DBAdapter {
 		initialValues.put(KEY_LEAGUE_PLAYER, player.getLeague());
 		initialValues.put(KEY_COUNTRY_PLAYER, player.getCountry());
 		initialValues.put(KEY_TEAM_PLAYER, player.getTeam());
+		initialValues.put(KEY_LINE_UP, player.getLineUp());
 		mDB.insertOrThrow(DB_TBL_PLAYER, null, initialValues);
 	}
 
@@ -292,13 +300,13 @@ public class DBAdapter {
 	
 	public void updatePlayer(Player player) {
 		ContentValues initialValues = new ContentValues();
-	//	initialValues.put(KEY_ID, player.getId());
 		initialValues.put(KEY_FIRSTNAME, player.getFirstname());
 		initialValues.put(KEY_LASTNAME, player.getLastname());
 		initialValues.put(KEY_KIT_NO, player.getKitNo());
 		initialValues.put(KEY_LEAGUE_PLAYER, player.getLeague());
 		initialValues.put(KEY_COUNTRY_PLAYER, player.getCountry());
 		initialValues.put(KEY_TEAM_PLAYER, player.getTeam());
+		initialValues.put(KEY_LINE_UP, player.getLineUp());
 		
 		mDB.update(DB_TBL_PLAYER, initialValues, KEY_ID + " = " + String.valueOf(player.getId()) + "", null);
 	}
@@ -306,16 +314,26 @@ public class DBAdapter {
 	public Cursor getPlayerByLeagueAndTeam(String liga, String team) {
 		return mDB.query(DB_TBL_PLAYER, 
 				new String[] { KEY_ID, KEY_FIRSTNAME, KEY_LASTNAME, KEY_KIT_NO, 
-						KEY_LEAGUE_PLAYER, KEY_COUNTRY_PLAYER, KEY_TEAM_PLAYER}, 
+						KEY_LEAGUE_PLAYER, KEY_COUNTRY_PLAYER, KEY_TEAM_PLAYER, KEY_LINE_UP}, 
 						KEY_LEAGUE_PLAYER + " LIKE '%" + liga + "%' AND " 
 								+ KEY_TEAM_PLAYER + " LIKE '%" + team + "%'", 
+				null, null, null, KEY_KIT_NO);
+	}
+	
+	public Cursor getPlayerByLeagueAndTeam(String liga, String team, int lineUp) {
+		return mDB.query(DB_TBL_PLAYER, 
+				new String[] { KEY_ID, KEY_FIRSTNAME, KEY_LASTNAME, KEY_KIT_NO, 
+						KEY_LEAGUE_PLAYER, KEY_COUNTRY_PLAYER, KEY_TEAM_PLAYER, KEY_LINE_UP}, 
+						KEY_LEAGUE_PLAYER + " LIKE '%" + liga + "%' AND " 
+								+ KEY_TEAM_PLAYER + " LIKE '%" + team + "%' AND "
+								+ KEY_LINE_UP + " = " + lineUp, 
 				null, null, null, KEY_KIT_NO);
 	}
 	
 	public Cursor getPlayerById(String id) {
 		return mDB.query(DB_TBL_PLAYER, 
 				new String[] { KEY_ID, KEY_FIRSTNAME, KEY_LASTNAME, KEY_KIT_NO, 
-						KEY_LEAGUE_PLAYER, KEY_COUNTRY_PLAYER, KEY_TEAM_PLAYER}, 
+						KEY_LEAGUE_PLAYER, KEY_COUNTRY_PLAYER, KEY_TEAM_PLAYER, KEY_LINE_UP}, 
 						KEY_ID + " = " + id, null, null, null, KEY_KIT_NO);
 	}
 	

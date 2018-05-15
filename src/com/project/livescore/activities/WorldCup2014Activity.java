@@ -1315,11 +1315,11 @@ public class WorldCup2014Activity extends Activity {
 	protected ArrayList<String> getPlayerList(final Resources res, String team) {
 		Cursor cPlayer;
 		final ArrayList<String> lstPlayer = new ArrayList<String>();
-		cPlayer = mDB.getPlayerByLeagueAndTeam(res.getString(R.string.worldcup), team);
+		cPlayer = mDB.getPlayerByLeagueAndTeam(res.getString(R.string.worldcup), team, 1);
 		cPlayer.moveToFirst();
 		while (!cPlayer.isAfterLast()) {
 			Player player = new Player(cPlayer.getString(1), cPlayer.getString(2), cPlayer.getInt(3),
-					cPlayer.getString(4), cPlayer.getString(5), cPlayer.getString(6));
+					cPlayer.getString(4), cPlayer.getString(5), cPlayer.getString(6), 0);
 			lstPlayer.add(player.getKitNo() + "-" + player.getLastname());
 			cPlayer.moveToNext();
 		}
