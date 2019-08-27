@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="DEUTSCHE BUNDESLIGA 2017/18"
+        android:text="DEUTSCHE BUNDESLIGA 2019/20"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#FFFFFF"
         android:textSize="25dp"
@@ -40,10 +40,19 @@
         android:background="#cccccc"
         android:gravity="center_horizontal|center_vertical" >
 
+        <Button
+            android:id="@+id/btnKitColorBLA"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF" />
+
         <TextView
             android:id="@+id/txtBLTeam1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0.15"
+            android:gravity="right"
             android:text="Medium Text"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="25dp" />
@@ -54,7 +63,6 @@
             android:layout_height="wrap_content"
             android:text="  "
             android:textAppearance="?android:attr/textAppearanceMedium" />
-
         <Button
             android:id="@+id/btnBLGoal1"
             android:layout_width="wrap_content"
@@ -88,7 +96,7 @@
             android:textColor="#ffffff"
             android:textSize="30sp"
             android:textStyle="bold" />
-
+        
         <TextView
             android:id="@+id/textView6"
             android:layout_width="wrap_content"
@@ -101,8 +109,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Medium Text"
+            android:layout_weight="0.15"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="25dp" />
+
+        <Button
+            android:id="@+id/btnKitColorBLB"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF" />
 
     </LinearLayout>
 

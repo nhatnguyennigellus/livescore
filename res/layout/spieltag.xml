@@ -46,6 +46,20 @@
             android:textColor="#ff0000" />
 
         <Button
+            android:id="@+id/btnKCBLA"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="A" />
+
+        <Button
+            android:id="@+id/btnKCBLB"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="B" />
+
+        <Button
             android:id="@+id/btnSplTeam2"
             android:layout_width="335dp"
             android:layout_height="wrap_content"

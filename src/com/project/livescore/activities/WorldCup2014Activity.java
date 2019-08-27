@@ -198,13 +198,13 @@ public class WorldCup2014Activity extends Activity {
 		
 		Calendar c = Calendar.getInstance();
 		if (c.get(Calendar.SECOND) % 3 == 1)
-			mp = MediaPlayer.create(this, R.raw.wc2018);
+			mp = MediaPlayer.create(this, R.raw.komanda);
 		else if (c.get(Calendar.SECOND) % 3 == 2)
-			mp = MediaPlayer.create(this, R.raw.wc2018_2);
+			mp = MediaPlayer.create(this, R.raw.color);
 		else
-			mp = MediaPlayer.create(this, R.raw.confedcup);
+			mp = MediaPlayer.create(this, R.raw.liveitup);
 		mp.start();
-		mpgoal = MediaPlayer.create(this, R.raw.torhymne);
+		mpgoal = MediaPlayer.create(this, R.raw.torhymne_wc2018);
 
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment()).commit();
@@ -244,15 +244,15 @@ public class WorldCup2014Activity extends Activity {
 			public void onClick(View arg0) {
 				dlgRnd.setTitle("Match Info");
 
-				Button btnOK = (Button) dlgRnd.findViewById(R.id.btnSplOK);
-				Button btnCancel = (Button) dlgRnd.findViewById(R.id.btnSplCancel);
+				Button btnOK = (Button) dlgRnd.findViewById(R.id.btnWCRndOK);
+				Button btnCancel = (Button) dlgRnd.findViewById(R.id.btnWCRndCancel);
 				final Button btnSpl = (Button) dlgRnd.findViewById(R.id.btnWCSelRound);
 				final Button btnGrp = (Button) dlgRnd.findViewById(R.id.btnWCSelGroup);
 
 				final Button btnVenue = (Button) dlgRnd.findViewById(R.id.btnVenueSel);
 
-				final Button btnTeam1 = (Button) dlgRnd.findViewById(R.id.btnSplTeam1);
-				final Button btnTeam2 = (Button) dlgRnd.findViewById(R.id.btnSplTeam2);
+				final Button btnTeam1 = (Button) dlgRnd.findViewById(R.id.btnRndTeam1);
+				final Button btnTeam2 = (Button) dlgRnd.findViewById(R.id.btnRndTeam2);
 				
 				final Button btnKCA = (Button) dlgRnd.findViewById(R.id.btnKCA);
 				final Button btnKCB = (Button) dlgRnd.findViewById(R.id.btnKCB);
@@ -280,6 +280,8 @@ public class WorldCup2014Activity extends Activity {
 										btnVenue.setText("Moscow");
 										btnDate.setText("15.07.2018");
 										btnTime.setText("01:00");
+										imgTrophy.setImageResource(R.drawable.trophywc);
+
 									}
 								}
 							}
@@ -692,7 +694,7 @@ public class WorldCup2014Activity extends Activity {
 						dlgScr.setItems(Team, new OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
-								btnScorer.setText(Team[which]);
+								btnScorer.setText(Team[which].substring(Team[which].indexOf("-") + 1));
 								dialog.cancel();
 							}
 						});
@@ -711,8 +713,18 @@ public class WorldCup2014Activity extends Activity {
 				btnGoalOK.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						int min = 0;
+						if (!txtMin.getText().toString().isEmpty() && !txtMin.getText().toString().startsWith("45+")
+								&& !txtMin.getText().toString().startsWith("90+")
+								&& !txtMin.getText().toString().startsWith("105+")
+								&& !txtMin.getText().toString().startsWith("120+")) {
+							min = Integer.parseInt(txtMin.getText().toString());
+						}
+
 						if (txtMin.getText().toString().equals("") || btnScorer.getText().toString().equals("")) {
 							errNoti("Please enter goal scorer and goal time!");
+						} else if (min < 0 || min > 120) {
+							errNoti("Invalid minute number!"); 
 						} else {
 							int goal = Integer.parseInt(btnGoal2.getText().toString());
 							btnGoal2.setText(String.valueOf(goal + 1).toString());
@@ -1319,18 +1331,20 @@ public class WorldCup2014Activity extends Activity {
 		cPlayer.moveToFirst();
 		while (!cPlayer.isAfterLast()) {
 			Player player = new Player(cPlayer.getString(1), cPlayer.getString(2), cPlayer.getInt(3),
-					cPlayer.getString(4), cPlayer.getString(5), cPlayer.getString(6), 0);
+					cPlayer.getString(4), cPlayer.getString(5), cPlayer.getString(6), cPlayer.getInt(7),
+					cPlayer.getString(8));
 			lstPlayer.add(player.getKitNo() + "-" + player.getLastname());
 			cPlayer.moveToNext();
 		}
 		cPlayer.close();
 		return lstPlayer;
 	}
+	
 	void resultNoti(String team) {
 		String mes = "";
 		if (!team.equals("")) {
 			if (btnRound.getText().toString().equals("FINAL"))
-				mes = team + " - WORLD CHAMPION!!!";
+				mes = team + " - WORLD CHAMPION 2018!!!";
 			else if (btnRound.getText().toString().contains("Group Stage"))
 				mes = team + " has won the match!!!";
 			else if (btnRound.getText().toString().contains("Round of 16"))

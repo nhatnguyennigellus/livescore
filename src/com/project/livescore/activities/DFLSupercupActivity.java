@@ -1,6 +1,9 @@
 package com.project.livescore.activities;
 
+import java.util.ArrayList;
+
 import com.project.livescore.data.DBAdapter;
+import com.project.livescore.data.Player;
 import com.project.livescore1415.R;
 
 import android.app.Activity;
@@ -12,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -34,10 +38,9 @@ import android.os.Build;
 
 public class DFLSupercupActivity extends Activity {
 
-	Button btnGoalBVB, btnGoalFCB, btnPenA1, btnPenA2, btnPenA3, btnPenA4,
-			btnPenA5, btnPenB1, btnPenB2, btnPenB3, btnPenB4, btnPenB5;
-	TextView txtTeamBVB, txtTeamFCB, txtGoalBVB, txtGoalFCB, tvPenBVB,
-			tvPenFCB, tvPenStage;
+	Button btnGoalBVB, btnGoalFCB, btnPenA1, btnPenA2, btnPenA3, btnPenA4, btnPenA5, btnPenB1, btnPenB2, btnPenB3,
+			btnPenB4, btnPenB5;
+	TextView txtTeamBVB, txtTeamFCB, txtGoalBVB, txtGoalFCB, tvPenBVB, tvPenFCB, tvPenStage;
 	LinearLayout llPen;
 	MediaPlayer mp, mpGoal;
 	static DBAdapter mDB;
@@ -113,28 +116,18 @@ public class DFLSupercupActivity extends Activity {
 		tvPenBVB.setText(pref.getString("tvPenBVB", "0"));
 		tvPenFCB.setText(pref.getString("tvPenFCB", "0"));
 		llPen.setVisibility(pref.getInt("llPenVisible", 8));
-		
-		btnPenA1.setBackgroundResource(pref.getInt("PenA1Color",
-				R.drawable.pen_button_normal));
-		btnPenA2.setBackgroundResource(pref.getInt("PenA2Color",
-				R.drawable.pen_button_normal));
-		btnPenA3.setBackgroundResource(pref.getInt("PenA3Color",
-				R.drawable.pen_button_normal));
-		btnPenA4.setBackgroundResource(pref.getInt("PenA4Color",
-				R.drawable.pen_button_normal));
-		btnPenA5.setBackgroundResource(pref.getInt("PenA5Color",
-				R.drawable.pen_button_normal));
-		btnPenB1.setBackgroundResource(pref.getInt("PenB1Color",
-				R.drawable.pen_button_normal));
-		btnPenB2.setBackgroundResource(pref.getInt("PenB2Color",
-				R.drawable.pen_button_normal));
-		btnPenB3.setBackgroundResource(pref.getInt("PenB3Color",
-				R.drawable.pen_button_normal));
-		btnPenB4.setBackgroundResource(pref.getInt("PenB4Color",
-				R.drawable.pen_button_normal));
-		btnPenB5.setBackgroundResource(pref.getInt("PenB5Color",
-				R.drawable.pen_button_normal));
-		
+
+		btnPenA1.setBackgroundResource(pref.getInt("PenA1Color", R.drawable.pen_button_normal));
+		btnPenA2.setBackgroundResource(pref.getInt("PenA2Color", R.drawable.pen_button_normal));
+		btnPenA3.setBackgroundResource(pref.getInt("PenA3Color", R.drawable.pen_button_normal));
+		btnPenA4.setBackgroundResource(pref.getInt("PenA4Color", R.drawable.pen_button_normal));
+		btnPenA5.setBackgroundResource(pref.getInt("PenA5Color", R.drawable.pen_button_normal));
+		btnPenB1.setBackgroundResource(pref.getInt("PenB1Color", R.drawable.pen_button_normal));
+		btnPenB2.setBackgroundResource(pref.getInt("PenB2Color", R.drawable.pen_button_normal));
+		btnPenB3.setBackgroundResource(pref.getInt("PenB3Color", R.drawable.pen_button_normal));
+		btnPenB4.setBackgroundResource(pref.getInt("PenB4Color", R.drawable.pen_button_normal));
+		btnPenB5.setBackgroundResource(pref.getInt("PenB5Color", R.drawable.pen_button_normal));
+
 		imgTrophy = (ImageView) this.findViewById(R.id.imgDFLSTrophy);
 		imgFlagBVB = (ImageView) this.findViewById(R.id.imgBVB);
 		imgFlagFCB = (ImageView) this.findViewById(R.id.imgFCB);
@@ -143,11 +136,10 @@ public class DFLSupercupActivity extends Activity {
 
 		mp = MediaPlayer.create(this, R.raw.bundesligaintro);
 		mpGoal = MediaPlayer.create(this, R.raw.torhymne);
-		
+
 		mp.start();
 		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+			getFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment()).commit();
 		}
 
 		imgTrophy.setOnClickListener(new View.OnClickListener() {
@@ -162,41 +154,54 @@ public class DFLSupercupActivity extends Activity {
 			}
 		});
 
-		// Resources res = getResources();
 		final Dialog dlgGoal = new Dialog(this);
 		final Dialog dlgEdit = new Dialog(this);
+		final Resources res = getResources();
+		final AlertDialog.Builder dlgScr = new AlertDialog.Builder(this);
 
 		btnGoalBVB.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				dlgGoal.setContentView(R.layout.goalalert);
+				dlgGoal.setContentView(R.layout.goalalert_new);
 				dlgGoal.setTitle("TOORRRR!!!!");
 
-				final EditText txtMin = (EditText) dlgGoal
-						.findViewById(R.id.txtMinute);
-				final EditText txtScorer = (EditText) dlgGoal
-						.findViewById(R.id.txtScorerName);
-				final Button btnGoalOK = (Button) dlgGoal
-						.findViewById(R.id.btnGoalOK);
-				final Button btnGoalCnl = (Button) dlgGoal
-						.findViewById(R.id.btnGoalCancel);
-				final TextView tvGoalFor = (TextView) dlgGoal
-						.findViewById(R.id.tvGoalFor);
+				final EditText txtMin = (EditText) dlgGoal.findViewById(R.id.txtMinute2);
+				final Button btnScorer = (Button) dlgGoal.findViewById(R.id.btnScorerList);
+				final Button btnGoalOK = (Button) dlgGoal.findViewById(R.id.btnGoalOK2);
+				final Button btnGoalCnl = (Button) dlgGoal.findViewById(R.id.btnGoalCancel2);
+				final TextView tvGoalFor = (TextView) dlgGoal.findViewById(R.id.tvGoalFor2);
 
-				final CheckBox chkOG = (CheckBox) dlgGoal
-						.findViewById(R.id.chkOG);
-				final CheckBox chkPen = (CheckBox) dlgGoal
-						.findViewById(R.id.chkPen);
+				final CheckBox chkOG = (CheckBox) dlgGoal.findViewById(R.id.chkOG2);
+				final CheckBox chkPen = (CheckBox) dlgGoal.findViewById(R.id.chkPen2);
 
-				tvGoalFor.setText("TOORRRRRR für Borussia Dortmund ");
+				tvGoalFor.setText("TOORRRRRR für " + txtTeamBVB.getText().toString() + " ");
 
+				btnScorer.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						final ArrayList<String> lstPlayer = !chkOG.isChecked()
+								? getPlayerList(res, txtTeamBVB.getText().toString())
+								: getPlayerList(res, txtTeamFCB.getText().toString());
+						final String[] Team = lstPlayer.toArray(new String[0]);
+
+						dlgScr.setItems(Team, new OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								btnScorer.setText(Team[which].substring(Team[which].indexOf("-") + 1));
+								dialog.cancel();
+							}
+						});
+
+						dlgScr.show();
+					}
+
+				});
+				
 				btnGoalCnl.setOnClickListener(new View.OnClickListener() {
 
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
 						dlgGoal.cancel();
 					}
 				});
@@ -205,33 +210,22 @@ public class DFLSupercupActivity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						if (txtMin.getText().toString().equals("")
-								|| txtScorer.getText().toString().equals("")) {
-							// TODO Auto-generated method stub
-
-							errNoti("Bitte die Minute und den Torschützer eingeben!");
+						if (txtMin.getText().toString().equals("") || btnScorer.getText().toString().equals("")) {
+							errNoti("Bitte geben Sie den Zeitpunkt und den Torschützer ein!");
 						} else {
-							int goal = Integer.parseInt(btnGoalBVB.getText()
-									.toString());
-							btnGoalBVB.setText(String.valueOf(goal + 1)
-									.toString());
+							int goal = Integer.parseInt(btnGoalBVB.getText().toString());
+							btnGoalBVB.setText(String.valueOf(goal + 1).toString());
 
-							String mes = txtScorer.getText() + " "
-									+ txtMin.getText() + "'";
+							String mes = btnScorer.getText() + " " + txtMin.getText() + "'";
 							if (chkOG.isChecked()) {
-								mes += "(E.t)";
+								mes += "(Et)";
 							}
 							if (chkPen.isChecked()) {
-								mes += "(E.m)";
+								mes += "(Elf.)";
 							}
-							if (txtGoalBVB.getText().toString()
-									.contains(txtScorer.getText())) {
-								String temp = txtGoalBVB
-										.getText()
-										.toString()
-										.replace(
-												txtScorer.getText().toString(),
-												mes);
+							if (txtGoalBVB.getText().toString().contains(btnScorer.getText())) {
+								String temp = txtGoalBVB.getText().toString().replace(btnScorer.getText().toString(),
+										mes);
 								txtGoalBVB.setText(temp);
 							} else
 								txtGoalBVB.append(mes + "\n");
@@ -245,32 +239,46 @@ public class DFLSupercupActivity extends Activity {
 
 			}
 		});
-
+		
 		btnGoalFCB.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				mpGoal.start();
-				dlgGoal.setContentView(R.layout.goalalert);
+				dlgGoal.setContentView(R.layout.goalalert_new);
 				dlgGoal.setTitle("TOORRRR!!!!");
 
-				final EditText txtMin = (EditText) dlgGoal
-						.findViewById(R.id.txtMinute);
-				final EditText txtScorer = (EditText) dlgGoal
-						.findViewById(R.id.txtScorerName);
-				final Button btnGoalOK = (Button) dlgGoal
-						.findViewById(R.id.btnGoalOK);
-				final Button btnGoalCnl = (Button) dlgGoal
-						.findViewById(R.id.btnGoalCancel);
-				final TextView tvGoalFor = (TextView) dlgGoal
-						.findViewById(R.id.tvGoalFor);
+				final EditText txtMin = (EditText) dlgGoal.findViewById(R.id.txtMinute2);
+				final Button btnScorer = (Button) dlgGoal.findViewById(R.id.btnScorerList);
+				final Button btnGoalOK = (Button) dlgGoal.findViewById(R.id.btnGoalOK2);
+				final Button btnGoalCnl = (Button) dlgGoal.findViewById(R.id.btnGoalCancel2);
+				final TextView tvGoalFor = (TextView) dlgGoal.findViewById(R.id.tvGoalFor2);
 
-				final CheckBox chkOG = (CheckBox) dlgGoal
-						.findViewById(R.id.chkOG);
-				final CheckBox chkPen = (CheckBox) dlgGoal
-						.findViewById(R.id.chkPen);
+				final CheckBox chkOG = (CheckBox) dlgGoal.findViewById(R.id.chkOG2);
+				final CheckBox chkPen = (CheckBox) dlgGoal.findViewById(R.id.chkPen2);
 
-				tvGoalFor.setText("TOORRRRRR für den FC Bayern München ");
+				tvGoalFor.setText("TOORRRRRR für " + txtTeamFCB.getText().toString() + " ");
+
+				btnScorer.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						final ArrayList<String> lstPlayer = !chkOG.isChecked()
+								? getPlayerList(res, txtTeamFCB.getText().toString())
+								: getPlayerList(res, txtTeamBVB.getText().toString());
+						final String[] Team = lstPlayer.toArray(new String[0]);
+
+						dlgScr.setItems(Team, new OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								btnScorer.setText(Team[which].substring(Team[which].indexOf("-") + 1));
+								dialog.cancel();
+							}
+						});
+
+						dlgScr.show();
+					}
+
+				});
 
 				btnGoalCnl.setOnClickListener(new View.OnClickListener() {
 
@@ -285,31 +293,22 @@ public class DFLSupercupActivity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						if (txtMin.getText().toString().equals("")
-								|| txtScorer.getText().toString().equals("")) {
-							errNoti("Bitte die Minute und den Torschützer eingeben!");
+						if (txtMin.getText().toString().equals("") || btnScorer.getText().toString().equals("")) {
+							errNoti("Bitte geben Sie den Zeitpunkt und den Torschützer ein!");
 						} else {
-							int goal = Integer.parseInt(btnGoalFCB.getText()
-									.toString());
-							btnGoalFCB.setText(String.valueOf(goal + 1)
-									.toString());
+							int goal = Integer.parseInt(btnGoalFCB.getText().toString());
+							btnGoalFCB.setText(String.valueOf(goal + 1).toString());
 
-							String mes = txtScorer.getText() + " "
-									+ txtMin.getText() + "'";
+							String mes = btnScorer.getText() + " " + txtMin.getText() + "'";
 							if (chkOG.isChecked()) {
-								mes += "(E.t)";
+								mes += "(Et.)";
 							}
 							if (chkPen.isChecked()) {
-								mes += "(E.m)";
+								mes += "(Elf.)";
 							}
-							if (txtGoalFCB.getText().toString()
-									.contains(txtScorer.getText())) {
-								String temp = txtGoalFCB
-										.getText()
-										.toString()
-										.replace(
-												txtScorer.getText().toString(),
-												mes);
+							if (txtGoalFCB.getText().toString().contains(btnScorer.getText())) {
+								String temp = txtGoalFCB.getText().toString().replace(btnScorer.getText().toString(),
+										mes);
 								txtGoalFCB.setText(temp);
 							} else
 								txtGoalFCB.append(mes + "\n");
@@ -328,15 +327,11 @@ public class DFLSupercupActivity extends Activity {
 
 			@Override
 			public boolean onLongClick(View v) {
-				// TODO Auto-generated method stub
 				if (!txtGoalBVB.getText().toString().equals("")) {
 					dlgEdit.setContentView(R.layout.edit);
-					final EditText txtEdit = (EditText) dlgEdit
-							.findViewById(R.id.txtEdit);
-					Button btnEditOK = (Button) dlgEdit
-							.findViewById(R.id.btnEditOK);
-					Button btnEditCancel = (Button) dlgEdit
-							.findViewById(R.id.btnEditCancel);
+					final EditText txtEdit = (EditText) dlgEdit.findViewById(R.id.txtEdit);
+					Button btnEditOK = (Button) dlgEdit.findViewById(R.id.btnEditOK);
+					Button btnEditCancel = (Button) dlgEdit.findViewById(R.id.btnEditCancel);
 
 					txtEdit.setText(txtGoalBVB.getText().toString());
 
@@ -344,21 +339,18 @@ public class DFLSupercupActivity extends Activity {
 
 						@Override
 						public void onClick(View v) {
-							// TODO Auto-generated method stub
 							txtGoalBVB.setText(txtEdit.getText().toString());
 							dlgEdit.cancel();
 						}
 					});
 
-					btnEditCancel
-							.setOnClickListener(new View.OnClickListener() {
+					btnEditCancel.setOnClickListener(new View.OnClickListener() {
 
-								@Override
-								public void onClick(View v) {
-									// TODO Auto-generated method stub
-									dlgEdit.cancel();
-								}
-							});
+						@Override
+						public void onClick(View v) {
+							dlgEdit.cancel();
+						}
+					});
 
 					dlgEdit.show();
 				}
@@ -370,15 +362,11 @@ public class DFLSupercupActivity extends Activity {
 
 			@Override
 			public boolean onLongClick(View v) {
-				// TODO Auto-generated method stub
 				if (!txtGoalFCB.getText().toString().equals("")) {
 					dlgEdit.setContentView(R.layout.edit);
-					final EditText txtEdit = (EditText) dlgEdit
-							.findViewById(R.id.txtEdit);
-					Button btnEditOK = (Button) dlgEdit
-							.findViewById(R.id.btnEditOK);
-					Button btnEditCancel = (Button) dlgEdit
-							.findViewById(R.id.btnEditCancel);
+					final EditText txtEdit = (EditText) dlgEdit.findViewById(R.id.txtEdit);
+					Button btnEditOK = (Button) dlgEdit.findViewById(R.id.btnEditOK);
+					Button btnEditCancel = (Button) dlgEdit.findViewById(R.id.btnEditCancel);
 
 					txtEdit.setText(txtGoalFCB.getText().toString());
 
@@ -386,21 +374,18 @@ public class DFLSupercupActivity extends Activity {
 
 						@Override
 						public void onClick(View v) {
-							// TODO Auto-generated method stub
 							txtGoalFCB.setText(txtEdit.getText().toString());
 							dlgEdit.cancel();
 						}
 					});
 
-					btnEditCancel
-							.setOnClickListener(new View.OnClickListener() {
+					btnEditCancel.setOnClickListener(new View.OnClickListener() {
 
-								@Override
-								public void onClick(View v) {
-									// TODO Auto-generated method stub
-									dlgEdit.cancel();
-								}
-							});
+						@Override
+						public void onClick(View v) {
+							dlgEdit.cancel();
+						}
+					});
 
 					dlgEdit.show();
 				}
@@ -412,15 +397,11 @@ public class DFLSupercupActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				if (btnPenA1.getBackground().getConstantState() == drMiss
-						.getConstantState()) {
+				if (btnPenA1.getBackground().getConstantState() == drMiss.getConstantState()) {
 					int p = Integer.parseInt(tvPenBVB.getText().toString());
-					tvPenBVB.setText(String.valueOf(
-							String.valueOf(p + 1).toString()).toString());
+					tvPenBVB.setText(String.valueOf(String.valueOf(p + 1).toString()).toString());
 					btnPenA1.setBackgroundResource(R.drawable.pen_button_goal);
-				} else if (btnPenA1.getBackground().getConstantState() == drNone
-						.getConstantState()) {
+				} else if (btnPenA1.getBackground().getConstantState() == drNone.getConstantState()) {
 					btnPenA1.setBackgroundResource(R.drawable.pen_button_miss);
 				}
 			}
@@ -432,16 +413,12 @@ public class DFLSupercupActivity extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 
-				if (btnPenA1.getBackground().getConstantState() != drNone
-						.getConstantState()) {
-					if (btnPenA2.getBackground().getConstantState() == drMiss
-							.getConstantState()) {
+				if (btnPenA1.getBackground().getConstantState() != drNone.getConstantState()) {
+					if (btnPenA2.getBackground().getConstantState() == drMiss.getConstantState()) {
 						int p = Integer.parseInt(tvPenBVB.getText().toString());
-						tvPenBVB.setText(String.valueOf(
-								String.valueOf(p + 1).toString()).toString());
+						tvPenBVB.setText(String.valueOf(String.valueOf(p + 1).toString()).toString());
 						btnPenA2.setBackgroundResource(R.drawable.pen_button_goal);
-					} else if (btnPenA2.getBackground().getConstantState() == drNone
-							.getConstantState()) {
+					} else if (btnPenA2.getBackground().getConstantState() == drNone.getConstantState()) {
 						btnPenA2.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
@@ -453,17 +430,13 @@ public class DFLSupercupActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				if (btnPenA1.getBackground().getConstantState() != drNone
-						.getConstantState()
-						&& btnPenA2.getBackground().getConstantState() != drNone
-								.getConstantState()) {
-					if (btnPenA3.getBackground().getConstantState() == drMiss
-							.getConstantState()) {
+				if (btnPenA1.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenA2.getBackground().getConstantState() != drNone.getConstantState()) {
+					if (btnPenA3.getBackground().getConstantState() == drMiss.getConstantState()) {
 						int p = Integer.parseInt(tvPenBVB.getText().toString());
 						tvPenBVB.setText(String.valueOf(p + 1).toString());
 						btnPenA3.setBackgroundResource(R.drawable.pen_button_goal);
-					} else if (btnPenA3.getBackground().getConstantState() == drNone
-							.getConstantState()) {
+					} else if (btnPenA3.getBackground().getConstantState() == drNone.getConstantState()) {
 						btnPenA3.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
@@ -475,19 +448,14 @@ public class DFLSupercupActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				if (btnPenA1.getBackground().getConstantState() != drNone
-						.getConstantState()
-						&& btnPenA2.getBackground().getConstantState() != drNone
-								.getConstantState()
-						&& btnPenA3.getBackground().getConstantState() != drNone
-								.getConstantState()) {
-					if (btnPenA4.getBackground().getConstantState() == drMiss
-							.getConstantState()) {
+				if (btnPenA1.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenA2.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenA3.getBackground().getConstantState() != drNone.getConstantState()) {
+					if (btnPenA4.getBackground().getConstantState() == drMiss.getConstantState()) {
 						int p = Integer.parseInt(tvPenBVB.getText().toString());
 						tvPenBVB.setText(String.valueOf(p + 1).toString());
 						btnPenA4.setBackgroundResource(R.drawable.pen_button_goal);
-					} else if (btnPenA4.getBackground().getConstantState() == drNone
-							.getConstantState()) {
+					} else if (btnPenA4.getBackground().getConstantState() == drNone.getConstantState()) {
 						btnPenA4.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
@@ -499,21 +467,15 @@ public class DFLSupercupActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				if (btnPenA1.getBackground().getConstantState() != drNone
-						.getConstantState()
-						&& btnPenA2.getBackground().getConstantState() != drNone
-								.getConstantState()
-						&& btnPenA3.getBackground().getConstantState() != drNone
-								.getConstantState()
-						&& btnPenA4.getBackground().getConstantState() != drNone
-								.getConstantState()) {
-					if (btnPenA5.getBackground().getConstantState() == drMiss
-							.getConstantState()) {
+				if (btnPenA1.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenA2.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenA3.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenA4.getBackground().getConstantState() != drNone.getConstantState()) {
+					if (btnPenA5.getBackground().getConstantState() == drMiss.getConstantState()) {
 						int p = Integer.parseInt(tvPenBVB.getText().toString());
 						tvPenBVB.setText(String.valueOf(p + 1).toString());
 						btnPenA5.setBackgroundResource(R.drawable.pen_button_goal);
-					} else if (btnPenA5.getBackground().getConstantState() == drNone
-							.getConstantState()) {
+					} else if (btnPenA5.getBackground().getConstantState() == drNone.getConstantState()) {
 						btnPenA5.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
@@ -524,15 +486,11 @@ public class DFLSupercupActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				if (btnPenB1.getBackground().getConstantState() == drMiss
-						.getConstantState()) {
+				if (btnPenB1.getBackground().getConstantState() == drMiss.getConstantState()) {
 					int p = Integer.parseInt(tvPenFCB.getText().toString());
-					tvPenFCB.setText(String.valueOf(
-							String.valueOf(p + 1).toString()).toString());
+					tvPenFCB.setText(String.valueOf(String.valueOf(p + 1).toString()).toString());
 					btnPenB1.setBackgroundResource(R.drawable.pen_button_goal);
-				} else if (btnPenB1.getBackground().getConstantState() == drNone
-						.getConstantState()) {
+				} else if (btnPenB1.getBackground().getConstantState() == drNone.getConstantState()) {
 					btnPenB1.setBackgroundResource(R.drawable.pen_button_miss);
 				}
 			}
@@ -542,17 +500,12 @@ public class DFLSupercupActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				if (btnPenB1.getBackground().getConstantState() != drNone
-						.getConstantState()) {
-					if (btnPenB2.getBackground().getConstantState() == drMiss
-							.getConstantState()) {
+				if (btnPenB1.getBackground().getConstantState() != drNone.getConstantState()) {
+					if (btnPenB2.getBackground().getConstantState() == drMiss.getConstantState()) {
 						int p = Integer.parseInt(tvPenFCB.getText().toString());
-						tvPenFCB.setText(String.valueOf(
-								String.valueOf(p + 1).toString()).toString());
+						tvPenFCB.setText(String.valueOf(String.valueOf(p + 1).toString()).toString());
 						btnPenB2.setBackgroundResource(R.drawable.pen_button_goal);
-					} else if (btnPenB2.getBackground().getConstantState() == drNone
-							.getConstantState()) {
+					} else if (btnPenB2.getBackground().getConstantState() == drNone.getConstantState()) {
 						btnPenB2.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
@@ -563,18 +516,13 @@ public class DFLSupercupActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				if (btnPenB1.getBackground().getConstantState() != drNone
-						.getConstantState()
-						&& btnPenB2.getBackground().getConstantState() != drNone
-								.getConstantState()) {
-					if (btnPenB3.getBackground().getConstantState() == drMiss
-							.getConstantState()) {
+				if (btnPenB1.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenB2.getBackground().getConstantState() != drNone.getConstantState()) {
+					if (btnPenB3.getBackground().getConstantState() == drMiss.getConstantState()) {
 						int p = Integer.parseInt(tvPenFCB.getText().toString());
 						tvPenFCB.setText(String.valueOf(p + 1).toString());
 						btnPenB3.setBackgroundResource(R.drawable.pen_button_goal);
-					} else if (btnPenB3.getBackground().getConstantState() == drNone
-							.getConstantState()) {
+					} else if (btnPenB3.getBackground().getConstantState() == drNone.getConstantState()) {
 						btnPenB3.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
@@ -585,20 +533,14 @@ public class DFLSupercupActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				if (btnPenB1.getBackground().getConstantState() != drNone
-						.getConstantState()
-						&& btnPenB2.getBackground().getConstantState() != drNone
-								.getConstantState()
-						&& btnPenB3.getBackground().getConstantState() != drNone
-								.getConstantState()) {
-					if (btnPenB4.getBackground().getConstantState() == drMiss
-							.getConstantState()) {
+				if (btnPenB1.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenB2.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenB3.getBackground().getConstantState() != drNone.getConstantState()) {
+					if (btnPenB4.getBackground().getConstantState() == drMiss.getConstantState()) {
 						int p = Integer.parseInt(tvPenFCB.getText().toString());
 						tvPenFCB.setText(String.valueOf(p + 1).toString());
 						btnPenB4.setBackgroundResource(R.drawable.pen_button_goal);
-					} else if (btnPenB4.getBackground().getConstantState() == drNone
-							.getConstantState()) {
+					} else if (btnPenB4.getBackground().getConstantState() == drNone.getConstantState()) {
 						btnPenB4.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
@@ -609,22 +551,15 @@ public class DFLSupercupActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				if (btnPenB1.getBackground().getConstantState() != drNone
-						.getConstantState()
-						&& btnPenB2.getBackground().getConstantState() != drNone
-								.getConstantState()
-						&& btnPenB3.getBackground().getConstantState() != drNone
-								.getConstantState()
-						&& btnPenB4.getBackground().getConstantState() != drNone
-								.getConstantState()) {
-					if (btnPenB5.getBackground().getConstantState() == drMiss
-							.getConstantState()) {
+				if (btnPenB1.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenB2.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenB3.getBackground().getConstantState() != drNone.getConstantState()
+						&& btnPenB4.getBackground().getConstantState() != drNone.getConstantState()) {
+					if (btnPenB5.getBackground().getConstantState() == drMiss.getConstantState()) {
 						int p = Integer.parseInt(tvPenFCB.getText().toString());
 						tvPenFCB.setText(String.valueOf(p + 1).toString());
 						btnPenB5.setBackgroundResource(R.drawable.pen_button_goal);
-					} else if (btnPenB5.getBackground().getConstantState() == drNone
-							.getConstantState()) {
+					} else if (btnPenB5.getBackground().getConstantState() == drNone.getConstantState()) {
 						btnPenB5.setBackgroundResource(R.drawable.pen_button_miss);
 					}
 				}
@@ -639,18 +574,14 @@ public class DFLSupercupActivity extends Activity {
 	void resultNoti(String team) {
 		String mes = "";
 		if (!team.equals("")) {
-
-			mes = team + " - DFL-SUPERCUP-2017 SIEGER!!!";
-
+			mes = team + " - DFL-SUPERCUP-2019 SIEGER!!!";
 		} else {
-
 			mes = "Elfmeter!";
 		}
 		Toast.makeText(this, mes, Toast.LENGTH_LONG).show();
 	}
 
 	private void refreshPen() {
-		// TODO Auto-generated method stub
 		btnPenA1.setBackgroundResource(R.drawable.pen_button_normal);
 		btnPenA2.setBackgroundResource(R.drawable.pen_button_normal);
 		btnPenA3.setBackgroundResource(R.drawable.pen_button_normal);
@@ -666,36 +597,26 @@ public class DFLSupercupActivity extends Activity {
 	private int remainingShot(String team) {
 		int res = 0;
 		if (team.equalsIgnoreCase("A")) {
-			if (btnPenA1.getBackground().getConstantState() == drNone
-					.getConstantState())
+			if (btnPenA1.getBackground().getConstantState() == drNone.getConstantState())
 				res++;
-			if (btnPenA2.getBackground().getConstantState() == drNone
-					.getConstantState())
+			if (btnPenA2.getBackground().getConstantState() == drNone.getConstantState())
 				res++;
-			if (btnPenA3.getBackground().getConstantState() == drNone
-					.getConstantState())
+			if (btnPenA3.getBackground().getConstantState() == drNone.getConstantState())
 				res++;
-			if (btnPenA4.getBackground().getConstantState() == drNone
-					.getConstantState())
+			if (btnPenA4.getBackground().getConstantState() == drNone.getConstantState())
 				res++;
-			if (btnPenA5.getBackground().getConstantState() == drNone
-					.getConstantState())
+			if (btnPenA5.getBackground().getConstantState() == drNone.getConstantState())
 				res++;
 		} else if (team.equalsIgnoreCase("B")) {
-			if (btnPenB1.getBackground().getConstantState() == drNone
-					.getConstantState())
+			if (btnPenB1.getBackground().getConstantState() == drNone.getConstantState())
 				res++;
-			if (btnPenB2.getBackground().getConstantState() == drNone
-					.getConstantState())
+			if (btnPenB2.getBackground().getConstantState() == drNone.getConstantState())
 				res++;
-			if (btnPenB3.getBackground().getConstantState() == drNone
-					.getConstantState())
+			if (btnPenB3.getBackground().getConstantState() == drNone.getConstantState())
 				res++;
-			if (btnPenB4.getBackground().getConstantState() == drNone
-					.getConstantState())
+			if (btnPenB4.getBackground().getConstantState() == drNone.getConstantState())
 				res++;
-			if (btnPenB5.getBackground().getConstantState() == drNone
-					.getConstantState())
+			if (btnPenB5.getBackground().getConstantState() == drNone.getConstantState())
 				res++;
 		}
 		return res;
@@ -759,7 +680,6 @@ public class DFLSupercupActivity extends Activity {
 	}
 
 	private void refresh() {
-		// TODO Auto-generated method stub
 		txtTeamBVB.setText("BORUSSIA DORTMUND");
 		txtTeamFCB.setText("FC BAYERN MÜNCHEN");
 		txtGoalBVB.setText("");
@@ -779,8 +699,6 @@ public class DFLSupercupActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.dflsupercup, menu);
 		return true;
 	}
@@ -820,7 +738,6 @@ public class DFLSupercupActivity extends Activity {
 		} else if (id == R.id.dflrefresh) {
 			refresh();
 		} else if (id == R.id.dflfulltime) {
-
 			int g1 = Integer.parseInt(btnGoalBVB.getText().toString());
 			int g2 = Integer.parseInt(btnGoalFCB.getText().toString());
 
@@ -831,11 +748,8 @@ public class DFLSupercupActivity extends Activity {
 				resultNoti("FC BAYERN MÜNCHEN");
 				addToDB(g1, g2, 0, 0);
 			} else {
-
 				handlePSO(g1, g2);
-
 			}
-
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -875,33 +789,47 @@ public class DFLSupercupActivity extends Activity {
 			}
 		}
 	}
-	
+
 	int getButtonResId(Button button) {
-		if (button.getBackground().getConstantState() == getResources()
-				.getDrawable(R.drawable.pen_button_miss).getConstantState()) {
+		if (button.getBackground().getConstantState() == getResources().getDrawable(R.drawable.pen_button_miss)
+				.getConstantState()) {
 			return R.drawable.pen_button_miss;
 
-		} else if (button.getBackground().getConstantState() == getResources()
-				.getDrawable(R.drawable.pen_button_normal).getConstantState()) {
+		} else if (button.getBackground().getConstantState() == getResources().getDrawable(R.drawable.pen_button_normal)
+				.getConstantState()) {
 			return R.drawable.pen_button_normal;
 
-		} else if (button.getBackground().getConstantState() == getResources()
-				.getDrawable(R.drawable.pen_button_goal).getConstantState()) {
+		} else if (button.getBackground().getConstantState() == getResources().getDrawable(R.drawable.pen_button_goal)
+				.getConstantState()) {
 			return R.drawable.pen_button_goal;
 		}
-
 		return -1;
 	}
 
+	protected ArrayList<String> getPlayerList(final Resources res, String team) {
+		Cursor cPlayer;
+		final ArrayList<String> lstPlayer = new ArrayList<String>();
+		cPlayer = mDB.getPlayerByTeam(team, 1);
+		cPlayer.moveToFirst();
+		while (!cPlayer.isAfterLast()) {
+			Player player = new Player(cPlayer.getString(1), cPlayer.getString(2), cPlayer.getInt(3),
+					cPlayer.getString(4), cPlayer.getString(5), "DEFAULT", cPlayer.getInt(6),
+					cPlayer.getString(7));
+			lstPlayer.add(player.getKitNo() + "-" + player.getLastname());
+			cPlayer.moveToNext();
+		}
+		cPlayer.close();
+		return lstPlayer;
+	}
+
 	private void addToDB(int g1, int g2, int pA, int pB) {
-		// TODO Auto-generated method stub
 		String scorerListA = txtGoalBVB.getText().toString();
 		String scorerListB = txtGoalFCB.getText().toString();
 
 		scorerListA.replace("\n", " ");
 		scorerListB.replace("\n", " ");
-		mDB.addMatch("DFL-Supercup 2017", "", "BORUSSIA DORTMUND",
-				"FC BAYERN MÜNCHEN", g1, g2, scorerListA, scorerListB, pA, pB);
+		mDB.addMatch("DFL-Supercup 2019", "", "BORUSSIA DORTMUND", "FC BAYERN MÜNCHEN", g1, g2, scorerListA,
+				scorerListB, pA, pB);
 	}
 
 	/**
@@ -913,10 +841,8 @@ public class DFLSupercupActivity extends Activity {
 		}
 
 		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_dflsupercup,
-					container, false);
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			View rootView = inflater.inflate(R.layout.fragment_dflsupercup, container, false);
 			return rootView;
 		}
 	}

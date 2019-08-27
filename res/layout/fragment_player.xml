@@ -16,16 +16,14 @@
 
         <EditText
             android:id="@+id/txtFirstname"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:ems="10" />
 
         <EditText
             android:id="@+id/txtLastname"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:ems="10" />
 
     </LinearLayout>
@@ -61,6 +59,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Select Kit No..." />
+
+        <Button
+            android:id="@+id/btnPosition"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Position..." />
 
         <Switch
             android:id="@+id/swLineup"

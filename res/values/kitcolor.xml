@@ -162,4 +162,195 @@
     	<item>#D9DBDA</item>
     	<item>#D9DBDA</item>
     </string-array>
+    
+    
+    
+    
+    <string-array name="fca">
+        <item>#FFFFFF</item>
+    	<item>#FF0000</item>
+    	<item>#000000</item>
+    </string-array>
+    <string-array name="bsc">
+        <item>#0303FF</item>
+    	<item>#000000</item>
+    	<item>#FFFFFF</item>
+    </string-array>
+    <string-array name="svw">
+        <item>#039A51</item>
+    	<item>#0C4011</item>
+    	<item>#000000</item>
+    </string-array>
+    <string-array name="bvb">
+        <item>#FFFF00</item>
+    	<item>#000000</item>
+    	<item>#FFFFFF</item>
+    </string-array>
+    <string-array name="f95">
+    	<item>#FFFFFF</item>
+        <item>#FF0000</item>
+    	<item>#000000</item>
+    </string-array>
+    <string-array name="sge">
+        <item>#000000</item>
+    	<item>#FFFFFF</item>
+    	<item>#DCB129</item>
+    </string-array>
+    <string-array name="scf">
+        <item>#FF0000</item>
+    	<item>#000000</item>
+    	<item>#3E0081</item>
+    </string-array>
+    <string-array name="koe">
+        <item>#000000</item>
+    	<item>#FF0000</item>
+    	<item>#00000E</item>
+    </string-array>
+    <string-array name="h96">
+        <item>#940000</item>
+    	<item>#313131</item>
+    	<item>#4AD415</item>
+    </string-array>
+    <string-array name="tsg">
+        <item>#004DCA</item>
+    	<item>#65F8B0</item>
+    	<item>#525252</item>
+    </string-array>
+    <string-array name="rbl">
+        <item>#FFFFFF</item>
+    	<item>#FF0000</item>
+    	<item>#00002C</item>
+    </string-array>
+    <string-array name="b04">
+        <item>#FF0000</item>
+    	<item>#000000</item>
+    	<item>#FFFFFF</item>
+    </string-array>
+    <string-array name="m05">
+        <item>#F90000</item>
+    	<item>#FBFBFB</item>
+    	<item>#2D340D</item>
+    </string-array>
+    <string-array name="scp">
+        <item>#0000FF</item>
+    	<item>#FFFFFF</item>
+    	<item>#D0FF00</item>
+    </string-array>
+    <string-array name="fcu">
+        <item>#FF0000</item>
+    	<item>#FFFFFF</item>
+    	<item>#000050</item>
+    </string-array>
+    <string-array name="bmg">
+        <item>#FFFFFF</item>
+    	<item>#000000</item>
+    	<item>#89BCFF</item>
+    </string-array>
+    <string-array name="fcb">
+        <item>#D60000</item>
+    	<item>#FFFFFF</item>
+    	<item>#000833</item>
+    </string-array>
+    <string-array name="fcn">
+        <item>#810000</item>
+    	<item>#E0DFDF</item>
+    	<item>#000000</item>
+    </string-array>
+    <string-array name="s04">
+        <item>#0000FF</item>
+    	<item>#FFFFFF</item>
+    	<item>#000000</item>
+    </string-array>
+    <string-array name="vfb">
+        <item>#FFFFFF</item>
+    	<item>#FF0000</item>
+    	<item>#000000</item>
+    </string-array>
+    <string-array name="wob">
+        <item>#0C4011</item>
+    	<item>#78BCFF</item>
+    	<item>#FFFFFF</item>
+    </string-array>
+    
+    
+     <string-array name="afc">
+        <item>#FFFFFF</item>
+    	<item>#000000</item>
+    	<item>#000000</item>
+    </string-array>
+    <string-array name="psv">
+        <item>#FF0000</item>
+    	<item>#D6F4FF</item>
+    	<item>#000000</item>
+    </string-array>
+    <string-array name="slb">
+        <item>#EF3A36</item>
+    	<item>#E5E5E5</item>
+    	<item>#000000</item>
+    </string-array>
+    <string-array name="aek">
+        <item>#FDD333</item>
+    	<item>#191921</item>
+    	<item>#0436A8</item>
+    </string-array>
+    <string-array name="atl">
+        <item>#FF0000</item>
+    	<item>#88CFEC</item>
+    	<item>#004B73</item>
+    </string-array>
+    <string-array name="rma">
+        <item>#FFFFFF</item>
+    	<item>#070715</item>
+    	<item>#FF3939</item>
+    </string-array>
+    <string-array name="bar">
+        <item>#00008D</item>
+    	<item>#E0FF00</item>
+    	<item>#5B093A</item>
+    </string-array>
+    <string-array name="val">
+        <item>#FFFFFF</item>
+    	<item>#00003A</item>
+    	<item>#000000</item>
+   	</string-array>
+   	<string-array name="itr">
+        <item>#0001C1</item>
+    	<item>#D9DCE8</item>
+    	<item>#606976</item>
+    </string-array>
+    <string-array name="rom">
+        <item>#911B33</item>
+    	<item>#A1A8B0</item>
+    	<item>#3B3130</item>
+    </string-array>
+    <string-array name="nap">
+        <item>#158EC6</item>
+    	<item>#888888</item>
+    	<item>#9A9A9A</item>
+    </string-array>
+    <string-array name="juv">
+        <item>#FFFFFF</item>
+    	<item>#BCBB9E</item>
+    	<item>#201E24</item>
+    </string-array>
+    <string-array name="mun">
+        <item>#ED0202</item>
+    	<item>#213A65</item>
+    	<item>#EB789F</item>
+    </string-array>
+    <string-array name="mci">
+        <item>#B7D9F5</item>
+    	<item>#030025</item>
+    	<item>#0A191C</item>
+    </string-array>
+    <string-array name="lfc">
+        <item>#DD0000</item>
+    	<item>#6200C5</item>
+    	<item>#D4D4D4</item>
+    </string-array>
+    <string-array name="tot">
+        <item>#FFFFFF</item>
+    	<item>#00003E</item>
+    	<item>#00C0B9</item>
+    </string-array>
 </resources>

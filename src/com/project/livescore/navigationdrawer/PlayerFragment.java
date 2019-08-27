@@ -9,7 +9,6 @@ import com.project.livescore.data.Player;
 import com.project.livescore.data.Team;
 import com.project.livescore1415.R;
 
-import android.R.bool;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
@@ -36,15 +35,15 @@ public class PlayerFragment extends Fragment {
 	public PlayerFragment() {
 	}
 
-	EditText txtFirstname, txtLastname;
-	Button btnAdd, btnCountry, btnLiga, btnKitNo, btnTeam, btnUpdate;
+	EditText txtFirstname, txtLastname, txtNation;
+	Button btnAdd, btnCountry, btnKitNo, btnTeam, btnLiga, btnUpdate, btnPosition;
 	ListView listPlayer;
 	TextView tvPlayerIdHid;
 	Switch swLineup;
 	static DBAdapter mDB;
 	Cursor mCursor;
 	String criteriaTeam = "";
-	String criteriaLeague = "";
+	String criteriaLeague = "DEFAULT";
 	/**
 	 * The fragment argument representing the section number for this fragment.
 	 */
@@ -70,12 +69,14 @@ public class PlayerFragment extends Fragment {
 		btnAdd = (Button) rootView.findViewById(R.id.btnAddPlayer);
 		btnUpdate = (Button) rootView.findViewById(R.id.btnPlayerUpdate);
 		btnCountry = (Button) rootView.findViewById(R.id.btnCountryPlayer);
-		btnLiga = (Button) rootView.findViewById(R.id.btnLigaPlayer);
 		btnKitNo = (Button) rootView.findViewById(R.id.btnKitNo);
 		btnTeam = (Button) rootView.findViewById(R.id.btnTeamPlayer);
+		btnLiga = (Button) rootView.findViewById(R.id.btnLigaPlayer);
+		btnPosition = (Button) rootView.findViewById(R.id.btnPosition);
 		listPlayer = (ListView) rootView.findViewById(R.id.listPlayer);
 		tvPlayerIdHid = (TextView) rootView.findViewById(R.id.tvPlayerIdHidden);
 		swLineup = (Switch) rootView.findViewById(R.id.swLineup);
+		
 		
 		mDB = new DBAdapter(getActivity());
 		mDB.open();
@@ -92,10 +93,6 @@ public class PlayerFragment extends Fragment {
 					noti("Please choose a country!");
 					return;
 				}
-				if (btnLiga.getText().toString().equals("Select League...")) {
-					noti("Please choose a league!");
-					return;
-				}
 				if (btnKitNo.getText().toString().equals("Select Kit No...")) {
 					noti("Please choose a kit number!");
 					return;
@@ -105,16 +102,21 @@ public class PlayerFragment extends Fragment {
 					return;
 				}
 				StringBuffer sbFN = new StringBuffer();
-				sbFN.append(Character.toUpperCase(txtFirstname.getText().toString().charAt(0)));
-				sbFN.append(txtFirstname.getText().toString().substring(1));
-				String newFirstname = sbFN.toString();
+				if (!txtFirstname.getText().toString().equals("")) {
+					sbFN.append(Character.toUpperCase(txtFirstname.getText().toString().charAt(0)));
+					sbFN.append(txtFirstname.getText().toString().substring(1));
+					
+				}
+				String newFirstname = !txtFirstname.getText().toString().equals("") ? 
+						sbFN.toString() : "";
 				Player player = new Player(newFirstname, 
 						txtLastname.getText().toString().toUpperCase(),
 						Integer.parseInt(btnKitNo.getText().toString()), 
 						btnTeam.getText().toString(),
 						btnCountry.getText().toString(), 
-						btnLiga.getText().toString(), 
-						swLineup.isChecked() ? 1 : 0);
+						"DEFAULT", 
+						swLineup.isChecked() ? 1 : 0,
+						btnPosition.getText().toString());
 
 				mDB.addPlayer(player);
 				noti("Player added!");
@@ -122,7 +124,7 @@ public class PlayerFragment extends Fragment {
 				txtFirstname.setText("");
 				btnKitNo.setText("Select Kit No...");
 				if (!criteriaTeam.equals("Select Team...") && !criteriaLeague.equals("Select League...")) {
-					loadData(criteriaLeague, criteriaTeam, "ALL");
+					loadData(criteriaTeam, "ALL");
 				}
 			}
 		});
@@ -141,6 +143,10 @@ public class PlayerFragment extends Fragment {
 		}
 		mCursor.close();
 		final String Ligen[] = ligen.toArray(new String[0]);
+		
+		final AlertDialog.Builder dlgTeam = new AlertDialog.Builder(getActivity());
+		final ArrayList<String> teams = new ArrayList<String>();
+
 		btnLiga.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -151,16 +157,12 @@ public class PlayerFragment extends Fragment {
 					public void onClick(DialogInterface dialog, int which) {
 						btnLiga.setText(Ligen[which]);
 						criteriaLeague = btnLiga.getText().toString();
-						loadData(criteriaLeague, criteriaTeam, "ALL");
 						dialog.cancel();
 					}
 				});
 				dlgLiga.show();
 			}
 		});
-
-		final AlertDialog.Builder dlgTeam = new AlertDialog.Builder(getActivity());
-		final ArrayList<String> teams = new ArrayList<String>();
 		
 		btnTeam.setOnClickListener(new View.OnClickListener() {
 
@@ -174,12 +176,13 @@ public class PlayerFragment extends Fragment {
 				mCursor.moveToFirst();
 				teams.clear();
 				while (!mCursor.isAfterLast()) {
-					Team team = new Team(mCursor.getInt(0), mCursor.getString(1), mCursor.getString(2), mCursor.getString(3));
+					Team team = new Team(mCursor.getInt(0), mCursor.getString(1), mCursor.getString(2),
+							mCursor.getString(3));
 					teams.add(team.getName());
 					mCursor.moveToNext();
 				}
 				mCursor.close();
-				
+
 				final String Team[] = teams.toArray(new String[0]);
 				dlgTeam.setItems(Team, new OnClickListener() {
 
@@ -187,7 +190,7 @@ public class PlayerFragment extends Fragment {
 					public void onClick(DialogInterface dialog, int which) {
 						btnTeam.setText(Team[which]);
 						criteriaTeam = btnTeam.getText().toString();
-						loadData(criteriaLeague, criteriaTeam, "ALL");
+						loadData(criteriaTeam, "ALL");
 						dialog.cancel();
 					}
 				});
@@ -215,25 +218,18 @@ public class PlayerFragment extends Fragment {
 		});
 
 		final ArrayList<String> kits = new ArrayList<String>();
-		
+
 		final AlertDialog.Builder dlgKit = new AlertDialog.Builder(getActivity());
 		btnKitNo.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				
-				if (btnTeam.getText().toString().equals("Select Team...")
-						|| criteriaTeam.isEmpty()) {
+
+				if (btnTeam.getText().toString().equals("Select Team...") || criteriaTeam.isEmpty()) {
 					noti("Please select team!");
 					return;
-				}
-				if (btnLiga.getText().toString().equals("Select League...")
-						|| criteriaLeague.isEmpty()) {
-					noti("Please select league!");
-					return;
-				}
-				
-				mCursor = mDB.getPlayerByLeagueAndTeam(criteriaLeague, criteriaTeam);
+				} 
+				mCursor = mDB.getPlayerByTeam(criteriaTeam);
 				mCursor.moveToFirst();
 				final ArrayList<Player> listPlayer = new ArrayList<Player>();
 				while (!mCursor.isAfterLast()) {
@@ -243,18 +239,21 @@ public class PlayerFragment extends Fragment {
 				}
 				mCursor.close();
 				kits.clear();
-				for (int kitNo = 1; kitNo <= 30; kitNo++) {
+				for (int kitNo = 1; kitNo <= 100; kitNo++) {
 					boolean existed = false;
 					for (Player player : listPlayer) {
-						if(kitNo == player.getKitNo()) {
+						if (kitNo == player.getKitNo()) {
 							existed = true;
 							break;
 						}
 					}
-					
-					if(!existed) {
+
+					if (!existed) {
 						kits.add(String.valueOf(kitNo));
 					}
+				}
+				if (kits.isEmpty()) {
+					noti("Number of players reached limit!");
 				}
 				final String Kits[] = kits.toArray(new String[0]);
 				dlgKit.setItems(Kits, new OnClickListener() {
@@ -268,11 +267,28 @@ public class PlayerFragment extends Fragment {
 			}
 		});
 
+		final AlertDialog.Builder dlgPos = new AlertDialog.Builder(getActivity());
+		final CharSequence Pos[] = res.getStringArray(R.array.position);
+		btnPosition.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				dlgPos.setItems(Pos, new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						btnPosition.setText(Pos[which]);
+						dialog.cancel();
+					}
+				});
+				dlgPos.show();
+			}
+		});
+		
 		final AlertDialog.Builder dlgDelCfm = new AlertDialog.Builder(getActivity());
 		listPlayer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-				
+
 				TextView tvId = (TextView) view.findViewById(R.id.txtPlayerId);
 				final int playerId = Integer.parseInt(tvId.getText().toString());
 
@@ -286,7 +302,7 @@ public class PlayerFragment extends Fragment {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						mDB.deletePlayer(playerId);
-						loadData(criteriaLeague, criteriaTeam, "ALL");
+						loadData(criteriaTeam, "ALL");
 						dialog.cancel();
 					}
 
@@ -299,13 +315,13 @@ public class PlayerFragment extends Fragment {
 						dialog.cancel();
 					}
 				});
-				if(btnUpdate.getVisibility() != View.VISIBLE) {
+				if (btnUpdate.getVisibility() != View.VISIBLE) {
 					dlgDelCfm.show();
 				}
 
 			}
 		});
-		
+
 		listPlayer.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
@@ -317,13 +333,13 @@ public class PlayerFragment extends Fragment {
 				mCursor.moveToFirst();
 				while (!mCursor.isAfterLast()) {
 					Player player = crsToObj(mCursor);
-					btnLiga.setText(player.getLeague());
 					btnTeam.setText(player.getTeam());
 					btnCountry.setText(player.getCountry());
 					btnKitNo.setText(String.valueOf(player.getKitNo()));
 					txtFirstname.setText(player.getFirstname());
 					txtLastname.setText(player.getLastname());
 					swLineup.setChecked(player.getLineUp() == 1 ? true : false);
+					btnPosition.setText(player.getPosition());
 					mCursor.moveToNext();
 				}
 				mCursor.close();
@@ -331,51 +347,56 @@ public class PlayerFragment extends Fragment {
 				btnAdd.setVisibility(View.GONE);
 				return false;
 			}
-			
+
 		});
-		
+
 		btnUpdate.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				StringBuffer sbFN = new StringBuffer();
-				sbFN.append(Character.toUpperCase(txtFirstname.getText().toString().charAt(0)));
-				sbFN.append(txtFirstname.getText().toString().substring(1));
-				String newFirstname = sbFN.toString();
-				
+				if (!txtFirstname.getText().toString().equals("")) {
+					sbFN.append(Character.toUpperCase(txtFirstname.getText().toString().charAt(0)));
+					sbFN.append(txtFirstname.getText().toString().substring(1));
+				}
+				String newFirstname = !txtFirstname.getText().toString().equals("") ? 
+						sbFN.toString() : "";
+
 				Player player = new Player(newFirstname, 
-						txtLastname.getText().toString(), 
+						txtLastname.getText().toString().toUpperCase(),
 						Integer.parseInt(btnKitNo.getText().toString()), 
-						btnTeam.getText().toString(), 
-						btnCountry.getText().toString(), 
-						btnLiga.getText().toString(),
-						swLineup.isChecked() ? 1 : 0);
+						btnTeam.getText().toString(),
+						btnCountry.getText().toString(), "DEFAULT", 
+						swLineup.isChecked() ? 1 : 0,
+						btnPosition.getText().toString());
 				player.setId(Integer.parseInt(tvPlayerIdHid.getText().toString()));
-				
+
 				mDB.updatePlayer(player);
 				noti("Player updated!");
-				
+
 				btnAdd.setVisibility(View.VISIBLE);
 				btnUpdate.setVisibility(View.GONE);
-				
+
 				txtLastname.setText("");
 				txtFirstname.setText("");
 				btnKitNo.setText("Select Kit No...");
 				if (!criteriaTeam.equals("Select Team...") && !criteriaLeague.equals("Select League...")) {
-					loadData(criteriaLeague, criteriaTeam, "ALL");
+					loadData(criteriaTeam, "ALL");
 				}
 			}
 		});
-		
+
 		swLineup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
+
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if(btnUpdate.getVisibility() == View.VISIBLE) {
+					return;
+				}
 				criteriaTeam = btnTeam.getText().toString();
-				criteriaLeague = btnLiga.getText().toString();
+				criteriaLeague = "DEFAULT";
 				if ((!criteriaTeam.equals("Select Team...") && !criteriaLeague.equals("Select League..."))
-						|| btnUpdate.getVisibility() == View.VISIBLE
-						) {
-					loadData(criteriaLeague, criteriaTeam, isChecked ? "on" : "sub");
+						|| btnUpdate.getVisibility() == View.VISIBLE) {
+					loadData(criteriaTeam, isChecked ? "on" : "sub");
 				}
 			}
 		});
@@ -384,15 +405,13 @@ public class PlayerFragment extends Fragment {
 
 	ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
 
-	private ArrayList<HashMap<String, Object>> loadData(String liga, String team, String lineUp) {
+	private ArrayList<HashMap<String, Object>> loadData(String team, String lineUp) {
 		final ArrayList<HashMap<String, Object>> lstPlayer = new ArrayList<HashMap<String, Object>>();
 		SimpleAdapter adapter = new SimpleAdapter(getActivity(), lstPlayer, R.layout.list_player_item_row,
-				new String[] { "Id", "Firstname", "Lastname", "KitNo", "Country", "Team", "Lineup" },
-				new int[] { R.id.txtPlayerId, R.id.txtListFirstname, R.id.txtListLastName, R.id.txtListKitNo,
-						R.id.tvLandPlayer, R.id.tvTeamPlayer, R.id.txtLineup });
-		mCursor = lineUp.equals("ALL") 
-				? mDB.getPlayerByLeagueAndTeam(liga, team)
-				: mDB.getPlayerByLeagueAndTeam(liga, team, lineUp.equals("on") ? 1 : 0);
+				new String[] { "Id", "Firstname", "Lastname", "KitNo", "Country", "Position" }, new int[] { R.id.txtPlayerId,
+						R.id.txtListFirstname, R.id.txtListLastName, R.id.txtListKitNo, R.id.tvNation, R.id.tvPosition });
+		mCursor = lineUp.equals("ALL") ? mDB.getPlayerByTeam(team)
+				: mDB.getPlayerByTeam(team, lineUp.equals("on") ? 1 : 0);
 		mCursor.moveToFirst();
 		list.clear();
 		while (!mCursor.isAfterLast()) {
@@ -402,10 +421,8 @@ public class PlayerFragment extends Fragment {
 			temp.put("Firstname", player.getFirstname());
 			temp.put("Lastname", player.getLastname());
 			temp.put("KitNo", String.valueOf(player.getKitNo()));
-			temp.put("League", player.getLeague());
+			temp.put("Position", player.getPosition());
 			temp.put("Country", player.getCountry());
-			temp.put("Team", player.getTeam());
-			temp.put("Lineup", player.getLineUp() == 1 ? "ON" : "SUB");
 
 			lstPlayer.add(temp);
 			list.add(temp);
@@ -414,7 +431,7 @@ public class PlayerFragment extends Fragment {
 
 		listPlayer.setAdapter(adapter);
 		mCursor.close();
-		
+
 		return lstPlayer;
 	}
 
@@ -424,10 +441,11 @@ public class PlayerFragment extends Fragment {
 		player.setFirstname(c.getString(1));
 		player.setLastname(c.getString(2));
 		player.setKitNo(c.getInt(3));
-		player.setLeague(c.getString(4));
+		player.setLeague("DEFAULT");
+		player.setTeam(c.getString(4));
 		player.setCountry(c.getString(5));
-		player.setTeam(c.getString(6));
-		player.setLineUp(c.getInt(7));
+		player.setLineUp(c.getInt(6));
+		player.setPosition(c.getString(7));
 		return player;
 	}
 

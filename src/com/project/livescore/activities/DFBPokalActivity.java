@@ -1034,7 +1034,7 @@ public class DFBPokalActivity extends Activity {
 		String mes = "";
 		if (!team.equals("")) {
 			if (btnRunde.getText().toString().equals("FINALE"))
-				mes = team + " - DEUTSCHER-POKAL-SIEGER 2016!!!";
+				mes = team + " - DEUTSCHER-POKAL-SIEGER 2019!!!";
 			else if (btnRunde.getText().toString().equals("1. Hauptrunde"))
 				mes = team + " steht in der 2. Hauptrunde!!!";
 			else if (btnRunde.getText().toString().equals("2. Hauptrunde"))

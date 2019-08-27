@@ -3,6 +3,7 @@ package com.project.livescore.activities;
 import java.util.ArrayList;
 
 import com.project.livescore.data.DBAdapter;
+import com.project.livescore.data.Player;
 import com.project.livescore.data.Team;
 import com.project.livescore1415.R;
 
@@ -15,6 +16,8 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -32,6 +35,7 @@ import android.widget.Toast;
 public class BundesligaActivity extends Activity {
 
 	Button btnSpieltag, btnTor1, btnTor2;
+	Button btnKitColorA, btnKitColorB;
 	TextView txtTeam1, txtTeam2, txtTor1, txtTor2;
 	MediaPlayer mp;
 	ImageView imgLogo;
@@ -40,6 +44,10 @@ public class BundesligaActivity extends Activity {
 
 	MediaPlayer mpGoal;
 
+	CharSequence kitColorA[];
+	CharSequence kitColorB[];
+	CharSequence kit[] = {"Home", "Away", "3rd Kit"};
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,6 +74,12 @@ public class BundesligaActivity extends Activity {
 		txtTeam1.setText(pref.getString("TeamBL1", null));
 		txtTeam2.setText(pref.getString("TeamBL2", null));
 
+		btnKitColorA = (Button) this.findViewById(R.id.btnKitColorBLA);
+		btnKitColorB = (Button) this.findViewById(R.id.btnKitColorBLB);
+
+		btnKitColorA.setBackgroundColor(pref.getInt("KitA", Color.WHITE));
+		btnKitColorB.setBackgroundColor(pref.getInt("KitB", Color.WHITE));
+		
 		mpGoal = MediaPlayer.create(this, R.raw.torhymne);
 		mp = MediaPlayer.create(this, R.raw.bundesligaintro);
 		mp.start();
@@ -76,6 +90,7 @@ public class BundesligaActivity extends Activity {
 		final Dialog dlgRnd = new Dialog(this);
 		final Dialog dlgGoal = new Dialog(this);
 		final Dialog dlgEdit = new Dialog(this);
+		final Dialog dlgKitColor = new Dialog(this);
 		final AlertDialog.Builder dlgSpl = new AlertDialog.Builder(this);
 		final AlertDialog.Builder dlgTeam = new AlertDialog.Builder(this);
 
@@ -83,7 +98,6 @@ public class BundesligaActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				if (mp.isPlaying())
 					mp.pause();
 				else
@@ -91,7 +105,6 @@ public class BundesligaActivity extends Activity {
 			}
 		});
 
-		
 		btnSpieltag.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -109,12 +122,20 @@ public class BundesligaActivity extends Activity {
 				final Button btnTeam2 = (Button) dlgRnd
 						.findViewById(R.id.btnSplTeam2);
 
+				final Button btnKCA = (Button) dlgRnd.findViewById(R.id.btnKCBLA);
+				final Button btnKCB = (Button) dlgRnd.findViewById(R.id.btnKCBLB);
+				
+				btnKCA.setEnabled(false);
+				btnKCA.setText("A");
+				btnKCA.setBackgroundResource(android.R.drawable.btn_default);
+				btnKCB.setBackgroundResource(android.R.drawable.btn_default);
+				btnKCB.setEnabled(false);
+				btnKCB.setText("B");
+				
 				btnSpl.setOnClickListener(new View.OnClickListener() {
-
 					@Override
 					public void onClick(View v) {
 						dlgSpl.setItems(Spieltag, new OnClickListener() {
-
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
@@ -126,6 +147,95 @@ public class BundesligaActivity extends Activity {
 					}
 				});
 
+				btnKCA.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dlgKitColor.setContentView(R.layout.select_kitcolor);
+						dlgKitColor.setTitle("Trikot auswählen");
+						
+						Button btnHomeKit = (Button) dlgKitColor.findViewById(R.id.btnHomeKit);
+						Button btnAwayKit = (Button) dlgKitColor.findViewById(R.id.btnAwayKit);
+						Button btn3rdKit = (Button) dlgKitColor.findViewById(R.id.btn3rdKit);
+						
+						btnHomeKit.setBackgroundColor(Color.parseColor(kitColorA[0].toString()));
+						btnAwayKit.setBackgroundColor(Color.parseColor(kitColorA[1].toString()));
+						btn3rdKit.setBackgroundColor(Color.parseColor(kitColorA[2].toString()));
+						
+						btnHomeKit.setOnClickListener(new View.OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								btnKCA.setBackgroundColor(Color.parseColor(kitColorA[0].toString()));
+								dlgKitColor.cancel();
+								btnKCA.setText("");
+							}
+						});
+						btnAwayKit.setOnClickListener(new View.OnClickListener() {
+													
+							@Override
+							public void onClick(View v) {
+								btnKCA.setBackgroundColor(Color.parseColor(kitColorA[1].toString()));
+								dlgKitColor.cancel();
+								btnKCA.setText("");
+							}
+						});
+						btn3rdKit.setOnClickListener(new View.OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								btnKCA.setBackgroundColor(Color.parseColor(kitColorA[2].toString()));
+								dlgKitColor.cancel();
+								btnKCA.setText("");
+							}
+						});
+						
+						dlgKitColor.show();
+					}
+				});
+				
+				btnKCB.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dlgKitColor.setContentView(R.layout.select_kitcolor);
+						dlgKitColor.setTitle("Trikot auswählen");
+						
+						Button btnHomeKit = (Button) dlgKitColor.findViewById(R.id.btnHomeKit);
+						Button btnAwayKit = (Button) dlgKitColor.findViewById(R.id.btnAwayKit);
+						Button btn3rdKit = (Button) dlgKitColor.findViewById(R.id.btn3rdKit);
+						
+						btnHomeKit.setBackgroundColor(Color.parseColor(kitColorB[0].toString()));
+						btnAwayKit.setBackgroundColor(Color.parseColor(kitColorB[1].toString()));
+						btn3rdKit.setBackgroundColor(Color.parseColor(kitColorB[2].toString()));
+						
+						btnHomeKit.setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								btnKCB.setBackgroundColor(Color.parseColor(kitColorB[0].toString()));
+								dlgKitColor.cancel();
+								btnKCB.setText("");
+							}
+						});
+						btnAwayKit.setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								btnKCB.setBackgroundColor(Color.parseColor(kitColorB[1].toString()));
+								dlgKitColor.cancel();
+								btnKCB.setText("");
+							}
+						});
+						btn3rdKit.setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								btnKCB.setBackgroundColor(Color.parseColor(kitColorB[2].toString()));
+								dlgKitColor.cancel();
+								btnKCB.setText("");
+							}
+						});
+						
+						dlgKitColor.show();
+					}
+				});
+				
 				Cursor mCursor;
 				final ArrayList<String> lstTeam = new ArrayList<String>();
 				mCursor = mDB.getTeamByLeague(res.getString(R.string.bundesliga));
@@ -140,21 +250,19 @@ public class BundesligaActivity extends Activity {
 				mCursor.close();
 				final String Team[] = lstTeam.toArray(new String[0]);
 				btnTeam1.setOnClickListener(new View.OnClickListener() {
-
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						dlgTeam.setItems(Team, new OnClickListener() {
-
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
 								if (!Team[which].equals(btnTeam2.getText())) {
-									// TODO Auto-generated method stub
 									btnTeam1.setText(Team[which]);
+									kitColorA = setKitColorList(Team[which], res);
+									btnKCA.setEnabled(true);
 									dialog.cancel();
 								} else {
-									errNoti("Bitte ein anderes Team auswählen");
+									errNoti("Bitte wählen ein anderes Team aus!");
 								}
 							}
 						});
@@ -166,19 +274,18 @@ public class BundesligaActivity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						dlgTeam.setItems(Team, new OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
 								if (!Team[which].equals(btnTeam1.getText())) {
-									// TODO Auto-generated method stub
 									btnTeam2.setText(Team[which]);
+									kitColorB = setKitColorList(Team[which], res);
+									btnKCB.setEnabled(true);
 									dialog.cancel();
 								} else {
-									errNoti("Bitte ein anderes Team auswählen");
+									errNoti("Bitte wählen Sie ein anderes Team aus!");
 								}
 							}
 						});
@@ -187,15 +294,15 @@ public class BundesligaActivity extends Activity {
 				});
 
 				btnOK.setOnClickListener(new View.OnClickListener() {
-
 					@Override
 					public void onClick(View v) {
 						if (btnSpl.getText().toString().equals("Spieltag")
 								|| btnTeam1.getText().toString().equals("Heim")
 								|| btnTeam2.getText().toString()
 										.equals("Auswärt")) {
-							// TODO Auto-generated method stub
-							errNoti("Bitte Teams und Spieltag auswählen");
+							errNoti("Bitte wählen Sie ein anderes Team aus!");
+						} else if (btnKCA.getText().equals("A") || btnKCB.getText().equals("B")) {
+							errNoti("Bitte wählen Sie ein Trikot aus!");
 						} else {
 							txtTeam1.setText(btnTeam1.getText());
 							txtTeam2.setText(btnTeam2.getText());
@@ -203,16 +310,18 @@ public class BundesligaActivity extends Activity {
 							btnTor1.setEnabled(true);
 							btnTor2.setEnabled(true);
 							btnSpieltag.setClickable(false);
+							ColorDrawable clKCA = (ColorDrawable) btnKCA.getBackground();
+							btnKitColorA.setBackgroundColor(clKCA.getColor());
+							ColorDrawable clKCB = (ColorDrawable) btnKCB.getBackground();
+							btnKitColorB.setBackgroundColor(clKCB.getColor());
 							dlgRnd.cancel();
 						}
 					}
 				});
 
 				btnCancel.setOnClickListener(new View.OnClickListener() {
-
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						dlgRnd.cancel();
 					}
 				});
@@ -221,6 +330,8 @@ public class BundesligaActivity extends Activity {
 
 		});
 
+		final AlertDialog.Builder dlgScr = new AlertDialog.Builder(this);
+
 		btnTor1.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -228,26 +339,47 @@ public class BundesligaActivity extends Activity {
 						.equalsIgnoreCase("FC Bayern München")) {
 					mpGoal.start();
 				}
-				dlgGoal.setContentView(R.layout.goalalert);
+				dlgGoal.setContentView(R.layout.goalalert_new);
 				dlgGoal.setTitle("TOOORRRR!!!!");
 
 				final EditText txtMin = (EditText) dlgGoal
-						.findViewById(R.id.txtMinute);
-				final EditText txtScorer = (EditText) dlgGoal
-						.findViewById(R.id.txtScorerName);
+						.findViewById(R.id.txtMinute2);
+				final Button btnScorer = (Button) dlgGoal
+						.findViewById(R.id.btnScorerList);
 				final Button btnGoalOK = (Button) dlgGoal
-						.findViewById(R.id.btnGoalOK);
+						.findViewById(R.id.btnGoalOK2);
 				final Button btnGoalCnl = (Button) dlgGoal
-						.findViewById(R.id.btnGoalCancel);
+						.findViewById(R.id.btnGoalCancel2);
 				final TextView tvGoalFor = (TextView) dlgGoal
-						.findViewById(R.id.tvGoalFor);
+						.findViewById(R.id.tvGoalFor2);
 				final CheckBox chkOG = (CheckBox) dlgGoal
-						.findViewById(R.id.chkOG);
+						.findViewById(R.id.chkOG2);
 				final CheckBox chkPen = (CheckBox) dlgGoal
-						.findViewById(R.id.chkPen);
+						.findViewById(R.id.chkPen2);
 
 				tvGoalFor.setText("TOORRRR für " + txtTeam1.getText() + " ");
 
+				btnScorer.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						final ArrayList<String> lstPlayer = !chkOG.isChecked()
+								? getPlayerList(res, txtTeam1.getText().toString())
+								: getPlayerList(res, txtTeam2.getText().toString());
+						final String[] Team = lstPlayer.toArray(new String[0]);
+
+						dlgScr.setItems(Team, new OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								btnScorer.setText(Team[which].substring(Team[which].indexOf("-") + 1));
+								dialog.cancel();
+							}
+						});
+
+						dlgScr.show();
+					}
+
+				});
+				
 				btnGoalCnl.setOnClickListener(new View.OnClickListener() {
 
 					@Override
@@ -270,8 +402,8 @@ public class BundesligaActivity extends Activity {
 							min = Integer.parseInt(txtMin.getText().toString());
 						}
 						if (txtMin.getText().toString().equals("")
-								|| txtScorer.getText().toString().equals("")) {
-							errNoti("Bitte die Minute und den Torschützer eingeben!");
+								|| btnScorer.getText().toString().equals("")) {
+							errNoti("Bitte geben Sie den Zeitpunkt und den Torschützer ein!");
 						}
 						else if (min < 0 || min > 120) {
 							errNoti("Ungültige Nummer!");
@@ -279,7 +411,7 @@ public class BundesligaActivity extends Activity {
 							int goal = Integer.parseInt(btnTor1.getText()
 									.toString());
 							btnTor1.setText(String.valueOf(goal + 1).toString());
-							String mes = txtScorer.getText() + " "
+							String mes = btnScorer.getText() + " "
 									+ txtMin.getText() + "'";
 							if (chkOG.isChecked()) {
 								mes += "(Et)";
@@ -288,12 +420,12 @@ public class BundesligaActivity extends Activity {
 								mes += "(Elf.)";
 							}
 							if (txtTor1.getText().toString()
-									.contains(txtScorer.getText())) {
+									.contains(btnScorer.getText())) {
 								String temp = txtTor1
 										.getText()
 										.toString()
 										.replace(
-												txtScorer.getText().toString(),
+												btnScorer.getText().toString(),
 												mes);
 								txtTor1.setText(temp);
 							} else
@@ -317,26 +449,47 @@ public class BundesligaActivity extends Activity {
 						.equalsIgnoreCase("FC Bayern München")) {
 					mpGoal.start();
 				}
-				dlgGoal.setContentView(R.layout.goalalert);
+				dlgGoal.setContentView(R.layout.goalalert_new);
 				dlgGoal.setTitle("TOOORRRR!!!!");
 
 				final EditText txtMin = (EditText) dlgGoal
-						.findViewById(R.id.txtMinute);
-				final EditText txtScorer = (EditText) dlgGoal
-						.findViewById(R.id.txtScorerName);
+						.findViewById(R.id.txtMinute2);
+				final Button btnScorer = (Button) dlgGoal
+						.findViewById(R.id.btnScorerList);
 				final Button btnGoalOK = (Button) dlgGoal
-						.findViewById(R.id.btnGoalOK);
+						.findViewById(R.id.btnGoalOK2);
 				final Button btnGoalCnl = (Button) dlgGoal
-						.findViewById(R.id.btnGoalCancel);
+						.findViewById(R.id.btnGoalCancel2);
 				final TextView tvGoalFor = (TextView) dlgGoal
-						.findViewById(R.id.tvGoalFor);
+						.findViewById(R.id.tvGoalFor2);
 				final CheckBox chkOG = (CheckBox) dlgGoal
-						.findViewById(R.id.chkOG);
+						.findViewById(R.id.chkOG2);
 				final CheckBox chkPen = (CheckBox) dlgGoal
-						.findViewById(R.id.chkPen);
+						.findViewById(R.id.chkPen2);
 
 				tvGoalFor.setText("TOORRRR für " + txtTeam2.getText() + " ");
 
+				btnScorer.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						final ArrayList<String> lstPlayer = !chkOG.isChecked()
+								? getPlayerList(res, txtTeam2.getText().toString())
+								: getPlayerList(res, txtTeam1.getText().toString());
+						final String[] Team = lstPlayer.toArray(new String[0]);
+
+						dlgScr.setItems(Team, new OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								btnScorer.setText(Team[which].substring(Team[which].indexOf("-") + 1));
+								dialog.cancel();
+							}
+						});
+
+						dlgScr.show();
+					}
+
+				});
+				
 				btnGoalCnl.setOnClickListener(new View.OnClickListener() {
 
 					@Override
@@ -359,8 +512,8 @@ public class BundesligaActivity extends Activity {
 							min = Integer.parseInt(txtMin.getText().toString());
 						}
 						if (txtMin.getText().toString().equals("")
-								|| txtScorer.getText().toString().equals("")) {
-							errNoti("Bitte die Minute und den Torschützer eingeben!");
+								|| btnScorer.getText().toString().equals("")) {
+							errNoti("Bitte geben Sie den Zeitpunkt und den Torschützer ein!");
 						}
 						else if (min < 0 || min > 120) {
 							errNoti("Ungültige Nummer!");
@@ -368,7 +521,7 @@ public class BundesligaActivity extends Activity {
 							int goal = Integer.parseInt(btnTor2.getText()
 									.toString());
 							btnTor2.setText(String.valueOf(goal + 1).toString());
-							String mes = txtScorer.getText() + " "
+							String mes = btnScorer.getText() + " "
 									+ txtMin.getText() + "'";
 							if (chkOG.isChecked()) {
 								mes += "(E.t.)";
@@ -377,12 +530,12 @@ public class BundesligaActivity extends Activity {
 								mes += "(E.m)";
 							}
 							if (txtTor2.getText().toString()
-									.contains(txtScorer.getText())) {
+									.contains(btnScorer.getText())) {
 								String temp = txtTor2
 										.getText()
 										.toString()
 										.replace(
-												txtScorer.getText().toString(),
+												btnScorer.getText().toString(),
 												mes);
 								txtTor2.setText(temp);
 							} else
@@ -401,7 +554,6 @@ public class BundesligaActivity extends Activity {
 
 			@Override
 			public boolean onLongClick(View v) {
-				// TODO Auto-generated method stub
 				if (!txtTor1.getText().toString().equals("")) {
 					dlgEdit.setContentView(R.layout.edit);
 					final EditText txtEdit = (EditText) dlgEdit
@@ -417,7 +569,6 @@ public class BundesligaActivity extends Activity {
 
 						@Override
 						public void onClick(View v) {
-							// TODO Auto-generated method stub
 							txtTor1.setText(txtEdit.getText().toString());
 							dlgEdit.cancel();
 						}
@@ -428,7 +579,6 @@ public class BundesligaActivity extends Activity {
 
 								@Override
 								public void onClick(View v) {
-									// TODO Auto-generated method stub
 									dlgEdit.cancel();
 								}
 							});
@@ -489,11 +639,13 @@ public class BundesligaActivity extends Activity {
 		btnTor1.setText("0");
 		btnTor2.setText("0");
 		miDB.setVisible(false);
+		
+		btnKitColorA.setBackgroundColor(Color.WHITE);
+		btnKitColorB.setBackgroundColor(Color.WHITE);
 	}
 
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
 		SharedPreferences pref = getPreferences(MODE_PRIVATE);
 		SharedPreferences.Editor editor = pref.edit();
@@ -521,13 +673,70 @@ public class BundesligaActivity extends Activity {
 		String TxtTor2 = txtTor2.getText().toString();
 		editor.putString("txtTor2", TxtTor2);
 
+		ColorDrawable kitColorA = (ColorDrawable) btnKitColorA.getBackground();
+		ColorDrawable kitColorB = (ColorDrawable) btnKitColorB.getBackground();
+		
+		int colorKitA = kitColorA.getColor();
+		editor.putInt("KitA", colorKitA);
+		int colorKitB = kitColorB.getColor();
+		editor.putInt("KitB", colorKitB);
+		
 		editor.commit();
 
+	}
+	
+	private CharSequence[] setKitColorList(String team, Resources res) {
+		if (team.equals("")) {
+			return null;
+		} else if (team.equals("FC BAYERN MÜNCHEN")) {
+			return res.getStringArray(R.array.fcb);
+		} else if (team.equals("BORUSSIA DORTMUND")) {
+			return res.getStringArray(R.array.bvb);
+		} else if (team.equals("FC SCHALKE 04")) {
+			return res.getStringArray(R.array.s04);
+		} else if (team.equals("TSG 1899 HOFFENHEIM")) {
+			return res.getStringArray(R.array.tsg);
+		} else if (team.equals("BAYER 04 LEVERKUSEN")) {
+			return res.getStringArray(R.array.b04);
+		} else if (team.equals("RB LEIPZIG")) {
+			return res.getStringArray(R.array.rbl);
+		} else if (team.equals("VFB STUTTGART")) {
+			return res.getStringArray(R.array.vfb);
+		} else if (team.equals("EINTRACHT FRANKFURT")) {
+			return res.getStringArray(R.array.sge);
+		} else if (team.equals("BORUSSIA MÖNCHENGLADBACH")) {
+			return res.getStringArray(R.array.bmg);
+		} else if (team.equals("FC AUGSBURG")) {
+			return res.getStringArray(R.array.fca);
+		} else if (team.equals("HERTHA BSC")) {
+			return res.getStringArray(R.array.bsc);
+		} else if (team.equals("SV WERDER BREMEN")) {
+			return res.getStringArray(R.array.svw);
+		} else if (team.equals("HANNOVER 96")) {
+			return res.getStringArray(R.array.h96);
+		} else if (team.equals("1. FSV MAINZ 05")) {
+			return res.getStringArray(R.array.m05);
+		} else if (team.equals("SPORT-CLUB FREIBURG")) {
+			return res.getStringArray(R.array.scf);
+		} else if (team.equals("VFL WOLFSBURG")) {
+			return res.getStringArray(R.array.wob);
+		} else if (team.equals("FORTUNA DÜSSELDORF 1895 E.V.")) {
+			return res.getStringArray(R.array.f95);
+		} else if (team.equals("1. FC NÜRNBERG")) {
+			return res.getStringArray(R.array.fcn);
+		} else if (team.equals("1. FC KÖLN")) {
+			return res.getStringArray(R.array.koe);
+		} else if (team.equals("1. FC UNION BERLIN")) {
+			return res.getStringArray(R.array.fcu);
+		} else if (team.equals("SC PADERBORN")) {
+			return res.getStringArray(R.array.scp);
+		} 
+
+		return null;
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.bundesliga, menu);
 		miDB = menu.findItem(R.id.savedb);
 		return true;
@@ -608,6 +817,22 @@ public class BundesligaActivity extends Activity {
 		Toast.makeText(this, mes, Toast.LENGTH_LONG).show();
 	}
 
+	protected ArrayList<String> getPlayerList(final Resources res, String team) {
+		Cursor cPlayer;
+		final ArrayList<String> lstPlayer = new ArrayList<String>();
+		cPlayer = mDB.getPlayerByTeam(team, 1);
+		cPlayer.moveToFirst();
+		while (!cPlayer.isAfterLast()) {
+			Player player = new Player(cPlayer.getString(1), cPlayer.getString(2), cPlayer.getInt(3),
+					cPlayer.getString(4), cPlayer.getString(5), "DEFAULT", cPlayer.getInt(6),
+					cPlayer.getString(7));
+			lstPlayer.add(player.getKitNo() + "-" + player.getLastname());
+			cPlayer.moveToNext();
+		}
+		cPlayer.close();
+		return lstPlayer;
+	}
+	
 	void resultNoti(String team) {
 		String mes = "";
 		if (!team.equals(""))

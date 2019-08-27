@@ -55,6 +55,12 @@
         <item>Saransk</item>
         <item>Volgograd</item>
     </string-array>
+    <string-array name="position">
+        <item>Goalkeeper</item>
+        <item>Defender</item>
+        <item>Midfielder</item>
+        <item>Forward</item>
+    </string-array>
 
     <string name="title_activity_dflsupercup">DFL Supercup</string>
     <string name="title_activity_euro2016">UEFA EURO 2016 - France</string>
@@ -69,11 +75,11 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
-    <string name="dfb">DFB Pokal 2017/18</string>
-    <string name="ucl">UEFA Champions League 2017/18</string>
+    <string name="dfb">DFB-Pokal 2019/20</string>
+    <string name="ucl">UEFA Champions League 2019/20</string>
     <string name="confedcup">FIFA Confederations Cup 2017/18</string>
-    <string name="bundesliga">Bundesliga 2017/18</string>
-    <string name="dflsupercup">DFL-Supercup 2017</string>
+    <string name="bundesliga">Bundesliga 2019/20</string>
+    <string name="dflsupercup">DFL-Supercup 2018</string>
 	<string name="worldcup">FIFA World Cup 2018</string>
 
     <string-array name="countries">
@@ -125,6 +131,7 @@
 		<item>Curacao</item>
 		<item>Cyprus</item>
 		<item>Czechia</item>
+		<item>Denmark</item>
 		<item>Timor-Leste</item>
 		<item>Ecuador</item>
 		<item>Egypt</item>
@@ -269,6 +276,7 @@
 		<item>Ukraine</item>
 		<item>United Arab Emirates</item>
 		<item>United Kingdom</item>
+		<item>United States</item>
 		<item>Uruguay</item>
 		<item>Uzbekistan</item>
 		<item>Vanuatu</item>

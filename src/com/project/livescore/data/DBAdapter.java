@@ -43,6 +43,7 @@ public class DBAdapter {
 	public static final String KEY_COUNTRY_PLAYER = "Country";
 	public static final String KEY_LEAGUE_PLAYER = "League";
 	public static final String KEY_LINE_UP = "LineUp";
+	public static final String KEY_POSITION = "Position";
 
 	private static final String DATABASE_NAME = "LivescoreDB";
 	private static final String DB_TBL_MATCH = "Match";
@@ -96,10 +97,11 @@ public class DBAdapter {
 			+ KEY_COUNTRY_PLAYER + " text not null,"
 			+ KEY_TEAM_PLAYER + " text not null,"
 			+ KEY_LEAGUE_PLAYER + " text not null,"
-			+ KEY_LINE_UP + " integer not null"
+			+ KEY_LINE_UP + " integer not null,"
+			+ KEY_POSITION + " text not null"
 			+ ");";
 	
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 5;
 
 	private final Context mContext;
 
@@ -131,7 +133,7 @@ public class DBAdapter {
 			// If you need to add a new column
 		    if (newVersion > oldVersion) {
 		        db.execSQL("ALTER TABLE " + DB_TBL_PLAYER 
-		        		+ " ADD COLUMN " + KEY_LINE_UP + " INTEGER DEFAULT 0");
+		        		+ " ADD COLUMN " + KEY_POSITION + " TEXT DEFAULT 'Forward'");
 		    }
 			onCreate(db);
 		}
@@ -287,6 +289,7 @@ public class DBAdapter {
 		initialValues.put(KEY_COUNTRY_PLAYER, player.getCountry());
 		initialValues.put(KEY_TEAM_PLAYER, player.getTeam());
 		initialValues.put(KEY_LINE_UP, player.getLineUp());
+		initialValues.put(KEY_POSITION, player.getPosition());
 		mDB.insertOrThrow(DB_TBL_PLAYER, null, initialValues);
 	}
 
@@ -307,14 +310,15 @@ public class DBAdapter {
 		initialValues.put(KEY_COUNTRY_PLAYER, player.getCountry());
 		initialValues.put(KEY_TEAM_PLAYER, player.getTeam());
 		initialValues.put(KEY_LINE_UP, player.getLineUp());
-		
+		initialValues.put(KEY_POSITION, player.getPosition());
 		mDB.update(DB_TBL_PLAYER, initialValues, KEY_ID + " = " + String.valueOf(player.getId()) + "", null);
 	}
 
 	public Cursor getPlayerByLeagueAndTeam(String liga, String team) {
 		return mDB.query(DB_TBL_PLAYER, 
 				new String[] { KEY_ID, KEY_FIRSTNAME, KEY_LASTNAME, KEY_KIT_NO, 
-						KEY_LEAGUE_PLAYER, KEY_COUNTRY_PLAYER, KEY_TEAM_PLAYER, KEY_LINE_UP}, 
+						KEY_LEAGUE_PLAYER, KEY_COUNTRY_PLAYER, KEY_TEAM_PLAYER, 
+						KEY_LINE_UP, KEY_POSITION}, 
 						KEY_LEAGUE_PLAYER + " LIKE '%" + liga + "%' AND " 
 								+ KEY_TEAM_PLAYER + " LIKE '%" + team + "%'", 
 				null, null, null, KEY_KIT_NO);
@@ -323,17 +327,38 @@ public class DBAdapter {
 	public Cursor getPlayerByLeagueAndTeam(String liga, String team, int lineUp) {
 		return mDB.query(DB_TBL_PLAYER, 
 				new String[] { KEY_ID, KEY_FIRSTNAME, KEY_LASTNAME, KEY_KIT_NO, 
-						KEY_LEAGUE_PLAYER, KEY_COUNTRY_PLAYER, KEY_TEAM_PLAYER, KEY_LINE_UP}, 
+						KEY_LEAGUE_PLAYER, KEY_COUNTRY_PLAYER, KEY_TEAM_PLAYER, 
+						KEY_LINE_UP, KEY_POSITION}, 
 						KEY_LEAGUE_PLAYER + " LIKE '%" + liga + "%' AND " 
 								+ KEY_TEAM_PLAYER + " LIKE '%" + team + "%' AND "
 								+ KEY_LINE_UP + " = " + lineUp, 
 				null, null, null, KEY_KIT_NO);
 	}
 	
+	public Cursor getPlayerByTeam(String team, int lineUp) {
+		return mDB.query(DB_TBL_PLAYER, 
+				new String[] { KEY_ID, KEY_FIRSTNAME, KEY_LASTNAME, KEY_KIT_NO,
+						KEY_TEAM_PLAYER, KEY_COUNTRY_PLAYER,
+						KEY_LINE_UP, KEY_POSITION}, 
+							KEY_TEAM_PLAYER + " LIKE '%" + team + "%' AND "
+								+ KEY_LINE_UP + " = " + lineUp, 
+				null, null, null, KEY_KIT_NO);
+	}
+	
+	public Cursor getPlayerByTeam(String team) {
+		return mDB.query(DB_TBL_PLAYER, 
+				new String[] { KEY_ID, KEY_FIRSTNAME, KEY_LASTNAME, KEY_KIT_NO,
+						KEY_TEAM_PLAYER, KEY_COUNTRY_PLAYER, 
+						KEY_LINE_UP, KEY_POSITION}, 
+							KEY_TEAM_PLAYER + " LIKE '%" + team + "%'", 
+				null, null, null, KEY_KIT_NO);
+	}
+	
 	public Cursor getPlayerById(String id) {
 		return mDB.query(DB_TBL_PLAYER, 
-				new String[] { KEY_ID, KEY_FIRSTNAME, KEY_LASTNAME, KEY_KIT_NO, 
-						KEY_LEAGUE_PLAYER, KEY_COUNTRY_PLAYER, KEY_TEAM_PLAYER, KEY_LINE_UP}, 
+				new String[] { KEY_ID, KEY_FIRSTNAME, KEY_LASTNAME, KEY_KIT_NO,
+						KEY_TEAM_PLAYER, KEY_COUNTRY_PLAYER, 
+						KEY_LINE_UP, KEY_POSITION}, 
 						KEY_ID + " = " + id, null, null, null, KEY_KIT_NO);
 	}
 	
